@@ -1,0 +1,482 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2024.2.25)  27 OCT 2025 03:40
+entering extended mode
+ restricted \write18 enabled.
+ file:line:error style messages enabled.
+ %&-line parsing enabled.
+**"c:/Users/Quang Huy Nugyen/Downloads/Distributed_Obs_2025_Huy_Shengya (1)/Ifac_form/ifacconf.tex"
+(c:/Users/Quang Huy Nugyen/Downloads/Distributed_Obs_2025_Huy_Shengya (1)/Ifac_form/ifacconf.tex
+LaTeX2e <2023-11-01> patch level 1
+L3 programming layer <2024-02-13>
+(ifacconf.cls
+Document Class: ifacconf 2022/02/11, 1.3: IFAC-PapersOnline
+
+\@frontmatterwidth=\dimen140
+\@bls=\dimen141
+\eqntopsep=\skip48
+\eqnarraycolsep=\dimen142
+\labelwidthi=\dimen143
+\labelwidthii=\dimen144
+\labelwidthiii=\dimen145
+\labelwidthiv=\dimen146
+\@maxlistdepth=\count188
+\eqnbaselineskip=\skip49
+\eqnlineskip=\skip50
+\mathindent=\dimen147
+\rulepreskip=\dimen148
+\rulepostskip=\dimen149
+\Arrayrulewidth=\dimen150
+\crulepostskip=\dimen151
+\@Ldec=\dimen152
+\@Rdec=\dimen153
+\@Lpmdec=\dimen154
+\@Rpmdec=\dimen155
+\c@section=\count189
+\c@subsection=\count190
+\c@subsubsection=\count191
+\c@paragraph=\count192
+\c@subparagraph=\count193
+(C:\Users\Quang Huy Nugyen\AppData\Local\Programs\MiKTeX\tex/latex/tools\theorem.sty
+Package: theorem 2023/07/05 v2.2c Theorem extension package (FMi)
+\theorem@style=\toks17
+\theorem@bodyfont=\toks18
+\theorempreskipamount=\skip51
+\theorempostskipamount=\skip52
+ (C:\Users\Quang Huy Nugyen\AppData\Local\Programs\MiKTeX\tex/latex/tools\thp.sty
+File: thp.sty 2023/07/05 v2.2c Theorem extension package (FMi)
+)) (C:\Users\Quang Huy Nugyen\AppData\Local\Programs\MiKTeX\tex/latex/base\newlfont.sty
+Package: newlfont 1998/08/17 v2.2m Standard LaTeX package
+LaTeX Info: Redefining \em on input line 57.
+ (C:\Users\Quang Huy Nugyen\AppData\Local\Programs\MiKTeX\tex/latex/base\latexsym.sty
+Package: latexsym 1998/08/17 v2.2e Standard LaTeX package (lasy symbols)
+\symlasy=\mathgroup4
+LaTeX Font Info:    Overwriting symbol font `lasy' in version `bold'
+(Font)                  U/lasy/m/n --> U/lasy/b/n on input line 52.
+))
+LaTeX Info: Redefining \rm on input line 596.
+LaTeX Info: Redefining \sf on input line 597.
+LaTeX Info: Redefining \tt on input line 598.
+LaTeX Info: Redefining \bf on input line 599.
+LaTeX Info: Redefining \it on input line 600.
+LaTeX Info: Redefining \sl on input line 601.
+LaTeX Info: Redefining \sc on input line 602.
+\c@thm=\count194
+\c@alg=\count195
+\c@algorithm=\count196
+\c@note=\count197
+\c@summ=\count198
+\c@case=\count199
+\@tempcntc=\count266
+\c@figure=\count267
+\c@table=\count268
+\t@glob@notes=\toks19
+\t@loc@notes=\toks20
+\note@cnt=\count269
+\c@author=\count270
+\n@author=\count271
+\c@collab=\count272
+\n@collab=\count273
+\c@address=\count274
+\sv@mathsurround=\dimen156
+\sv@hyphenpenalty=\count275
+\prev@elem=\count276
+\cur@elem=\count277
+\fm@box=\box51
+\fm@size=\dimen157
+\t@abstract=\box52
+\t@keyword=\box53
+\rep@mod=\count278
+\t@xtheight=\dimen158
+\@logoheight=\dimen159
+\@pubyear=\count279
+\c@firstpage=\count280
+\c@lastpage=\count281
+\slashbox=\box54
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 1508.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 1508.
+LaTeX Font Info:    Trying to load font information for U+lasy on input line 1508.
+ (C:\Users\Quang Huy Nugyen\AppData\Local\Programs\MiKTeX\tex/latex/base\ulasy.fd
+File: ulasy.fd 1998/08/17 v2.2e LaTeX symbol font definitions
+)
+\Slashbox=\box55
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 1509.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 1509.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 1509.
+\@frontindent=\dimen160
+) (C:\Users\Quang Huy Nugyen\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphicx.sty
+Package: graphicx 2021/09/16 v1.2d Enhanced LaTeX Graphics (DPC,SPQR)
+ (C:\Users\Quang Huy Nugyen\AppData\Local\Programs\MiKTeX\tex/latex/graphics\keyval.sty
+Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
+\KV@toks@=\toks21
+) (C:\Users\Quang Huy Nugyen\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphics.sty
+Package: graphics 2022/03/10 v1.4e Standard LaTeX Graphics (DPC,SPQR)
+ (C:\Users\Quang Huy Nugyen\AppData\Local\Programs\MiKTeX\tex/latex/graphics\trig.sty
+Package: trig 2021/08/11 v1.11 sin cos tan (DPC)
+) (C:\Users\Quang Huy Nugyen\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 107.
+ (C:\Users\Quang Huy Nugyen\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\pdftex.def
+File: pdftex.def 2022/09/22 v1.2b Graphics/color driver for pdftex
+))
+\Gin@req@height=\dimen161
+\Gin@req@width=\dimen162
+) (C:\Users\Quang Huy Nugyen\AppData\Local\Programs\MiKTeX\tex/latex/natbib\natbib.sty
+Package: natbib 2010/09/13 8.31b (PWD, AO)
+\bibhang=\skip53
+\bibsep=\skip54
+LaTeX Info: Redefining \cite on input line 694.
+\c@NAT@ctr=\count282
+) (C:\Users\Quang Huy Nugyen\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pdftex.def
+File: l3backend-pdftex.def 2024-01-04 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count283
+\l__pdf_internal_box=\box56
+)
+No file ifacconf.aux.
+\openout1 = `ifacconf.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+(C:\Users\Quang Huy Nugyen\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count284
+\scratchdimen=\dimen163
+\scratchbox=\box57
+\nofMPsegments=\count285
+\nofMParguments=\count286
+\everyMPshowfont=\toks22
+\MPscratchCnt=\count287
+\MPscratchDim=\dimen164
+\MPnumerator=\count288
+\makeMPintoPDFobject=\count289
+\everyMPtoPDFconversion=\toks23
+) (C:\Users\Quang Huy Nugyen\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-base.sty
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
+ (C:\Users\Quang Huy Nugyen\AppData\Local\Programs\MiKTeX\tex/latex/00miktex\epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
+))
+LaTeX Font Info:    Calculating math sizes for size <14> on input line 17.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <14> on input line 17.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <9.79996> on input line 17.
+
+
+LaTeX Warning: Reference `footnoteinfo' on page 1 undefined on input line 17.
+
+
+LaTeX Warning: Reference `First' on page 1 undefined on input line 24.
+
+
+LaTeX Warning: Reference `Second' on page 1 undefined on input line 25.
+
+
+LaTeX Warning: Reference `Third' on page 1 undefined on input line 26.
+
+\c@sv@footnote=\count290
+
+LaTeX Warning: Reference `eq:sample' on page 1 undefined on input line 83.
+
+
+Overfull \hbox (1.49907pt too wide) in paragraph at lines 83--85
+[]\OT1/cmr/m/n/10 Some words might be ap-pro-pri-ate de-scrib-ing equa-tion ([]),
+ []
+
+
+Package natbib Warning: Citation `Abl:56' on page 1 undefined on input line 90.
+
+
+Package natbib Warning: Citation `AbTaRu:54' on page 1 undefined on input line 90.
+
+
+Package natbib Warning: Citation `Keo:58' on page 1 undefined on input line 90.
+
+
+Package natbib Warning: Citation `Pow:85' on page 1 undefined on input line 90.
+
+
+LaTeX Warning: Reference `fig:bifurcation' on page 1 undefined on input line 126.
+
+<bifurcation.jpg, id=1, 670.505pt x 501.875pt>
+File: bifurcation.jpg Graphic file (type jpg)
+<use bifurcation.jpg>
+Package pdftex.def Info: bifurcation.jpg  used on input line 130.
+(pdftex.def)             Requested size: 239.00298pt x 178.89055pt.
+
+LaTeX Warning: Reference `tb:margins' on page 1 undefined on input line 140.
+
+[1{C:/Users/Quang Huy Nugyen/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}
+
+]
+
+LaTeX Warning: Reference `tb:margins' on page 2 undefined on input line 161.
+
+
+LaTeX Warning: Reference `eq:sample' on page 2 undefined on input line 254.
+
+
+c:/Users/Quang Huy Nugyen/Downloads/Distributed_Obs_2025_Huy_Shengya (1)/Ifac_form/ifacconf.tex:285: LaTeX Error: Environment equation* undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.285 \begin{equation*}
+                       
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+c:/Users/Quang Huy Nugyen/Downloads/Distributed_Obs_2025_Huy_Shengya (1)/Ifac_form/ifacconf.tex:286: Missing $ inserted.
+<inserted text> 
+                $
+l.286    \bar
+             {\L}^{(j)} = \begin{bmatrix}
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+
+LaTeX Warning: Command \L invalid in math mode on input line 286.
+
+
+c:/Users/Quang Huy Nugyen/Downloads/Distributed_Obs_2025_Huy_Shengya (1)/Ifac_form/ifacconf.tex:286: LaTeX Error: Environment bmatrix undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.286    \bar{\L}^{(j)} = \begin{bmatrix}
+                                         
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+c:/Users/Quang Huy Nugyen/Downloads/Distributed_Obs_2025_Huy_Shengya (1)/Ifac_form/ifacconf.tex:287: Misplaced alignment tab character &.
+l.287 ...thcal{N}_1 \cup \{ 0 \}\}} w_{1l}^{(j)} &
+                                                   -w_{12}^{(j)} & \cdots & ...
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+c:/Users/Quang Huy Nugyen/Downloads/Distributed_Obs_2025_Huy_Shengya (1)/Ifac_form/ifacconf.tex:287: Misplaced alignment tab character &.
+l.287 ...\{ 0 \}\}} w_{1l}^{(j)} & -w_{12}^{(j)} &
+                                                   \cdots & -w_{1N}^{(j)} \\
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+c:/Users/Quang Huy Nugyen/Downloads/Distributed_Obs_2025_Huy_Shengya (1)/Ifac_form/ifacconf.tex:287: Misplaced alignment tab character &.
+l.287 ...} w_{1l}^{(j)} & -w_{12}^{(j)} & \cdots &
+                                                   -w_{1N}^{(j)} \\
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+c:/Users/Quang Huy Nugyen/Downloads/Distributed_Obs_2025_Huy_Shengya (1)/Ifac_form/ifacconf.tex:288: Misplaced alignment tab character &.
+l.288             -w_{21}^{(j)} &
+                                  \sum_{l \in \mathcal{N}_2}w_{2l}^{(j)} & \...
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+c:/Users/Quang Huy Nugyen/Downloads/Distributed_Obs_2025_Huy_Shengya (1)/Ifac_form/ifacconf.tex:288: Misplaced alignment tab character &.
+l.288 ... \sum_{l \in \mathcal{N}_2}w_{2l}^{(j)} &
+                                                   \cdots & -w_{1N}^{(j)} \\
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+c:/Users/Quang Huy Nugyen/Downloads/Distributed_Obs_2025_Huy_Shengya (1)/Ifac_form/ifacconf.tex:288: Misplaced alignment tab character &.
+l.288 ...\in \mathcal{N}_2}w_{2l}^{(j)} & \cdots &
+                                                   -w_{1N}^{(j)} \\
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+c:/Users/Quang Huy Nugyen/Downloads/Distributed_Obs_2025_Huy_Shengya (1)/Ifac_form/ifacconf.tex:289: Misplaced alignment tab character &.
+l.289            \vdots &
+                          \vdots & \ddots & \vdots \\
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+c:/Users/Quang Huy Nugyen/Downloads/Distributed_Obs_2025_Huy_Shengya (1)/Ifac_form/ifacconf.tex:289: Misplaced alignment tab character &.
+l.289            \vdots & \vdots &
+                                   \ddots & \vdots \\
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+c:/Users/Quang Huy Nugyen/Downloads/Distributed_Obs_2025_Huy_Shengya (1)/Ifac_form/ifacconf.tex:289: Misplaced alignment tab character &.
+l.289            \vdots & \vdots & \ddots &
+                                            \vdots \\
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+c:/Users/Quang Huy Nugyen/Downloads/Distributed_Obs_2025_Huy_Shengya (1)/Ifac_form/ifacconf.tex:290: Misplaced alignment tab character &.
+l.290             -w_{N1}^{(j)} &
+                                  -w_{N2}^{(j)}& \cdots & \sum_{l \in \mathc...
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+c:/Users/Quang Huy Nugyen/Downloads/Distributed_Obs_2025_Huy_Shengya (1)/Ifac_form/ifacconf.tex:290: Misplaced alignment tab character &.
+l.290             -w_{N1}^{(j)} & -w_{N2}^{(j)}&
+                                                 \cdots & \sum_{l \in \mathc...
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+c:/Users/Quang Huy Nugyen/Downloads/Distributed_Obs_2025_Huy_Shengya (1)/Ifac_form/ifacconf.tex:290: Misplaced alignment tab character &.
+l.290 ...  -w_{N1}^{(j)} & -w_{N2}^{(j)}& \cdots &
+                                                   \sum_{l \in \mathcal{N}_N...
+I can't figure out why you would want to use a tab mark
+here. If you just want an ampersand, the remedy is
+simple: Just type `I\&' now. But if some right brace
+up above has ended a previous alignment prematurely,
+you're probably due for more error messages, and you
+might try typing `S' now just to see what is salvageable.
+
+
+c:/Users/Quang Huy Nugyen/Downloads/Distributed_Obs_2025_Huy_Shengya (1)/Ifac_form/ifacconf.tex:291: LaTeX Error: \begin{document} ended by \end{bmatrix}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.291    \end{bmatrix}
+                      
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+c:/Users/Quang Huy Nugyen/Downloads/Distributed_Obs_2025_Huy_Shengya (1)/Ifac_form/ifacconf.tex:292: LaTeX Error: \begin{document} ended by \end{equation*}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.292 \end{equation*}
+                     
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+c:/Users/Quang Huy Nugyen/Downloads/Distributed_Obs_2025_Huy_Shengya (1)/Ifac_form/ifacconf.tex:292: Missing $ inserted.
+<inserted text> 
+                $
+l.292 \end{equation*}
+                     
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 284--295
+
+ []
+
+[2 <./bifurcation.jpg>]
+
+LaTeX Warning: Reference `eq:sample' on page 3 undefined on input line 300.
+
+
+LaTeX Warning: Reference `eq:sample' on page 3 undefined on input line 300.
+
+
+LaTeX Warning: Reference `eq:sample' on page 3 undefined on input line 301.
+
+
+LaTeX Warning: Reference `eq:sample' on page 3 undefined on input line 302.
+
+(ifacconf.bbl) [3]
+
+Package natbib Warning: There were undefined citations.
+
+(ifacconf.aux
+
+Package natbib Warning: Citation(s) may have changed.
+(natbib)                Rerun to get citations correct.
+
+)
+ ***********
+LaTeX2e <2023-11-01> patch level 1
+L3 programming layer <2024-02-13>
+ ***********
+
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 2304 strings out of 474462
+ 35559 string characters out of 5737655
+ 1941998 words of memory out of 5000000
+ 24622 multiletter control sequences out of 15000+600000
+ 564997 words of font info for 64 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 57i,8n,65p,372b,261s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt8.pfb>
+Output written on ifacconf.pdf (3 pages, 282009 bytes).
+PDF statistics:
+ 98 PDF objects out of 1000 (max. 8388607)
+ 0 named destinations out of 1000 (max. 500000)
+ 6 words of extra memory for PDF output out of 10000 (max. 10000000)
+

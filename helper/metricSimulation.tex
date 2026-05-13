@@ -1,0 +1,129 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+
+\begin{document}
+
+In this simulation code, four \textbf{error metrics} are computed to evaluate the performance of vehicle state estimation. The \textbf{mathematical formulation} of each metric is based on the \textbf{difference between estimated and actual states} over time and across vehicles.
+
+\subsection*{Notation:}
+
+Let:
+
+\begin{itemize}
+    \item $\hat{x}_{i,v}(t)$: estimated value of state $i$ for vehicle $v$ at time $t$
+    \item $x_{i,v}(t)$: actual value of state $i$ for vehicle $v$ at time $t$
+    \item $T$: total number of time steps
+    \item $V$: number of follower vehicles evaluated (in this code: $V = 3$ for car2, car3, car4)
+\end{itemize}
+
+\section*{ 1. \textbf{Distance Error}: $e_{\text{dist}}$}
+
+\textbf{Definition:}
+
+\begin{equation}
+    e_{\text{dist},v}(t) = \sqrt{ \left( \hat{x}_{1,v}(t) - x_{1,v}(t) \right)^2 + \left( \hat{x}_{2,v}(t) - x_{2,v}(t) \right)^2 }
+\end{equation}
+
+Here, $x_1$ and $x_2$ are the global $X$ and $Y$ positions.
+
+\textbf{Mean over time:}
+
+\begin{equation}
+    \bar{e}_{\text{dist},v} = \frac{1}{T} \sum_{t=1}^{T} e_{\text{dist},v}(t)
+\end{equation}
+
+\section*{ 2. \textbf{Orientation (Theta) Error}: $e_{\theta}$}
+
+\textbf{Definition:}
+
+\begin{equation}
+    e_{\theta,v}(t) = \left| \hat{x}_{3,v}(t) - x_{3,v}(t) \right|
+\end{equation}
+
+Where $x_3$ is the orientation angle (theta) in radians.
+
+\textbf{Mean over time:}
+
+\begin{equation}
+    \bar{e}_{\theta,v} = \frac{1}{T} \sum_{t=1}^{T} e_{\theta,v}(t)
+\end{equation}
+
+\section*{ 3. \textbf{Velocity Error}: $e_{\text{vel}}$}
+
+\textbf{Definition:}
+
+\begin{equation}
+    e_{\text{vel},v}(t) = \left| \hat{x}_{4,v}(t) - x_{4,v}(t) \right|
+\end{equation}
+
+Where $x_4$ is the longitudinal velocity in m/s.
+
+\textbf{Mean over time:}
+
+\begin{equation}
+    \bar{e}_{\text{vel},v} = \frac{1}{T} \sum_{t=1}^{T} e_{\text{vel},v}(t)
+\end{equation}
+
+\section*{4. \textbf{Acceleration Error}: $e_{\text{acc}}$}
+
+\textbf{Definition:}
+
+\begin{equation}
+    e_{\text{acc},v}(t) = \left| \hat{x}_{5,v}(t) - x_{5,v}(t) \right|
+\end{equation}
+
+Where $x_5$ is the longitudinal acceleration.
+
+\textbf{Mean over time:}
+
+\begin{equation}
+    \bar{e}_{\text{acc},v} = \frac{1}{T} \sum_{t=1}^{T} e_{\text{acc},v}(t)
+\end{equation}
+
+\section*{ Final Aggregated Metric:}
+
+For each \textbf{scenario $s$} and \textbf{metric $m$}, the value stored is:
+
+\begin{equation}
+    \bar{e}_{m,s} = \frac{1}{V} \sum_{v=1}^{V} \bar{e}_{m,v}
+\end{equation}
+
+Where:
+
+\begin{itemize}
+    \item $V = 3$ vehicles (car2, car3, car4)
+    \item $m \in \{\text{distance}, \text{theta}, \text{velocity}, \text{acceleration}\}$
+    \item $s \in \{\text{constant}, \text{acceleration}, \text{deceleration}\}$
+\end{itemize}
+
+This forms the matrix:
+
+\begin{verbatim}
+mean_errors(v, m, s)
+\end{verbatim}
+
+with dimensions:
+
+\begin{itemize}
+    \item 4 vehicles (but only 3 used in error calculation)
+    \item 4 metrics
+    \item 3 scenarios
+\end{itemize}
+
+\subsection*{Summary Table of Metrics}
+
+\begin{tabular}{lllll}
+    \toprule
+    \textbf{Metric} & \textbf{Formula} & \textbf{Units} & & \\
+    \midrule
+    Distance Error & $\sqrt{( \hat{x} - x )^2 + ( \hat{y} - y )^2}$ & meters (m) & & \\
+    Orientation Error & $| \hat{\theta} - \theta |$ & radians (rad) & & \\
+    Velocity Error & $| \hat{v} - v |$ & m/s & & \\
+    Acceleration Error & $| \hat{a} - a |$ & m/s\textsuperscript{2} & & \\
+    \bottomrule
+\end{tabular}
+
+\end{document}

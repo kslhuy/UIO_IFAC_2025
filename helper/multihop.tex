@@ -1,0 +1,138 @@
+\documentclass{article}
+\usepackage{amsmath,amssymb,array,booktabs}
+\usepackage[boxed]{algorithm2e}
+
+\begin{document}
+
+\section*{1. One-hop neighbor weights}
+
+For each node \(i\), let  
+\begin{itemize}
+    \item \(N_i\) be the set of its \textbf{direct out-neighbors} (i.e.\ nodes \(k\) for which there is an edge \(i\to k\)).  
+    \item \(t_i^{(k)}\in[0,1]\) be the \textbf{direct trust} that node \(i\) places in its neighbor \(k\).
+\end{itemize}
+
+We normalize those so that the weights sum to 1:
+
+\[
+  \boxed{
+    g_{\,i k}
+    \;=\;
+    \frac{t_i^{(k)}}{\displaystyle\sum_{m\in N_i}t_i^{(m)}}
+    \quad
+    \forall\,k\in N_i
+  }
+\]
+
+\begin{itemize}
+    \item \textbf{\(g_{ik}\)} is the fraction of \(i\)'s ``attention'' assigned to neighbor \(k\).  
+    \item If \(i\) trusts \(k\) more, then \(g_{ik}\) is larger; if \(k\) is one of many equally-trusted neighbors, each gets roughly \(1/|N_i|\).
+\end{itemize}
+
+\section*{2. Paths and path-trust}
+
+We want to measure \textbf{indirect trust} from \(i\) to \textbf{any} other node \(j\), possibly via several hops.  
+
+\subsection*{1. Paths:}
+\begin{itemize}
+    \item A \textbf{path} \(p\) of length \(\ell\) from \(i\) to \(j\) is a sequence of nodes  
+    \[
+      p = (v_0=i,\;v_1,\;v_2,\;\dots,\;v_\ell=j)
+    \]  
+    such that each consecutive pair \((v_{r},v_{r+1})\) is an edge in the graph.
+\end{itemize}
+
+\subsection*{2. Path-trust via \(g\):}
+\begin{itemize}
+    \item Along a path \(p\), multiply all the one-hop weights:  
+    \[
+      \mathrm{trust}(p)
+      \;=\;
+      \prod_{r=0}^{\ell-1}
+        g_{\,v_r\,v_{r+1}}.
+    \]
+    \item Intuitively, if any link on the path is weak, the whole product goes down.
+\end{itemize}
+
+\section*{3. Decay factor \(\beta\)}
+
+Longer paths are often less reliable than short ones.  To reflect that, introduce a \textbf{decay} or \textbf{hop-penalty} \(\beta\in[0,1)\).  A path of length \(\ell\) is down-weighted by \(\beta^{\,\ell-1}\).  
+\begin{itemize}
+    \item If \(\beta=1\), all lengths contribute equally.  
+    \item If \(\beta<1\), each extra hop multiplies the path's contribution by another \(\beta\).
+\end{itemize}
+
+\section*{4. Summing over all paths (the master equation)}
+
+Let \(P_{\,i\to j}\) be the set of \textbf{all simple directed paths} from \(i\) to \(j\).  Then define the \textbf{total propagated trust} \(T_{ij}\equiv t_i^{(j)}\) by
+
+\[
+  \boxed{
+  t_i^{(j)}
+  \;=\;
+  \sum_{p\in P_{\,i\to j}}
+    \underbrace{\beta^{\,\ell(p)-1}}_{\substack{\text{decay}\\\text{factor}}}
+    \;\times\;
+    \underbrace{\Bigl[\prod_{(u\to v)\in p}g_{u v}\Bigr]}_{\substack{\text{path-trust}\\\text{via one-hop }g}}
+  }
+  \quad.
+\]
+
+Equivalently, grouping by length:
+\[
+  t_i^{(j)}
+  = 
+  \sum_{\ell=1}^{L}
+    \beta^{\,\ell-1}
+    \sum_{\substack{p=(i\to\cdots\to j)\\|p|=\ell}}
+      \prod_{(u\to v)\in p}g_{u v},
+\]
+where \(L\) is a maximum hop count (possibly \(\infty\) if \(\beta<1\)).
+
+\section*{5. Matrix form}
+
+Define the \textbf{normalized adjacency matrix} \(G\) by
+\[
+  G_{ik} =
+  \begin{cases}
+    g_{ik}, & k\in N_i,\\
+    0, & \text{otherwise}.
+  \end{cases}
+\]
+Then
+\[
+  T \;=\;
+  \sum_{\ell=1}^L \beta^{\,\ell-1}\,G^\ell
+  \quad\Longrightarrow\quad
+  T_{ij} \;=\; t_i^{(j)}.
+\]
+\begin{itemize}
+    \item \(G^2_{ij}\) sums over all 2-hop contributions, \(G^3\) over 3-hop, etc.  
+    \item The scalar \(\beta^{\ell-1}\) scales each power.
+\end{itemize}
+
+\section*{Summary of all symbols}
+
+\begin{center}
+\begin{tabular}{>{\raggedright}p{3cm}>{\raggedright\arraybackslash}p{9cm}}
+\toprule
+\textbf{Symbol} & \textbf{Meaning} \\
+\midrule
+\(i,j,k\) & Nodes (vertices) in the directed graph \\
+\(N_i\) & Set of direct out-neighbors of node \(i\) \\
+\(t_i^{(k)}\) & \textbf{Direct} trust value from node \(i\) to its neighbor \(k\) (edge weight in \([0,1]\)) \\
+\(g_{ik}\) & Normalized one-hop weight: \(g_{ik} = t_i^{(k)} / \sum_{m\in N_i}t_i^{(m)}\) \\
+\(P_{\,i\to j}\) & All simple directed paths from \(i\) to \(j\) \\
+\(\ell(p)\) & Length (number of edges) of path \(p\) \\
+\(\mathrm{trust}(p)\) & Product of the \(g\)-weights along path \(p\): \(\prod_{(u\to v)\in p}g_{uv}\) \\
+\(\beta\) & Decay factor in \([0,1)\) to downweight longer paths \\
+\(L\) & Maximum hop count (can be set to \(\infty\) if \(\beta<1\)) \\
+\(T_{ij}\equiv t_i^{(j)}\) & Total propagated trust from \(i\) to \(j\), summing (with decay) over \emph{all} paths \\
+\(G\) & Matrix whose \((i,k)\) entry is \(g_{ik}\), and zero elsewhere \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+With this you can compute \textbf{indirect trust} for any pair \((i,j)\) by combining all possible routes, weighting each by both its per-hop strength \(g\) and an overall hop-penalty \(\beta\).
+
+\end{document}

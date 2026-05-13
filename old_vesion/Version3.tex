@@ -1,0 +1,448 @@
+\documentclass[letterpaper, 10pt, conference]{ieeeconf}  % 
+\IEEEoverridecommandlockouts                              % This command is only needed if 
+                                                          % you want to use the \thanks command
+\overrideIEEEmargins    
+\usepackage{cite}
+
+\usepackage{algorithmic}
+
+\usepackage{textcomp}
+
+\usepackage{comment}
+
+%\usepackage{graphicx}      % include this line if your document contains figures
+%\usepackage{natbib}        % required for bibliography
+%===============================================================================
+% Needed to meet printer requirements.
+ \usepackage{latexsym,amssymb,amsfonts}
+\usepackage[applemac]{inputenc}
+\usepackage{rotating}
+\usepackage{cite}
+%\usepackage{graphicx}
+\usepackage{epstopdf}
+\usepackage{subfigure}
+%\usepackage{color}
+%\usepackage{xcolor}
+%
+%\usepackage{color}
+\usepackage[dvipsnames]{xcolor}
+%
+\usepackage[normalem]{ulem}
+\usepackage{isolatin1}
+%\usepackage{caption}
+%\usepackage{array,multirow,makecell}
+%\usepackage{placeins}
+%\usepackage{stackengine}
+%\usepackage{hyperref}
+\usepackage{fancybox}
+\usepackage{colortbl}
+\usepackage{float}
+\usepackage{comment}
+\usepackage{mathdots}
+%\usepackage{lmodern}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{dblfloatfix}
+\usepackage{kantlipsum}
+\usepackage{dblfloatfix}    % To enable figures at the bottom of page
+\usepackage{graphicx} % [demo] option for empty figure
+\usepackage{placeins}
+\usepackage{marginnote}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{fancybox}
+%\usepackage{empheq}
+\usepackage[overload]{empheq}
+
+\usepackage{bm}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{tikz}
+\usetikzlibrary{circuits.ee.IEC}
+\usepackage[european resistor, european voltage, european current]{circuitikz}
+\usetikzlibrary{arrows,shapes,positioning}
+\usetikzlibrary{decorations.markings,decorations.pathmorphing,
+decorations.pathreplacing}
+\usetikzlibrary{calc,patterns,shapes.geometric}
+\usetikzlibrary{shapes.multipart,positioning,patterns,backgrounds}
+\tikzstyle{titlebox}=[rectangle,inner sep=10pt,inner ysep=10pt,draw]%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\blacksquare{\hbox{\vrule width 4pt height 4pt depth 0pt}}
+\def\square{\hbox{\vrule\barox{\hrule\phantom{o}\hrule}\vrule}}
+\def\qed{\hfill \square}
+\def\qedp{\rightline{$\blacksquare$}}
+\def\EXPT{\mathop{{\rm E}}}
+\def\MIN{\mathop{{\rm min}}}
+\def\MAX{\mathop{{\rm max}}}
+\def\LIM{\mathop{{\longrightarrow}}}
+\def\UNION{\mathop{\bigcup}}
+\def\INTERSECT{\mathop{\bigcap}}
+\def\ARGMIN{\mathop{{\rm argmin}}}
+\def\ARGMAX{\mathop{{\rm argmax}}}
+\def\TOUND{\mathop{\longrightarrow}}
+\def\col#1{\mathop{{\rm col}\,\left(\,#1\,\right)}}
+\def\eqref#1{(\ref{#1})}
+\def\rank{\mathop{{\rm rank}}}
+
+\newcommand{\widebox}[2][0.5em]{\fbox{\hspace{#1}$\displaystyle #2$\hspace{#1}}}
+
+
+%\newcommand*\rank{\rm rank}
+\def\rank{\mathop{{\rm rank}}}
+
+%%%
+\newtheorem{prb}{\it Problem}%[section]
+\newtheorem{theorem}{\it Theorem}%[section]
+\newtheorem{lemma}{\it Lemma}%[section]
+\newtheorem{definition}{\it Definition}
+\newtheorem{remark}{\it Remark}%[section]
+\newtheorem{assumption}{\it Assumption}%[section]
+\newtheorem{example}{\it Example}%[section]b
+\newtheorem{annex}{\it Annex}%[section]b
+\newtheorem{prop}{\it Proposition}%[section]b
+
+
+
+
+
+
+
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+
+
+\title{\bf Resilience in Distributed
+ Consensus based on Trust for Conneted Vehicle }
+\author{Q.H. Nguyen$^{1,2}$, Selsabil Bougherara $^{1,2}$, Shengya Meng $^{1}$, H. Rafaralahy $^{1}$, M. Haddad $^{2}$, A. Zemouche $^{1}$
+%
+\thanks{This work was supported by SEGULA Engineering. H. Rafaralahy and A. Zemouche would like to acknowledge the ANR agency for its partial financial support under the project ArtISMo ANR-20-CE48-0015.
+}
+%
+\thanks{$^{1}$ Universit\'e de Lorraine, CRAN  CNRS UMR 7039, 54400 Cosnes et Romain, France~(e-mail: \protect\url{ali.zemouche@univ-lorraine.fr}).}
+%
+\thanks{$^{2}$ SEGULA Engineering, 19 rue d'Arras, 92000 Nanterre, France~(e-mail: \protect\url{madjid.haddad@segula.fr}).}
+%
+\thanks{All relevant CARLA resources have been made available in \protect\href{https://github.com/kslhuy/CACC_UIO_simulink}{GitHub}.}
+}
+\maketitle
+
+\begin{abstract}
+This paper presents a solution to estimate state of k-nearest neighbor in platoon. A bunch of technic is used to secured estimation in the case of measurement fautlt in local vehicle and cyber-attack in communication channel .
+\end{abstract}
+
+\begin{keywords}
+Distributed observers, secure estimation, lyapunov stability, cyber-attack.
+\end{keywords}
+
+\section{Introduction}
+    
+
+The contributions of this paper are as follows:
+\begin{enumerate}
+\item ....
+\end{enumerate}
+
+
+\section{Problem Formulation}
+
+\subsection{Local System}
+The Minicar has Ackermann steering geometry, and its kinematics can be approximated by the bicycle model, with motion equations as follows:
+where
+\begin{align} \label{diff_1_LPV}
+    \dot{X} &= v cos(\theta) \\ \notag
+    \dot{Y} &= v sin(\theta)\\ \notag
+    \dot{v} &= a \\ \notag
+    \dot{\theta} &= L^{-1} v tan(\psi)  
+\end{align}
+\begin{itemize}
+    \item $X , Y$ denote the position,
+    \item v is is the forward speed , a acceleration control 
+    \item $\psi $ is the steering angle,
+    \item L is the vehicle's wheel base. 
+\end{itemize}
+
+The radar sensor is located on the front of the
+ host vehicle and measures the relative speed and distance to the rear bumper of the target
+ vehicle. The relative distance $r$ is defined as
+
+\begin{equation}
+    r = \sqrt{(X_t - X_h)^2 + (Y_t - Y_h)^2} - L 
+\end{equation}
+$X-$ and $Y-$positions of the host and target vehicle
+ correspond with their center of gravity. Note that the expression in (6) is a simplification
+ where the difference in heading angle between the two vehicles is ignored. The effects of
+ this simplification can be included in the measurement noise, which also accounts for the
+ $r$ is defined as uncertainty of the measurement location on the target vehicle's bumper. The relative speed $\dot{r}$
+ \begin{equation}
+     \dot{r} = (v_t - v_h) cos(\theta_r)
+ \end{equation}
+where $r$ is the azimuth angle measured by the radar. The relative speed is derived from a
+ constant radius cornering assumption where the vehicles drive with the same curvature
+ and have no relative lateral offset with respect to the desired trajectory. 
+
+
+
+ In state-space form, the system dynamics are described as
+
+ \begin{equation}\label{bycle}
+%\displaystyle
+       \begin{array}{l}
+        \dot{x_i}=A x_i + B u_i + F {d_i}\\
+         \end{array} .
+\end{equation}  
+
+   
+\subsection{Distributed system}
+
+\assumption{Each car $i$ has perfect knowledge only of its own dynamics, i.e. $\tau_i$ is known . The relation $\tau_j = \tau_i + d_{\tau_i} $ will be used . Here $d_{\tau}$ is unknown, but the upper and lower bounds are known. Because when a car connects to his neighborhood, some basic information like which car is share, so $\tau_j$ can be defined base on his type of car } 
+
+So we can write down the the virtual global system that represents all the k-neighbors of $i^th$ . 
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[scale=0.45]{img/local_global_com.png}
+    \caption{Schematic diagram of the estimation method.}
+    \label{fig:information_boarcard}
+\end{figure}
+
+\begin{equation}\label{CACC_dis_neibor}
+        \mathbf{\hat{X}}(t+1)=\mathbf{A} \mathbf{X} + \mathbf{B}({U+\mathcal{F} + \mathcal{D}_{uk}}) 
+\end{equation}
+
+where 
+\begin{equation*}
+\mathbf{A} = I_N \otimes A_i, \quad \mathbf{B} = I_N \otimes B_i,
+\end{equation*}
+
+
+
+
+So the 
+
+\begin{itemize}
+\item $\mathbf{X} = [x_{i-k},..., x_{i} ,..., x_{i+k}]^T$ 
+\item $U = [u_i , ... u_i ,.. u_i ]^T$ 
+
+ \item $\mathcal{F} = [f_{i-k},..., f_{i} ,..., f_{i+k} ]$ 
+
+ \item $\mathcal{D}_{uk}$ is the uncertain in the controller input. 
+ \end{itemize}
+
+
+
+So the Global System's state can be ordered by position and have lead, follower, last . 
+
+\remark{It is difficult to get, or send the control input because it will be private. So we will consider that all the controller in vehicle $k^th$ that is the neighbor of $i^th$ vehicle will be  $u_k = u_i + d_{u_k}$ , so the controller in the virtual global system  $U = [u_{i} , ... u_i ,.. u_{i} ]^T$ }
+
+\assumption{In the virtual global system don't fault the system , only fault in the mesurement caused by the uncertain of the communications channels could be considered}
+
+k-neighbor of $i^th$ will send the estimated value $\hat{x}_k $ to the $i^th$ vehicle and , also send about the realtive position from lidar . The measurement of the virtual global system can be :
+\begin{equation*}\label{CACC}
+      \mathbf{Y}_i = \mathbf{C}_i X    
+\end{equation*}  
+
+Where $\mathbf{Y}_i = [\hat{x}_{i-k} ,..., \hat{x}_{i},..., \hat{x}_{i+k} ]^T$  
+$e_s$ is the cyber-attack  
+
+
+
+
+\section{Modeling Trust}
+
+To prevent collisions induced by data injection attacks as demonstrated in \cite{vanderheijden2017}, only accurate data can be passed to the cruise controller. Since a host vehicle cannot judge the value of a single data point received in a beacon, it has to be compared to the sender's actual behavior over a longer period of time. This allows the host vehicle to gain trust in the sender's benignity or detect misbehavior. Depending on the trust in the predecessor within the platoon, the host vehicle can regulate the safety gap to that vehicle. If the trust falls below a certain threshold, it might ultimately decide not to be in a platoon with that vehicle at all. This section introduces the details of TriP, our trust-based misbehavior detection system for platoons.
+
+\subsection{Interactions}
+
+A host vehicle with automated driving functions, such as Cooperative Adaptive Cruise Control (CACC), must ultimately trust its own sensor data. When assessing other platoon members' trustworthiness, the host vehicle uses its sensor data as ground truth to compare the others' actual behavior to what they announced in their beacons. This comparison is feasible only for vehicles within the perception range of the host vehicle’s local sensors and is most effective for the direct predecessor and successor. Each criterion evaluation results in a value between 0 (worst) and 1 (best).
+
+\paragraph{Velocity:} The host vehicle calculates the reference velocity $v_\text{ref}$ based on the leader’s last reported velocity $v_L$, adjusted by the reported acceleration $a_L$ and the elapsed time $b_L$ since the last leader beacon:
+\begin{equation}
+    v_\text{ref} = v_L + b_L \cdot a_L.
+\end{equation}
+The velocity criterion is calculated as:
+\begin{equation}
+    v_{y,\text{ref}} = 
+    \begin{cases} 
+        \max\left(1 - \left|\frac{v_y - v_\text{ref}}{v_\text{ref}}\right|, 0\right), & \text{if } v_\text{ref} > 0, \\
+        \max\left(1 - |v_y|, 0\right), & \text{otherwise}.
+    \end{cases}
+\end{equation}
+
+\paragraph{Distance:} The host vehicle calculates the error between the measured distance $d$ from its sensors and the reported distance $d_{b,y}$ from the preceding vehicle:
+\begin{equation}
+    d_y = \max\left(1 - \left|d_{b,y} - d\right|, 0\right).
+\end{equation}
+
+\paragraph{Acceleration:} The relative velocity $v_\text{rel}$ is derived as the rate of change in distance $d$ over the sample interval $t_s$. The acceleration criterion is:
+\begin{equation}
+    a_y = \max\left(1 - \left|\frac{v_\text{rel}}{t_s} \cdot a_\text{diff}\right|, 0\right),
+\end{equation}
+where $a_\text{diff}$ is the difference between the received and measured acceleration.
+
+\paragraph{Jerkiness:} The absolute jerk $j_{y,\text{abs}}$ is evaluated, with penalties applied only if it exceeds a threshold $j_\text{thres}$:
+\begin{equation}
+    j_y = \min\left(\frac{j_\text{thres}}{j_{y,\text{abs}}}, 1\right).
+\end{equation}
+
+\paragraph{Beacon Delivery Timeout:} If a member vehicle $y$ fails to send a beacon within the expected timeout, the timeout factor $t_y$ is set to 0, otherwise it is set to 1.
+
+\subsection{Trust Samples}
+
+All criteria are combined into a single trust sample $t_y$:
+\begin{equation}
+    t_y = t_{o,y} \cdot v^{w_v}_{y,\text{ref}} \cdot d^{w_d}_y \cdot a^{w_a}_y \cdot j^{w_j}_y,
+\end{equation}
+where $w_v, w_d, w_a, w_j$ are the respective weights for the criteria.
+
+\subsection{Building Trust}
+
+Trust samples are aggregated over time using a Bayesian approach. The aggregated rating vector $R_y$ accumulates past outcomes as follows:
+\begin{equation}
+    R_{y,(t+1)} = (1 - \lambda_y) \cdot R_{y,t} + r_{xy},
+\end{equation}
+where $\lambda_y$ is an aging factor depending on the trust score $\sigma_y$:
+\begin{equation}
+    \lambda_y = \sigma_y \cdot w_t.
+\end{equation}
+
+The probability distribution vector $S_y$ is computed using an a priori distribution vector $a$:
+\begin{equation}
+    S_y(i) = \frac{R_y(i) + C \cdot a(i)}{C + \sum_{j=1}^k R_y(j)}.
+\end{equation}
+
+The trust score $\sigma_y$ is then calculated as:
+\begin{equation}
+    \sigma_y = \sum_{i=1}^k \frac{i-1}{k-1} \cdot S_y(i).
+\end{equation}
+
+\subsection{Misbehavior Mitigation}
+
+The trust score $\sigma_y$ is used to adjust the safety distance to the predecessor. If $\sigma_y < 0.2$, the host vehicle switches to ACC mode and increases the distance, detaching itself from the platoon.
+
+\section{Distributed Driving State Estimation Scheme}
+
+In this section, we develop a distributed driving state observer
+for a vehicle platoon and establish the conditions that guarantee
+the stability of its estimation error dynamics.
+
+\subsection{Distributed Observer Design}
+We begin by presenting an overview of our design. Based
+on the observability analysis of the platooning system, each
+vehicle $i \in V$ is able to estimate its own state $x_i(k)$ using
+a Luenberger observer and its local measurement $y_i(k)$. The
+estimate is denoted as $\bar{x}_i(k)$ and is updated by vehicle $i$ 
+locally. The estimate $\bar{x}_i(k)$ is then treated as an external signal
+to be tracked by all vehicles in the platoon using a leader–
+follower consensus technique. This allows each vehicle $i$ to
+construct an estimate of vehicle $j's$ state by tracking the signal
+$\bar{x}_j(k)$ generated by vehicle $j$ using its own local Luenberger
+observer for $\forall j \in V$. We represent the estimate of vehicle $j$
+as $\hat{x}_i^{(j)}(k)$ by vehicle $i \in V$. Finally, each vehicle $i$ develops
+an estimate of the true global driving state $x(k)$, denoted as
+$\hat{x}_i(k) = [(\hat{x}_i^{(1)}(k))^\top, \ldots, (\hat{x}_i^{(m)}(k))^\top]^\top$.
+This distributed state estimation procedure can be summarized as follows:
+\begin{equation}
+\begin{aligned}
+&\bar{x}_i(k+1)=\left\{\begin{array}{l}
+A \bar{x}_1(k)+B u_1(k)+F_1\left(y_1(k)-C_{1,1} \bar{x}_1(k)\right), i=1 \\
+A \bar{x}_i(k)+B u_i(k)+F_i\left(y_i(k)-\left(C_{i, i} \bar{x}_i(k)\right.\right. \\
+\left.\left.+C_{i, i-1} \hat{x}_i^{(i-1)}(k)\right)\right), i \in \mathrm{~V} /\{1\}
+\end{array}\right.\\
+&\begin{aligned}
+\hat{x}_i^{(j)}(k+1)= & A\left(\hat{x}_i^{(j)}(k)+\sum_{l \in \mathrm{~N}_i} w_{i l}^{(j)}\left(\hat{x}_l^{(j)}(k)-\hat{x}_i^{(j)}(k)\right)\right. \\
+& \left.+w_{i 0}^{(j)}\left(\bar{x}_j(k)-\hat{x}_i^{(j)}(k)\right)\right)+B u_j(k), i, j \in \mathrm{~V}
+\end{aligned}
+\end{aligned}
+\end{equation}
+
+% \begin{align}
+%     \bar{x}_i(k+1) &=
+%     \begin{cases}
+%         A\bar{x}_1(k) + B u_1(k) + F_1 (y_1(k) - C_{1,1} \bar{x}_1(k)), & i = 1 \\
+%         A\bar{x}_i(k) + B u_i(k) + F_i (y_i(k) - (C_{i,i} \bar{x}_i(k) + C_{i,i-1} \hat{x}_i^{(i-1)}(k))), & i \in V / \{1\}
+%     \end{cases} \tag{5a} \\
+%     \hat{x}_i^{(j)}(k+1) &= A (\hat{x}_i^{(j)}(k) + \sum_{l \in N_i} w_{il}^{(j)} (\hat{x}_l^{(j)}(k) - \hat{x}_i^{(j)}(k)) + w_{i0}^{(j)} (\bar{x}_j(k) - \hat{x}_i^{(j)}(k))) + B u_j(k), \quad i, j \in V \tag{5b}
+% \end{align}
+
+where $F_1$ and $F_i$ are the Luenberger observer gains, $w_{il}^{(j)}$ and
+$w_{i0}^{(j)}$ are nonnegative consensus weights related to the communication
+network $G$. These parameters will be determined by the
+following stability analysis of the estimation error dynamics of
+the proposed observer (5). Note that the information transmitted
+by each vehicle $i \in V$ through the communication network $G$ is
+its estimate of the global driving state of the platoon, i.e., $\hat{x}_i(k)$.
+
+\subsection{Stability Analysis of Estimation Error Dynamics}
+In this part, we explore the conditions that guarantee the stability of the
+estimation error dynamics of the proposed observer, as given in (5).
+
+\section{Weigth Design}
+
+
+\subsection{Choice of Weights}
+Although we are interested here in time-varying graphs, it is interesting to first consider the case when the communication graph is fixed, and we use a time-invariant weight matrix $W$. In this case, the following conditions are necessary and sufficient for the convergence
+
+\[
+1^\top W = 1^\top, \quad W1 = 1, \quad \rho(W - \frac{11^\top}{n}) < 1,
+\]
+
+where $\rho(\cdot)$ denotes the spectral radius of a matrix. The asymptotic convergence rate of the average consensus, defined as
+
+\[
+r_{\text{asym}}(W) = \sup_{x(0) \neq \hat{\theta}_{ML}1} \lim_{t \to \infty} \left(\frac{\|x(t) - \hat{\theta}_{ML}1\|}{\|x(0) - \hat{\theta}_{ML}1\|}\right)^{1/t},
+\]
+
+is precisely $\rho(W - 11^\top / n)$. In other words, it is the second-largest eigenvalue modulus of $W$. Moreover, for a fixed graph, we can find the symmetric weight matrix that has the smallest asymptotic convergence rate using semidefinite programming.
+
+In the time-varying case, we determine the weight matrix at each step as a function of the instantaneous communication graph. In particular, we focus on the following two simple rules for choosing the weights:
+
+\begin{itemize}
+    \item \textbf{Maximum-degree weights.} Here we use the constant weight $1/n$ on all the edges and choose the self-weights so that the sum of weights at each node is $1$:
+    \[
+    W_{ij}(t) = 
+    \begin{cases} 
+    \frac{1}{n} & \text{if } \{i, j\} \in E(t), \\
+    1 - \frac{d_i(t)}{n} & \text{if } i = j, \\
+    0 & \text{otherwise}.
+    \end{cases}
+    \]
+    \item \textbf{Metropolis weights.} The Metropolis weight matrix is defined as
+    \[
+    W_{ij}(t) = 
+    \begin{cases} 
+    \frac{1}{1 + \max\{d_i(t), d_j(t)\}} & \text{if } \{i, j\} \in E(t), \\
+    1 - \sum_{\{i, k\} \in E(t)} W_{ik}(t) & \text{if } i = j, \\
+    0 & \text{otherwise}.
+    \end{cases}
+    \]
+    \item \textbf{Test HUY.} The revised Equation 5b with trust-based weights is given by:
+    
+    \[
+    w_{i0}^{(j)} = \frac{T_{ij}}{T_{ij} + \sum_{l \in N_i} T_{il} \cdot \tau_{lj}},
+    \]
+    \[
+    w_{il}^{(j)} = \frac{T_{il} \cdot \tau_{lj}}{T_{ij} + \sum_{l' \in N_i} T_{il'} \cdot \tau_{l'j}}, \quad \forall l \in N_i.
+    \]
+
+\end{itemize}
+
+With Metropolis weights, the weight on each edge is one over one plus the larger degree at its two incident vertices, and the self-weights are chosen so the sum of weights at each node is $1$.
+
+\section{Simulation}
+
+\end{document}
+
+
+\bibliographystyle{IEEEtran}
+
+
+%=================
+\bibliography{biblio}
+%=================
+
+
+\end{document}

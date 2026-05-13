@@ -1,0 +1,288 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+\section{CACC}
+
+Below is a derivation of a general expression for the steady-state gap \( s_i \) (i.e.\ the spacing between vehicle \( i-1 \) and vehicle \( i \)) in an \(N\)-vehicle platoon using a cooperative formulation.
+
+In this cooperative model, each follower vehicle \( i \) (with \( i \ge 2 \)) ``observes'' all vehicles ahead (vehicles \( 1 \) through \( i-1 \)). For each leader \( j \) (with \( 1 \le j \le i-1 \)), the error term is defined as the difference between the actual cumulative spacing from vehicle \( j \) to vehicle \( i \) and the desired spacing. The desired cumulative spacing from vehicle \( j \) to vehicle \( i \) is assumed to be:
+\[
+\text{desired gap}_{ij} = (i-j) s_0 + T\,v,
+\]
+where  
+- \( s_0 \) is the minimum gap,  
+- \( T \) is the safe time headway, and  
+- \( v \) is the constant steady-state speed.
+
+Let the gap between vehicle \( k-1 \) and vehicle \( k \) be \( s_k \) (with \( k=2,\ldots,N \)). Then, the cumulative gap from vehicle \( j \) to vehicle \( i \) is:
+\[
+\sum_{k=j+1}^{i} s_k.
+\]
+
+In equilibrium, the cooperative controller is designed so that the average of these errors is zero:
+\[
+\frac{1}{i-1}\sum_{j=1}^{i-1}\left[\left(\sum_{k=j+1}^{i} s_k\right) - \Big((i-j)s_0 + T\,v\Big)\right] = 0.
+\]
+
+Let's illustrate for the first few vehicles and then deduce the general result.
+
+\subsection*{Vehicle 2}
+
+For vehicle 2 (the first follower), there is only one error term from the leader (vehicle 1):
+\[
+s_2 - \Big(s_0 + T\,v\Big) = 0.
+\]
+Thus,
+\[
+s_2 = s_0 + T\,v.
+\]
+
+\subsection*{Vehicle 3}
+
+Vehicle 3 ``sees'' vehicles 1 and 2. Its errors are:
+\begin{itemize}
+    \item \textbf{Relative to vehicle 1:}  
+    The cumulative gap is \( s_2 + s_3 \) and the desired gap is  
+    \[
+    2s_0 + T\,v.
+    \]
+    So the error is:
+    \[
+    E_{31} = (s_2+s_3) - \Big(2s_0 + T\,v\Big).
+    \]
+    \item \textbf{Relative to vehicle 2:}  
+    The gap is \( s_3 \) and the desired gap is
+    \[
+    s_0 + T\,v.
+    \]
+    So the error is:
+    \[
+    E_{32} = s_3 - \Big(s_0 + T\,v\Big).
+    \]
+\end{itemize}
+
+The average error is set to zero:
+\[
+\frac{E_{31} + E_{32}}{2} = \frac{(s_2+s_3 - (2s_0+T\,v)) + (s_3 - (s_0+T\,v))}{2} = 0.
+\]
+
+Multiply through by 2:
+\[
+s_2 + s_3 + s_3 - (2s_0+T\,v) - (s_0+T\,v) = 0,
+\]
+\[
+s_2 + 2 s_3 = 3s_0 + 2T\,v.
+\]
+
+Substitute \( s_2 = s_0+T\,v \):
+\[
+(s_0+T\,v) + 2 s_3 = 3s_0+2T\,v,
+\]
+\[
+2s_3 = 2s_0 + T\,v,
+\]
+\[
+s_3 = s_0 + \frac{T\,v}{2}.
+\]
+
+\subsection*{Vehicle 4}
+
+Vehicle 4 ``sees'' vehicles 1, 2, and 3. Its three error terms are:
+\begin{itemize}
+    \item \textbf{Relative to vehicle 1:}  
+    Cumulative gap: \( s_2+s_3+s_4 \)  
+    Desired: \( 3s_0+T\,v \)  
+    Error:  
+    \[
+    E_{41} = (s_2+s_3+s_4) - (3s_0+T\,v).
+    \]
+    \item \textbf{Relative to vehicle 2:}  
+    Cumulative gap: \( s_3+s_4 \)  
+    Desired: \( 2s_0+T\,v \)  
+    Error:
+    \[
+    E_{42} = (s_3+s_4) - (2s_0+T\,v).
+    \]
+    \item \textbf{Relative to vehicle 3:}  
+    Gap: \( s_4 \)  
+    Desired: \( s_0+T\,v \)  
+    Error:
+    \[
+    E_{43} = s_4 - (s_0+T\,v).
+    \]
+\end{itemize}
+
+Set the average error to zero:
+\[
+\frac{E_{41}+E_{42}+E_{43}}{3} = 0.
+\]
+
+That is,
+\[
+(s_2+s_3+s_4 - (3s_0+T\,v)) + (s_3+s_4 - (2s_0+T\,v)) + (s_4 - (s_0+T\,v)) = 0.
+\]
+
+Combine like terms:
+\[
+s_2 + 2 s_3 + 3 s_4 = 6s_0 + 3T\,v.
+\]
+
+Now substitute the previously found values:
+\[
+s_2 = s_0+T\,v, \quad s_3 = s_0+\frac{T\,v}{2},
+\]
+\[
+(s_0+T\,v) + 2\Big(s_0+\frac{T\,v}{2}\Big) + 3 s_4 = 6s_0+3T\,v.
+\]
+
+Simplify the left-hand side:
+\[
+s_0+T\,v + 2s_0+T\,v + 3s_4 = 3s_0 + 2T\,v + 3s_4.
+\]
+
+So,
+\[
+3s_0 + 2T\,v + 3s_4 = 6s_0 + 3T\,v,
+\]
+\[
+3s_4 = 3s_0 + T\,v,
+\]
+\[
+s_4 = s_0 + \frac{T\,v}{3}.
+\]
+
+\subsection*{Observing the Pattern}
+
+So far we have:
+\begin{itemize}
+    \item For \(i=2\):  
+    \[
+    s_2 = s_0 + \frac{T\,v}{1},
+    \]
+    \item For \(i=3\):  
+    \[
+    s_3 = s_0 + \frac{T\,v}{2},
+    \]
+    \item For \(i=4\):  
+    \[
+    s_4 = s_0 + \frac{T\,v}{3}.
+    \]
+\end{itemize}
+
+This pattern suggests that for a general follower vehicle \( i \) (with \( i \ge 2 \)), the steady-state gap is given by:
+\[
+\boxed{s_i = s_0 + \frac{T\,v}{\,i-1}\,.}
+\]
+
+\subsection*{Additional Note: Cumulative Gap}
+
+If one is interested in the cumulative gap \( S_i \) from the leader (vehicle 1) to vehicle \( i \), then
+\[
+S_i = \sum_{k=2}^{i} s_k = (i-1)s_0 + T\,v \sum_{j=1}^{i-1} \frac{1}{j}.
+\]
+This shows that the cumulative spacing grows with both the number of followers and the harmonic sum.
+
+\subsection*{Summary}
+
+The general steady-state spacing between vehicle \( i-1 \) and vehicle \( i \) in a cooperative platoon is:
+\[
+\boxed{s_i = s_0 + \frac{T\,v}{\,i-1}\,,\quad \text{for } i=2,\ldots,N\,.}
+\]
+
+This formula reflects that the influence of the time-headway term \( T\,v \) is divided among the \( i-1 \) vehicles observed by the \( i \)th vehicle.
+
+\section{CIDM}
+
+In the steady state of your CIDM, all vehicles are moving at the same constant speed \(v\) (so that the relative speed is zero) and the acceleration is zero. Under these conditions, the desired gap in the CIDM becomes
+
+\[
+s^* = s_0 + v\,T,
+\]
+
+since the additional term that depends on the relative speed vanishes. In your CIDM controller the control law is
+
+\[
+a = \alpha\left(1 - \left(\frac{v}{v_0}\right)^\delta - \left(\frac{s^*}{s_n}\right)^2\right),
+\]
+
+with \(s_n\) computed as a weighted sum of the gaps to each of the \(n\) cooperative vehicles ahead. At steady state (with \(a=0\)) we have
+
+\[
+1 - \left(\frac{v}{v_0}\right)^\delta - \left(\frac{s_0+v\,T}{s_n}\right)^2 = 0.
+\]
+
+Solving for \(s_n\) gives
+
+\[
+\frac{s_0+v\,T}{s_n} = \sqrt{1 - \left(\frac{v}{v_0}\right)^\delta}
+\quad\Longrightarrow\quad
+s_n = \frac{s_0+v\,T}{\sqrt{1 - \left(\frac{v}{v_0}\right)^\delta}}.
+\]
+
+In your implementation the ``combined'' gap \(s_n\) is obtained as a weighted sum over the distances to each of the \(n\) vehicles ahead. If we assume that the vehicles in the platoon are equally spaced by a uniform gap \(s\) (i.e. the immediate gap between consecutive vehicles is \(s\)), then the distance from the following vehicle to the \(j\)th vehicle ahead is
+
+\[
+s_j = j\,s,\quad \text{for } j=1,\ldots,n.
+\]
+
+If the fixed weights for the \(n\) vehicles are given by
+\[
+w_1,\,w_2,\,\dots,\,w_n,
+\]
+then the controller computes
+
+\[
+s_n = \sum_{j=1}^{n} w_j\, s_j = s \sum_{j=1}^{n} j\, w_j.
+\]
+
+Thus, equating the two expressions for \(s_n\) in steady state we obtain
+
+\[
+s \sum_{j=1}^{n} j\, w_j = \frac{s_0+v\,T}{\sqrt{1 - \left(\frac{v}{v_0}\right)^\delta}}.
+\]
+
+Solving for the immediate gap \(s\) (the steady-state gap between a follower and its immediate leader) gives
+
+\[
+\boxed{s = \frac{s_0+v\,T}{\sqrt{1 - \left(\frac{v}{v_0}\right)^\delta}\;\displaystyle\sum_{j=1}^{n} j\,w_j}\,}
+\]
+
+\subsection*{Summary of the Derivation}
+
+\begin{enumerate}
+    \item \textbf{Steady-State Desired Gap:}  
+    At equilibrium, with zero relative speed, the desired gap is  
+    \[
+    s^* = s_0 + v\,T.
+    \]
+    
+    \item \textbf{Zero Acceleration Condition:}  
+    With \(a=0\) in the CIDM, we have  
+    \[
+    1 - \left(\frac{v}{v_0}\right)^\delta - \left(\frac{s^*}{s_n}\right)^2 = 0,
+    \]
+    which implies  
+    \[
+    s_n = \frac{s_0+v\,T}{\sqrt{1 - \left(\frac{v}{v_0}\right)^\delta}}.
+    \]
+    
+    \item \textbf{Weighted Sum for Combined Gap:}  
+    Assuming uniform spacing \(s\) for each vehicle, the combined gap from the follower to the \(n\)th vehicle ahead is  
+    \[
+    s_n = s \sum_{j=1}^{n} j\,w_j.
+    \]
+    
+    \item \textbf{General Steady-State Gap Equation:}  
+    Equating these two expressions for \(s_n\) and solving for \(s\) yields the final result:
+    \[
+    s = \frac{s_0+v\,T}{\sqrt{1 - \left(\frac{v}{v_0}\right)^\delta}\;\displaystyle\sum_{j=1}^{n} j\,w_j}\,.
+    \]
+\end{enumerate}
+
+This equation gives the steady-state gap \(s\) between consecutive vehicles in the platoon when using your CIDM implementation with a cooperative weighted scheme over \(n\) vehicles ahead.
+
+
+
+\end{document}

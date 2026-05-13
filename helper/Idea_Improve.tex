@@ -1,0 +1,356 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{array}
+
+\title{Trust Model Formulations}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Handle Edge Cases}
+
+\subsection{Zero or Negative Velocity}
+\begin{itemize}
+    \item \textbf{Scenario}: Leader or reference velocity $v_{\text{ref}} \leq 0$.
+    \item \textbf{Formulation}:  
+    \begin{itemize}
+        \item If $v_{\text{ref}} \leq 0$ and leader acceleration $a_{\text{leader}} < 0$ (braking), but follower acceleration $a_y \geq 0$ (not braking):
+        \[
+        v_{\text{score\_final}} = 0
+        \]
+        \item Otherwise:
+        \[
+        v_{\text{score\_final}} = \max\left(1 - \left| \frac{a_y}{a_{\text{max}}} \right|, 0\right)
+        \]
+        where $a_{\text{max}}$ is the maximum plausible acceleration (e.g., 10 m/s²).
+    \end{itemize}
+\end{itemize}
+
+\subsection{Very Small or Negative Distances}
+\begin{itemize}
+    \item \textbf{Scenario}: Measured distance $d_{\text{measured}} \leq 0$ or $d_{\text{measured}} < d_{\text{critical}}$.
+    \item \textbf{Formulation}:
+    \begin{itemize}
+        \item If $d_{\text{measured}} \leq 0$:
+        \[
+        d_{\text{score}} = 0
+        \]
+        \item If $0 < d_{\text{measured}} < d_{\text{critical}}$:
+        \[
+        d_{\text{score}} = \max\left(1 - \frac{d_{\text{critical}} - d_{\text{measured}}}{d_{\text{critical}}}, 0\right)
+        \]
+        \item Else:
+        \[
+        d_{\text{score}} = \text{normal\_d\_score}(d_{\text{measured}})
+        \]
+        where $\text{normal\_d\_score}$ is the standard distance scoring function.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Extreme Accelerations}
+\begin{itemize}
+    \item \textbf{Scenario}: Reported acceleration $|a_y| > a_{\text{max}}$.
+    \item \textbf{Formulation}:
+    \[
+    a_{\text{score}} = 
+    \begin{cases} 
+    0 & \text{if } |a_y| > a_{\text{max}} \\
+    \text{normal\_a\_score}(a_y) & \text{otherwise}
+    \end{cases}
+    \]
+    where $\text{normal\_a\_score}$ is the standard acceleration scoring function.
+\end{itemize}
+
+\subsection{Beacon Loss}
+\begin{itemize}
+    \item \textbf{Scenario}: No beacons received for time $t$ since the last beacon.
+    \item \textbf{Formulation}:
+    \[
+    \text{beacon\_score} = e^{-\lambda t}
+    \]
+    where $\lambda$ is a decay rate (e.g., 0.1). If $t > t_{\text{max}}$ (e.g., 5 seconds):
+    \[
+    \text{beacon\_score} = 0
+    \]
+\end{itemize}
+
+\section{Safety-First Design}
+
+\subsection{Asymmetric Trust Adjustment}
+\begin{itemize}
+    \item \textbf{Concept}: Decrease trust quickly when it drops, increase it slowly when it rises.
+    \item \textbf{Formulation}:  
+    Let $\text{trust}_{\text{ext}}$ be the current trust, $\text{trust}_{\text{new}}$ the new trust sample, $\alpha_{\text{decrease}} = 0.5$, and $\alpha_{\text{increase}} = 0.1$:
+    \[
+    \text{trust}_{\text{ext}} = 
+    \begin{cases}
+    (1 - \alpha_{\text{decrease}}) \cdot \text{trust}_{\text{ext}} + \alpha_{\text{decrease}} \cdot \text{trust}_{\text{new}} & \text{if } \text{trust}_{\text{new}} < \text{trust}_{\text{ext}} \\
+    (1 - \alpha_{\text{increase}}) \cdot \text{trust}_{\text{ext}} + \alpha_{\text{increase}} \cdot \text{trust}_{\text{new}} & \text{otherwise}
+    \end{cases}
+    \]
+\end{itemize}
+
+\subsection{Critical Thresholds for Emergency Actions}
+\begin{itemize}
+    \item \textbf{Concept}: Trigger safety actions if trust falls too low.
+    \item \textbf{Formulation}:  
+    Let $\text{final\_score}$ be the overall trust score and $\tau_{\text{critical}} = 0.2$:
+    \[
+    \text{emergency\_action} = 
+    \begin{cases} 
+    1 & \text{if } \text{final\_score} < \tau_{\text{critical}} \\
+    0 & \text{otherwise}
+    \end{cases}
+    \]
+\end{itemize}
+
+\subsection{Conservative Trust Combination}
+\begin{itemize}
+    \item \textbf{Concept}: Combine local and global trust conservatively.
+    \item \textbf{Formulation}:  
+    Let $\text{trust}_{\text{sample}}$ be the sample trust, $\gamma_{\text{cross}}$ the cross-verified trust, and $\gamma_{\text{local}}$ the local trust:
+    \begin{itemize}
+        \item Using minimum:
+        \[
+        \text{trust}_{\text{ext}} = \min(\text{trust}_{\text{sample}}, \gamma_{\text{cross}} \cdot \gamma_{\text{local}})
+        \]
+        \item Using product:
+        \[
+        \text{trust}_{\text{ext}} = \text{trust}_{\text{sample}} \cdot (\gamma_{\text{cross}} \cdot \gamma_{\text{local}})
+        \]
+    \end{itemize}
+\end{itemize}
+
+\section{Monitor Sudden Changes}
+
+\subsection{Basic Change Detection for $\gamma_{\text{cross}}$}
+\begin{itemize}
+    \item \textbf{Approach}: Detect anomalies using a sliding window of size $w$ (e.g., 10).
+    \item \textbf{Formulation}:  
+    Let $\gamma_{\text{cross}}^{(t)}$ be the value at time $t$, and $\Gamma = [\gamma_{\text{cross}}^{(t-w+1)}, \dots, \gamma_{\text{cross}}^{(t)}]$:
+    \[
+    \mu_{\gamma} = \frac{1}{w} \sum_{i=1}^{w} \Gamma_i, \quad \sigma_{\gamma} = \sqrt{\frac{1}{w} \sum_{i=1}^{w} (\Gamma_i - \mu_{\gamma})^2}
+    \]
+    If $|\gamma_{\text{cross}}^{(t+1)} - \mu_{\gamma}| > 2 \sigma_{\gamma}$:
+    \[
+    \text{anomaly}_{\gamma}^{(t+1)} = 1
+    \]
+    Else:
+    \[
+    \text{anomaly}_{\gamma}^{(t+1)} = 0
+    \]
+\end{itemize}
+
+\subsection{Monitoring State Components (e.g., Position, Velocity)}
+\begin{itemize}
+    \item \textbf{Concept}: Check for sudden changes in differences between target and host states.
+    \item \textbf{Formulation}:  
+    For a state component $s$ (e.g., position $x$, velocity $v$):
+    \[
+    s_{\text{diff}}^{(t)} = s_{\text{target}}^{(t)} - s_{\text{host}}^{(t)}
+    \]
+    Using a sliding window $S = [s_{\text{diff}}^{(t-w+1)}, \dots, s_{\text{diff}}^{(t)}]$:
+    \[
+    \mu_s = \frac{1}{w} \sum_{i=1}^{w} S_i, \quad \sigma_s = \sqrt{\frac{1}{w} \sum_{i=1}^{w} (S_i - \mu_s)^2}
+    \]
+    If $|s_{\text{diff}}^{(t+1)} - \mu_s| > 2 \sigma_s$:
+    \[
+    \text{anomaly}_s^{(t+1)} = 1
+    \]
+    Else:
+    \[
+    \text{anomaly}_s^{(t+1)} = 0
+    \]
+\end{itemize}
+
+\section{Log Flags Separately}
+
+\begin{itemize}
+    \item \textbf{Concept}: Record anomalies without immediately altering trust.
+    \item \textbf{Formulation}:  
+    At each time step $t$:
+    \begin{itemize}
+        \item Store trust:
+        \[
+        \text{trust\_sample\_log}[t] = \text{trust}_{\text{ext}}^{(t)}
+        \]
+        \item Store anomaly flags:
+        \[
+        \text{anomaly\_flags}[t] = 
+        \begin{bmatrix}
+        \text{anomaly}_{\gamma}^{(t)} \\
+        \text{anomaly}_{\text{position}}^{(t)} \\
+        \text{anomaly}_{\text{velocity}}^{(t)} \\
+        \vdots
+        \end{bmatrix}
+        \]
+        \item Optional cumulative check:
+        \[
+        \text{anomaly\_count} = \sum_{i=t-w+1}^{t} \text{anomaly}_{\gamma}^{(i)}
+        \]
+        If $\text{anomaly\_count} > k$ (e.g., 3):
+        \[
+        \text{trust}_{\text{ext}}^{(t)} = \text{trust}_{\text{ext}}^{(t)} \cdot \beta
+        \]
+        where $\beta = 0.5$ reduces trust.
+    \end{itemize}
+\end{itemize}
+
+
+
+\section{Combining Local and Global Trust into a Single Trust Score}
+You want to combine local trust (based on direct observations like sensor data) and global trust (based on platoon-wide consistency) into one trust score for each vehicle. This makes sense because a single score simplifies the design of the observer gains and communication across the platoon. A straightforward way to do this is to multiply the two trust values:
+
+\[
+\text{trust}_{i \to j} = \text{trust}_{\text{local}, i \to j} \cdot \text{trust}_{\text{global}, i \to j}
+\]
+
+\begin{itemize}
+    \item \textbf{Why this works}: Multiplying ensures that if either local or global trust is low, the combined score reflects that distrust. For example, if a nearby vehicle has faulty sensors (low local trust) or doesn't align with the platoon's state (low global trust), its overall trust score will be low. This conservative approach prioritizes safety.
+    
+    \item \textbf{How it's used}: Each vehicle \( i \) calculates \( \text{trust}_{i \to j} \) for every vehicle \( j \) it observes and sends this to the host vehicle for aggregation.
+\end{itemize}
+
+\section{Logging Flags Separately Without Altering Trust Immediately}
+You also want to log flags for nearby vehicles separately, without letting them instantly change the trust score. This is a smart move because it gives you flexibility: you can monitor issues over time without overreacting to temporary glitches.
+
+\begin{itemize}
+    \item \textbf{What are flags?}: These are indicators of specific anomalies, like:
+    \begin{itemize}
+        \item \( \text{flag}_{\text{position}, j} \): Unusual position data.
+        \item \( \text{flag}_{\text{velocity}, j} \): Unexpected velocity changes.
+        \item \( \text{flag}_{\text{global}, j} \): Inconsistencies with platoon-wide trust.
+    \end{itemize}
+    
+    \item \textbf{How to log them}: In the host vehicle, maintain a log (e.g., a table or list) for nearby vehicles. For each time step, record any flags triggered by a vehicle \( j \) without modifying \( \text{trust}_{i \to j} \) right away.
+    
+    \item \textbf{Why this helps}: Logging flags separately lets you:
+    \begin{itemize}
+        \item Track patterns (e.g., a vehicle consistently showing position errors).
+        \item Avoid knee-jerk reactions to one-off issues (e.g., a single noisy measurement).
+    \end{itemize}
+\end{itemize}
+
+For example, your log might look like this over a few time steps for a nearby vehicle \( j \):
+
+\begin{center}
+    \begin{tabular}{cccc}
+        \toprule
+        Time Step & Position Flag & Velocity Flag & Global Flag \\
+        \midrule
+        1         & 0             & 0             & 0           \\
+        2         & 1             & 0             & 0           \\
+        3         & 1             & 1             & 0           \\
+        \bottomrule
+    \end{tabular}
+\end{center}
+
+Here, 1 means an anomaly was detected, and 0 means no issue.
+
+\section{Using Flags for Nearby Vehicles When Designing Observer Gains}
+When designing the observer gains (e.g., weights that determine how much you trust each vehicle's data), you want to check if the target vehicle \( j \) being estimated is nearby. If it is, you can use the logged flags to adjust or prioritize the trust score before aggregating it with trust from other vehicles.
+
+\subsection{General Observer Gain Design}
+First, let's define the basic weights without flags:
+\begin{itemize}
+    \item \textbf{Consensus weight \( w_{il}^{(j)} \)}: How much vehicle \( i \) trusts vehicle \( l \)'s estimate of vehicle \( j \)'s state:
+    \[
+    w_{il}^{(j)} = \frac{\text{trust}_{i \to l}}{\sum_{m \in N_i} \text{trust}_{i \to m}}
+    \]
+    This normalizes the trust across all neighbors \( N_i \).
+    
+    \item \textbf{Tracking weight \( w_{i0}^{(j)} \)}: How much vehicle \( i \) trusts its own measurement of \( j \):
+    \[
+    w_{i0}^{(j)} = \text{trust}_{i \to j}
+    \]
+\end{itemize}
+
+These weights use the combined trust score directly and are fine for distant vehicles.
+
+\subsection{Adjusting for Nearby Vehicles Using Flags}
+For nearby vehicles, you can add an extra layer of caution by using the flags. The idea is to penalize the trust score of a nearby vehicle if its log shows frequent anomalies, prioritizing safety since these vehicles are more critical (e.g., for collision avoidance).
+
+\begin{itemize}
+    \item \textbf{Step 1: Calculate an anomaly fraction}:
+    \begin{itemize}
+        \item For a nearby vehicle \( l \), look at the log over the last \( T \) time steps (e.g., \( T = 10 \)).
+        \item Count how often any flag (position, velocity, or global) was triggered.
+        \item Compute the fraction \( f_l \):
+        \[
+        f_l = \frac{\text{Number of time steps with any flag}}{\text{Total time steps } T}
+        \]
+        For example, if vehicle \( l \) had flags in 3 out of 10 steps, \( f_l = 0.3 \).
+    \end{itemize}
+    
+    \item \textbf{Step 2: Apply a penalty to the trust score}:
+    \begin{itemize}
+        \item Reduce the trust score based on \( f_l \):
+        \[
+        \text{trust}_{i \to l}^{\text{adjusted}} = \text{trust}_{i \to l} \cdot (1 - \alpha f_l)
+        \]
+        where \( \alpha \) is a tuning parameter (e.g., 0.5) that controls how much the flags lower the trust. If \( \alpha = 0.5 \) and \( f_l = 0.3 \):
+        \[
+        \text{trust}_{i \to l}^{\text{adjusted}} = \text{trust}_{i \to l} \cdot (1 - 0.5 \cdot 0.3) = \text{trust}_{i \to l} \cdot 0.85
+        \]
+    \end{itemize}
+    
+    \item \textbf{Step 3: Use the adjusted trust for nearby vehicles}:
+    \begin{itemize}
+        \item For a nearby vehicle \( l \), replace \( \text{trust}_{i \to l} \) with \( \text{trust}_{i \to l}^{\text{adjusted}} \) in the weight calculation:
+        \[
+        w_{il}^{(j)} = \frac{\text{trust}_{i \to l}^{\text{adjusted}}}{\sum_{m \in N_i} \text{trust}_{i \to m}^{\text{adjusted}}}
+        \]
+        \item This reduces the influence of a nearby vehicle with frequent anomalies.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Why This Prioritizes Nearby Vehicles}
+By checking if the target vehicle is nearby and adjusting its trust based on flags, you ensure that:
+\begin{itemize}
+    \item Vehicles with persistent issues (e.g., faulty sensors) have less influence on your estimate, protecting the host vehicle.
+    \item The adjustment only applies to nearby vehicles, where safety is most critical, while distant vehicles use the unadjusted trust score.
+\end{itemize}
+
+\section{Aggregating Trust Across the Platoon}
+After calculating trust scores (adjusted for nearby vehicles), the host vehicle aggregates them to get a platoon-wide trust for each vehicle \( j \):
+\[
+\text{trust}_{\text{agg}, j} = \frac{1}{m} \sum_{i=1}^{m} \text{trust}_{i \to j}
+\]
+where \( m \) is the number of vehicles reporting trust for \( j \). For nearby vehicles, the host uses the adjusted trust scores based on its own logs.
+
+\begin{itemize}
+    \item \textbf{Host's special role}: If \( j \) is nearby, the host can further tweak \( \text{trust}_{\text{agg}, j} \) using its own logged flags:
+    \[
+    \text{trust}_{\text{host}, j} = \text{trust}_{\text{agg}, j} \cdot (1 - \beta f_j^{\text{host}})
+    \]
+    where \( f_j^{\text{host}} \) is the anomaly fraction from the host's log, and \( \beta \) (e.g., 0.5) is a tuning parameter.
+\end{itemize}
+
+This ensures the host prioritizes its own observations for nearby vehicles while still considering the platoon's input.
+
+\section{Putting It All Together}
+Here's how it works in the host vehicle:
+\begin{enumerate}
+    \item \textbf{Compute combined trust}: For every vehicle \( j \), calculate \( \text{trust}_{i \to j} = \text{trust}_{\text{local}, i \to j} \cdot \text{trust}_{\text{global}, i \to j} \).
+    \item \textbf{Log flags}: For nearby vehicles, record anomalies in a log without changing the trust score immediately.
+    \item \textbf{Design gains}:
+    \begin{itemize}
+        \item For distant vehicles, use \( \text{trust}_{i \to j} \) directly to compute weights.
+        \item For nearby vehicles, check the log, compute \( f_l \), adjust the trust to \( \text{trust}_{i \to l}^{\text{adjusted}} \), and use that for weights.
+    \end{itemize}
+    \item \textbf{Aggregate trust}: Combine trust scores across the platoon, applying host-specific adjustments for nearby vehicles based on its own flags.
+\end{enumerate}
+
+\section{Why This Approach Makes Sense}
+\begin{itemize}
+    \item \textbf{Simplicity}: A single trust score keeps the observer design and communication straightforward.
+    \item \textbf{Safety}: Logging flags and adjusting trust for nearby vehicles ensures you're cautious where it matters most.
+    \item \textbf{Flexibility}: Flags don't alter trust instantly, so you can decide how to use them—whether for real-time tweaks or later analysis.
+\end{itemize}
+
+
+\end{document}

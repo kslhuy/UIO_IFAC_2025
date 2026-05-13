@@ -1,0 +1,346 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+
+
+\begin{document}
+
+\section*{Building Trust in the TriP Paper}
+
+Let me explain Section C, "Building Trust," from the TriP paper in a clear and straightforward way. This section describes how trust is calculated and updated over time for vehicles in a platoon, using a mathematical system called the Dirichlet Reputation System. It's a bit technical, but I'll break it down step by step so you can understand how it works.
+
+\subsection*{What's the Goal?}
+In a platoon (a group of vehicles driving closely together), each vehicle needs to trust the others to behave correctly—sending accurate data about their speed, position, etc. "Building Trust" explains how a vehicle takes individual "trust samples" (ratings of another vehicle's behavior during a single interaction) and combines them over time into a single trust score. This score helps the vehicle decide how much it can rely on the other vehicle.
+
+\subsection*{Step 1: Trust Samples}
+First, every time a vehicle (let's call it vehicle \(x\)) interacts with another vehicle (say, vehicle \(y\)), it calculates a \textbf{trust sample}, denoted \(t_y\). This is a number between 0 and 1:
+\begin{itemize}
+    \item \textbf{0} means "completely untrustworthy" (worst behavior).
+    \item \textbf{1} means "perfectly trustworthy" (best behavior).
+\end{itemize}
+
+The trust sample \(t_y\) comes from evaluating things like velocity, distance, or acceleration (these are detailed in earlier sections of the paper). For example, if \(y\) reports a speed that matches what \(x\) measures with its own sensors, \(t_y\) might be close to 1. If \(y\) sends nonsense data, \(t_y\) could drop toward 0.
+
+\subsection*{Step 2: Turning Trust Samples into Categories}
+The system uses \textbf{five trust levels} to describe trustworthiness:
+\begin{itemize}
+    \item \textbf{Untrustworthy} (lowest)
+    \item \textbf{Bad}
+    \item \textbf{Acceptable}
+    \item \textbf{Good}
+    \item \textbf{Excellent} (highest)
+\end{itemize}
+
+These levels are spread evenly across the range [0,1]. So, roughly:
+\begin{itemize}
+    \item 0.0--0.2 is untrustworthy
+    \item 0.2--0.4 is bad
+    \item 0.4--0.6 is acceptable
+    \item 0.6--0.8 is good
+    \item 0.8--1.0 is excellent
+\end{itemize}
+
+When vehicle \(x\) calculates \(t_y\) (say, \(t_y = 0.7\)), it maps this value to one of these levels. Here, 0.7 falls into the "good" category (0.6--0.8). This is turned into a \textbf{vector} called \(r_y\), which has 5 elements (one for each level):
+\[
+r_y = (0, 0, 0, 1, 0)
+\]
+The "1" is in the 4th spot (good), and all other spots are 0.
+
+This vector is like a snapshot saying, "Based on this interaction, I rate \(y\) as good."
+
+\subsection*{Step 3: Aggregating Trust Over Time}
+Since trust builds over many interactions, the system keeps track of all past ratings in a \textbf{rating vector}, \(R_y\). This vector also has 5 elements, one for each trust level, and it counts how often \(y\) has been rated in each category over time. For example:
+\[
+R_y = (2, 3, 5, 4, 1)
+\]
+This might mean \(y\) was untrustworthy 2 times, bad 3 times, acceptable 5 times, good 4 times, and excellent 1 time.
+
+But here's the twist: older ratings matter less than new ones. The system updates \(R_y\) with each new interaction using this formula:
+\[
+R_{y,(t+1)} = (1 - \lambda_y) \cdot R_{y,t} + r_y^t
+\]
+\begin{itemize}
+    \item \(R_{y,t}\) is the old rating vector (before the new interaction).
+    \item \(r_y^t\) is the new trust vector (like \( (0, 0, 0, 1, 0) \) from Step 2).
+    \item \(\lambda_y\) is an \textbf{aging factor} between 0 and 1, which controls how fast old ratings fade.
+\end{itemize}
+
+\subsubsection*{The Aging Factor (\(\lambda_y\))}
+The aging factor is clever:
+\[
+\lambda_y = \sigma_y \cdot w_t
+\]
+\begin{itemize}
+    \item \(\sigma_y\) is the current trust score (we'll calculate this later, between 0 and 1).
+    \item \(w_t\) is a constant (set to 0.85 in the paper).
+\end{itemize}
+
+Here's what it means:
+\begin{itemize}
+    \item If \(\sigma_y\) is high (e.g., 0.9), \(\lambda_y = 0.9 \cdot 0.85 = 0.765\). Then \(1 - \lambda_y = 0.235\), so the old \(R_{y,t}\) is scaled down a lot (to 23.5\% of its old value). New ratings (\(r_y^t\)) have a big impact.
+    \item If \(\sigma_y\) is low (e.g., 0.1), \(\lambda_y = 0.1 \cdot 0.85 = 0.085\). Then \(1 - \lambda_y = 0.915\), so the old \(R_{y,t}\) stays strong (91.5\% of its old value). New ratings have less impact.
+\end{itemize}
+
+This makes sense socially: if a vehicle is trusted (\(\sigma_y\) high), one bad move can quickly lower its trust. But if it's already untrusted (\(\sigma_y\) low), it takes longer to earn trust back.
+
+\subsection*{Step 4: Probability Distribution (\(S_y\))}
+Next, the system turns \(R_y\) into a \textbf{probability distribution vector}, \(S_y\), which shows the likelihood of each trust level. The formula is:
+\[
+S_y(i) = \frac{R_y(i) + C \cdot a(i)}{C + \sum_{j=1}^5 R_y(j)}
+\]
+\begin{itemize}
+    \item \(R_y(i)\) is the count for level \(i\) in the rating vector.
+    \item \(C = 0.2\) is a constant that adds some initial uncertainty.
+    \item \(a(i) = 0.2\) is the "prior belief" for each level (since there are 5 levels, 0.2 each makes it neutral at the start).
+    \item \(\sum_{j=1}^5 R_y(j)\) is the total number of past ratings.
+\end{itemize}
+
+For example, if \(R_y = (2, 3, 5, 4, 1)\):
+\begin{itemize}
+    \item Total ratings = \(2 + 3 + 5 + 4 + 1 = 15\).
+    \item For \(i = 1\) (untrustworthy): \( S_y(1) = \frac{2 + 0.2 \cdot 0.2}{0.2 + 15} = \frac{2 + 0.04}{15.2} = \frac{2.04}{15.2} \approx 0.134 \).
+    \item You'd calculate this for all 5 levels to get \(S_y = (0.134, 0.197, 0.329, 0.263, 0.076)\).
+\end{itemize}
+
+\(S_y\) adds up to 1 and shows the current "spread" of trust.
+
+\subsection*{Step 5: Final Trust Score (\(\sigma_y^x\))}
+Finally, \(x\) calculates a single trust score for \(y\), called \(\sigma_y^x\), by taking the "expected value" of \(S_y\):
+\[
+\sigma_y^x = \sum_{i=1}^5 \frac{i-1}{4} \cdot S_y(i)
+\]
+\begin{itemize}
+    \item \(k = 5\) (number of levels), so \(\frac{i-1}{k-1} = \frac{i-1}{4}\):
+    \begin{itemize}
+        \item \(i = 1\) (untrustworthy): \(\frac{0}{4} = 0\)
+        \item \(i = 2\) (bad): \(\frac{1}{4} = 0.25\)
+        \item \(i = 3\) (acceptable): \(\frac{2}{4} = 0.5\)
+        \item \(i = 4\) (good): \(\frac{3}{4} = 0.75\)
+        \item \(i = 5\) (excellent): \(\frac{4}{4} = 1\)
+    \end{itemize}
+\end{itemize}
+
+Using our example \(S_y = (0.134, 0.197, 0.329, 0.263, 0.076)\):
+\[
+\sigma_y^x = (0 \cdot 0.134) + (0.25 \cdot 0.197) + (0.5 \cdot 0.329) + (0.75 \cdot 0.263) + (1 \cdot 0.076)
+\]
+\[
+= 0 + 0.04925 + 0.1645 + 0.19725 + 0.076 = 0.487
+\]
+
+So, \(\sigma_y^x \approx 0.49\), which is close to "acceptable" (0.5). This is the trust score \(x\) assigns to \(y\).
+
+\subsection*{Why This Matters}
+The trust score \(\sigma_y^x\) helps \(x\) decide how to act:
+\begin{itemize}
+    \item High trust (e.g., > 0.8): Keep a tight spacing in the platoon.
+    \item Low trust (e.g., < 0.2): Increase distance or leave the platoon.
+\end{itemize}
+
+The system is designed so:
+\begin{itemize}
+    \item Vehicles lose trust fast if they misbehave (when \(\sigma_y\) is high, \(\lambda_y\) is high, and old good ratings fade quickly).
+    \item Vehicles with low trust take longer to recover (when \(\sigma_y\) is low, \(\lambda_y\) is low, and old bad ratings stick around).
+\end{itemize}
+
+\subsection*{Summary}
+"Building Trust" uses the Dirichlet Reputation System to:
+\begin{enumerate}
+    \item Rate each interaction as a trust sample (\(t_y\)).
+    \item Map it to one of five levels (untrustworthy to excellent) in a vector (\(r_y\)).
+    \item Aggregate these over time into \(R_y\), with an aging factor (\(\lambda_y\)) that forgets old ratings faster when trust is high.
+    \item Turn \(R_y\) into a probability distribution (\(S_y\)).
+    \item Calculate a final trust score (\(\sigma_y^x\)) as a weighted average.
+\end{enumerate}
+
+This gives a dynamic, fair way to track trust in a platoon, balancing history with recent behavior. I hope that clears it up! Let me know if you have more questions.
+
+
+
+To explain why the trust score \(\sigma_y\) in Equation 12 is calculated the way it is, let’s dive into the details step by step. Equation 12, as presented in the document, is:
+
+\[
+\sigma_y^x = \sum_{i=1}^k \frac{i-1}{k-1} \cdot S(i)_y
+\]
+
+Here, \(\sigma_y^x\) represents the trust score that vehicle \(x\) assigns to vehicle \(y\), \(k\) is the number of trust rating levels, and \(S_y = (S_y(1), S_y(2), \ldots, S_y(k))\) is a probability distribution vector reflecting the current trust rating for vehicle \(y\). The goal is to understand why this formula is structured this way and what it achieves in the context of the TriP trust model for dynamic platoons.
+
+\section*{Step 1: Understanding the Components}
+First, let’s break down the elements of the formula:
+
+\begin{itemize}
+    \item \(\mathbf{k}\): This is the number of trust rating levels. The document specifies \(k = 5\), with levels labeled as untrustworthy, bad, acceptable, good, and excellent. These levels are described as mutually exclusive, equidistant, and ascending within the interval \([0, 1]\).
+
+    \item \(\mathbf{S_y(i)}\): This is the probability that vehicle \(y\)’s trust corresponds to the \(i\)-th trust level. It comes from the Dirichlet Reputation System, where \(S_y(i)\) is calculated as:
+
+    \[
+    S_y(i) = \frac{R_y(i) + C \cdot a(i)}{C + \sum_{j=1}^k R_y(j)}
+    \]
+
+    Here, \(R_y(i)\) is the accumulated evidence for the \(i\)-th trust level based on past interactions, \(a(i)\) is a prior belief (e.g., 0.2 for each level if no prior is known), and \(C\) is a constant weighting the prior’s influence. Since \(\sum_{i=1}^k S_y(i) = 1\), \(S_y\) behaves like a probability distribution.
+
+    \item \(\mathbf{\frac{i-1}{k-1}}\): This term assigns a numerical value to each trust level. For \(k = 5\):
+    \begin{align*}
+        i = 1&: \frac{1-1}{5-1} = \frac{0}{4} = 0 \text{ (untrustworthy)} \\
+        i = 2&: \frac{2-1}{5-1} = \frac{1}{4} = 0.25 \text{ (bad)} \\
+        i = 3&: \frac{3-1}{5-1} = \frac{2}{4} = 0.5 \text{ (acceptable)} \\
+        i = 4&: \frac{4-1}{5-1} = \frac{3}{4} = 0.75 \text{ (good)} \\
+        i = 5&: \frac{5-1}{5-1} = \frac{4}{4} = 1 \text{ (excellent)}
+    \end{align*}
+
+    These values (0, 0.25, 0.5, 0.75, 1) are evenly spaced between 0 and 1, aligning with the idea of equidistant trust levels in \([0, 1]\).
+\end{itemize}
+
+\section*{Step 2: Interpreting the Formula}
+The formula \(\sigma_y^x = \sum_{i=1}^k \frac{i-1}{k-1} \cdot S_y(i)\) looks familiar if you’ve encountered probability theory. It’s the \textbf{expected value} of a discrete random variable. Here’s why:
+
+\begin{itemize}
+    \item Imagine the trust level of vehicle \(y\) as a random variable that can take values \(\frac{i-1}{k-1}\) (e.g., 0, 0.25, 0.5, 0.75, 1 for \(k = 5\)).
+    \item The probability of each value is given by \(S_y(i)\).
+    \item The expected value is then:
+
+    \[
+    E[\text{Trust Level}] = \sum (\text{Value}) \cdot (\text{Probability}) = \sum_{i=1}^k \frac{i-1}{k-1} \cdot S_y(i)
+    \]
+
+    This is exactly Equation 12! So, \(\sigma_y^x\) is the expected trust level of vehicle \(y\) based on the probability distribution \(S_y\).
+\end{itemize}
+
+\section*{Step 3: Why Use the Expected Value?}
+Now, why choose this approach? In the TriP model, trust is built from multiple interactions, evaluated through criteria like velocity, distance, and acceleration, and aggregated into \(S_y\) via the Dirichlet Reputation System. The system produces a distribution over five trust levels, but for practical use—say, adjusting the safety distance to vehicle \(y\)—a single, interpretable number is needed. The expected value serves this purpose perfectly:
+
+\begin{itemize}
+    \item \textbf{Summarizes the Distribution}: It combines the probabilities \(S_y(i)\) with their corresponding trust levels into one score between 0 and 1.
+    \item \textbf{Reflects Evidence}: If most evidence (high \(S_y(i)\)) points to “excellent” (\(i = 5\)), \(\sigma_y^x\) will be close to 1. If it points to “untrustworthy” (\(i = 1\)), it’s close to 0.
+    \item \textbf{Handles Uncertainty}: When trust is uncertain (e.g., \(S_y = (0.2, 0.2, 0.2, 0.2, 0.2)\)), the score balances out to 0.5, indicating average trust.
+\end{itemize}
+
+\subsection*{Examples}
+Let’s test this intuition:
+\begin{itemize}
+    \item \textbf{All Excellent}: \(S_y = (0, 0, 0, 0, 1)\)
+    \[
+    \sigma_y^x = 0 \cdot 0 + 0.25 \cdot 0 + 0.5 \cdot 0 + 0.75 \cdot 0 + 1 \cdot 1 = 1
+    \]
+    Perfect trust, as expected.
+
+    \item \textbf{All Untrustworthy}: \(S_y = (1, 0, 0, 0, 0)\)
+    \[
+    \sigma_y^x = 0 \cdot 1 + 0.25 \cdot 0 + 0.5 \cdot 0 + 0.75 \cdot 0 + 1 \cdot 0 = 0
+    \]
+    No trust, makes sense.
+
+    \item \textbf{Even Distribution}: \(S_y = (0.2, 0.2, 0.2, 0.2, 0.2)\)
+    \[
+    \sigma_y^x = 0 \cdot 0.2 + 0.25 \cdot 0.2 + 0.5 \cdot 0.2 + 0.75 \cdot 0.2 + 1 \cdot 0.2 = 0 + 0.05 + 0.1 + 0.15 + 0.2 = 0.5
+    \]
+    Middle ground, reflecting uncertainty.
+\end{itemize}
+
+\section*{Step 4: Practical Justification}
+In the context of platooning:
+\begin{itemize}
+    \item \textbf{Range}: Since \(\frac{i-1}{k-1}\) ranges from 0 to 1 and \(S_y(i)\) are probabilities summing to 1, \(\sigma_y^x\) stays in \([0, 1]\), making it easy to interpret and use (e.g., for setting safety distances).
+    \item \textbf{Standard Approach}: Expected value is a widely accepted method in trust and reputation systems to summarize probabilistic assessments into a actionable scalar.
+    \item \textbf{Safety}: A single score allows quick decisions, like increasing distance if \(\sigma_y^x\) drops below a threshold (e.g., 0.2), enhancing safety in dynamic platoons.
+\end{itemize}
+
+\section*{Conclusion}
+The trust score \(\sigma_y\) in Equation 12 is calculated as a weighted sum because it represents the \textbf{expected value} of vehicle \(y\)’s trust level, based on a probability distribution over \(k\) equidistant levels. This method effectively condenses complex trust evidence into a single, meaningful number between 0 and 1, balancing past interactions and prior beliefs. It’s a logical choice for the TriP model, enabling vehicles to assess and react to the trustworthiness of platoon members efficiently and safely.
+
+
+
+To address your request for a more general equation for trust propagation in a weighted directed graph, let’s carefully consider the context you’ve provided: a graph where nodes represent vehicles, directed edges represent trust relationships with weights (trust scores between 0 and 1), and the graph is strongly connected, meaning there exists a directed path between any pair of nodes (e.g., from \( v_1 \) to \( v_2 \) via intermediates like \( v_{1.3} \) and \( v_{3.2} \)). Your goal is to compute the trust from a starting node \( i \) to an ending node \( j \), potentially over multiple hops, generalizing beyond the one-hop equation you provided.
+
+### Understanding Your Current Model
+Your current equation for trust propagation is:
+
+\[ \mathcal{O}_i(j) = \sum_{k \in K_j} w_{ik} \cdot T_k(j) \]
+
+with weights defined as:
+
+\[ w_{ik} = \frac{t_i^k}{|K_j|} \]
+
+where:
+- \( N_i \): the set of out-neighbors of vehicle \( i \) (nodes \( k \) such that there is a direct edge from \( i \) to \( k \)).
+- \( K_j \): the set of neighbors \( k \) of \( i \) that provide information about \( j \) (in your context, often \( K_j = N_i \), assuming all neighbors contribute).
+- \( t_i^k \): the direct trust score that vehicle \( i \) assigns to vehicle \( k \) (the weight of the edge \( i \to k \)).
+- \( T_k(j) \) or \( t_k^{(j)} \): the trust that neighbor \( k \) has in vehicle \( j \), which could be direct or itself propagated.
+- \( |K_j| \): the number of elements in \( K_j \), used for normalization.
+
+You also stated that “the combined trust \( i \) has in \( k \)’s estimate of \( j \) is \( t_i^{(j)} = t_i^{(k)} \cdot t_k^{(j)} \),” but your equation averages these over all \( k \in K_j \):
+
+\[ \mathcal{O}_i(j) = \frac{1}{|K_j|} \sum_{k \in K_j} t_i^{(k)} \cdot t_k^{(j)} \]
+
+This formulation assumes trust propagates through one hop: \( i \) trusts \( k \), and \( k \) trusts \( j \), with the result normalized by the number of neighbors. However, since you mentioned multi-hop paths (e.g., \( v_1 \to v_{1.3} \to v_{3.2} \to v_2 \)), your current model doesn’t fully capture trust propagation over multiple hops, which is likely why you find it insufficiently general.
+
+### Requirements for a General Equation
+A more general trust propagation model should:
+1. **Incorporate Paths**: Account for trust along all possible directed paths from \( i \) to \( j \), not just one-hop neighbors.
+2. **Handle Multi-Hop Propagation**: Recursively or iteratively propagate trust through intermediaries.
+3. **Respect Trust Semantics**: Since trust scores are between 0 and 1, propagation should combine them (e.g., via multiplication or weighted aggregation) in a way that keeps the result interpretable.
+4. **Normalize Appropriately**: Ensure the trust value remains meaningful (e.g., between 0 and 1) despite multiple contributors.
+5. **Work with the Graph’s Structure**: Leverage the strong connectivity and weighted edges.
+
+Given the image’s matrix \( V_3 \) and your description, the trust values (e.g., 0.8, 0.9) are direct edge weights, and the equation suggests a recursive process where \( T_k(j) \) might itself depend on \( k \)’s neighbors. Let’s build a general model.
+
+### General Trust Propagation Equation
+To generalize trust propagation, we define the overall trust \( \mathcal{O}_i(j) \) from vehicle \( i \) to vehicle \( j \) recursively, considering both direct and indirect trust:
+
+- **Direct Trust**: If there is a direct edge from \( i \) to \( j \), the baseline trust is the edge weight \( t_{ij} \).
+- **Indirect Trust**: For cases where \( j \) is not a direct neighbor (or to enhance direct trust), \( i \) aggregates trust through its neighbors \( k \), weighted by how much \( i \) trusts each \( k \).
+
+Here’s the proposed general equation:
+
+\[ \mathcal{O}_i(j) = \begin{cases} 
+t_{ij} & \text{if there is a direct edge from } i \text{ to } j \\
+\sum_{k \in N_i} w_{ik} \cdot \mathcal{O}_k(j) & \text{if no direct edge exists from } i \text{ to } j
+\end{cases} \]
+
+with weights:
+
+\[ w_{ik} = \frac{t_i^{(k)}}{\sum_{m \in N_i} t_i^{(m)}} \]
+
+where:
+- \( t_{ij} \): the direct trust from \( i \) to \( j \) (the weight of edge \( i \to j \)), or 0 if no edge exists.
+- \( N_i \): the set of out-neighbors of \( i \).
+- \( t_i^{(k)} \): the direct trust from \( i \) to \( k \) (synonymous with \( t_{ik} \)).
+- \( \mathcal{O}_k(j) \): the overall trust from \( k \) to \( j \), computed similarly.
+- \( w_{ik} \): the normalized weight reflecting \( i \)’s trust in \( k \) relative to all its neighbors.
+
+#### Why This Is More General
+1. **Recursive Nature**: \( \mathcal{O}_i(j) \) depends on \( \mathcal{O}_k(j) \), which allows trust to propagate through multiple hops. For example, if \( i \to k \to m \to j \) is a path, the trust propagates as \( t_{ik} \cdot t_{km} \cdot t_{mj} \) through the weights and recursion.
+2. **Path Consideration**: Since the graph is strongly connected, every \( j \) is reachable from \( i \), and this model captures all paths by recursively consulting neighbors.
+3. **Normalization**: The weights \( w_{ik} \) sum to 1 (\( \sum_{k \in N_i} w_{ik} = 1 \)), ensuring \( \mathcal{O}_i(j) \) remains between 0 and 1 if all trust values are.
+4. **Flexibility**: It extends your one-hop model by making \( T_k(j) \) (now \( \mathcal{O}_k(j) \)) a propagated value, not just a direct trust.
+
+#### Handling Direct and Indirect Trust
+You might wonder why the direct trust \( t_{ij} \) is used only when there’s an edge, excluding indirect paths. In some trust models, even when \( i \) directly trusts \( j \), indirect paths can adjust the trust. An alternative formulation could be:
+
+\[ \mathcal{O}_i(j) = \alpha t_{ij} + (1 - \alpha) \sum_{k \in N_i} w_{ik} \cdot \mathcal{O}_k(j) \]
+
+where \( t_{ij} = 0 \) if no edge exists, and \( \alpha \) (0 ≤ \( \alpha \) ≤ 1) balances direct and indirect trust. However, your original model focuses on neighbors for non-direct cases, so the simpler recursive definition aligns better with your intent.
+
+### Computation and Cycles
+Since the graph is strongly connected, cycles exist (e.g., \( i \to k \to i \)), making \( \mathcal{O}_i(j) \) a fixed-point solution to a system of equations. For \( n \) vehicles, define the trust vector for \( j \), \( \mathbf{O}^{(j)} = [\mathcal{O}_1(j), \ldots, \mathcal{O}_n(j)]^T \). The equations form:
+
+\[ \mathcal{O}_i(j) = \sum_{k \in N_i} w_{ik} \cdot \mathcal{O}_k(j) \text{ (if no direct edge), or } t_{ij} \text{ (if direct)} \]
+
+In practice, you’d:
+1. Initialize \( \mathcal{O}_i(j) = t_{ij} \) for direct edges, 0 otherwise.
+2. Iteratively update \( \mathcal{O}_i(j) \) for non-direct cases until convergence.
+
+### Example
+Consider a path \( v_1 \to v_2 \to v_3 \):
+- \( t_{12} = 0.9 \), \( t_{23} = 0.8 \).
+- \( N_1 = \{v_2\} \), so \( w_{12} = 1 \).
+- \( \mathcal{O}_3(3) = 1 \) (self-trust).
+- \( \mathcal{O}_2(3) = t_{23} = 0.8 \).
+- \( \mathcal{O}_1(3) = w_{12} \cdot \mathcal{O}_2(3) = 1 \cdot 0.8 = 0.8 \).
+
+For multiple paths, the recursion aggregates contributions naturally.
+
+### Conclusion
+This recursive equation generalizes your model by propagating trust over all paths, using a weighted aggregation that respects the graph’s structure and trust semantics. It’s computable via iteration and aligns with your goal of path-based trust calculation.
+\end{document}

@@ -1,0 +1,152 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\title{Heading Check Using Position Reports and Radar Azimuth}
+\author{Your Name}
+\date{\today}
+
+\begin{document}
+
+Certainly! Below is the mathematical formulation of the function `evaluate_acceleration`, with variables and logic directly mapped from the code.
+
+---
+
+### **Notation** (based on input variables and internal calculations):
+
+Let:
+
+* $d_k$: current distance between `host` and `target` (i.e., $d(1)$)
+* $\text{buffer} = [d_k, d_{k-1}, \dots, d_{k-N+1}]$: distance buffer of length $N = \text{self.buffer_size}$
+* $T_s$: sampling time
+* $a_{\text{host}}$: acceleration of the host
+* $a_y$: measured or estimated acceleration of the target
+* $\text{ID}_{\text{host}}$, $\text{ID}_{\text{target}}$: indices of host and target vehicles
+* $d_{\text{norm}} = 17$: normalization constant
+* $\text{is\_nearby}$: binary flag (true or false)
+* $\omega_{\text{nearby}}, \omega$: exponents for scoring depending on proximity (i.e., `self.wa_nearby` and `self.wa`)
+
+---
+
+### **Step-by-Step Mathematical Equations**
+
+#### 1. **Compute relative velocity estimate**
+
+If the buffer is fully initialized:
+
+$$
+v_{\text{rel}} = \frac{d_{k-N+1} - d_k}{(N - 1) T_s}
+$$
+
+$$
+v_{\text{rel}}^{-1} = \frac{d_{k-N+2} - d_{k-1}}{(N - 1) T_s}
+$$
+
+#### 2. **Estimate relative acceleration**
+
+$$
+a_{\text{rel,expected}} = \frac{v_{\text{rel}} - v_{\text{rel}}^{-1}}{(N - 1) T_s}
+$$
+
+If buffer is not filled, then approximate:
+
+$$
+v_{\text{rel}} = \frac{d_2 - d_1}{T_s}, \quad a_{\text{rel,expected}} = 0
+$$
+
+---
+
+#### 3. **Compute actual relative acceleration**
+
+$$
+a_{\text{rel,actual}} = a_y - a_{\text{host}}
+$$
+
+---
+
+#### 4. **Compute difference in relative acceleration**
+
+$$
+\Delta a = a_{\text{rel,expected}} - a_{\text{rel,actual}}
+$$
+
+---
+
+#### 5. **Define regulation constant $C$ and distance adjustment $d_{\text{add}}$:**
+
+* If not nearby:
+
+$$
+d_{\text{add}} = \frac{d_{\text{norm}} \cdot |\text{ID}_{\text{target}} - \text{ID}_{\text{host}}|}{d_k}
+$$
+
+* If nearby:
+
+  * If $\text{ID}_{\text{target}} > 1$:
+
+    * Let:
+
+      $$
+      \text{SignMismatch} = \begin{cases}
+      0 & \text{if } \text{sign}(a_{\text{host}}) = \text{sign}(a_{\text{rel,actual}}) \\
+      1 & \text{otherwise}
+      \end{cases}
+      $$
+    * Then:
+
+      $$
+      C = \begin{cases}
+      0.8 & \text{if SignMismatch} = 0 \\
+      0.85 & \text{if SignMismatch} = 1
+      \end{cases}
+      $$
+
+    $$
+    d_{\text{add}} = \frac{d_{\text{norm}} \cdot C}{d_k}
+    $$
+
+  * Else (i.e., $\text{ID}_{\text{target}} \leq 1$):
+
+    $$
+    d_{\text{add}} = \frac{d_{\text{norm}} \cdot C}{d_k} \quad \text{(with default } C = 1 \text{)}
+    $$
+
+---
+
+#### 6. **Compute score**
+
+$$
+a_{\text{score}} = \max \left(1 - \left| d_{\text{add}} \cdot \Delta a \right|, \; 0 \right)
+$$
+
+---
+
+#### 7. **Apply proximity-based weighting**
+
+$$
+a_{\text{score}} =
+\begin{cases}
+\left(a_{\text{score}}\right)^{\omega_{\text{nearby}}} & \text{if is\_nearby} = \text{True} \\
+\left(a_{\text{score}}\right)^{\omega} & \text{if is\_nearby} = \text{False}
+\end{cases}
+$$
+
+---
+
+### ✅ Final Formula Summary:
+
+$$
+a_{\text{score}} = \left[ \max \left(1 - \left| \frac{d_{\text{scale}}}{d_k} \cdot \left( \frac{v_{\text{rel}} - v_{\text{rel}}^{-1}}{(N - 1) T_s} - (a_y - a_{\text{host}}) \right) \right|, 0 \right) \right]^{\omega_{\text{nearby/normal}}}
+$$
+
+Where:
+
+* $d_{\text{scale}} = d_{\text{norm}} \cdot C$
+* $\omega_{\text{nearby/normal}} = \omega_{\text{nearby}}$ if `is_nearby` else $\omega$
+
+---
+
+Let me know if you'd like this equation rewritten in LaTeX or included in a document.
+\end{document}

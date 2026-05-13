@@ -1,0 +1,282 @@
+%===============================================================================
+% IFAC conference paper
+%===============================================================================
+\documentclass{ifacconf}
+
+\usepackage{graphicx}
+\usepackage{natbib}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{bm}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage[normalem]{ulem}
+\graphicspath{{../}{../img/}{img/}}
+
+\newtheorem{prb}{\it Problem}
+\newtheorem{theorem}{\it \textbf{Theorem}}
+\newtheorem{proposition}{\it \textbf{Proposition}}
+\newtheorem{lemma}{\it \textbf{Lemma}}
+\newtheorem{definition}{\it \textbf{Definition}}
+\newtheorem{remark}{\it \textbf{Remark}}
+\newtheorem{assumption}{\it \textbf{Assumption}}
+\newtheorem{example}{\it \textbf{Example}}
+
+\def\rank{\mathop{{\rm rank}}}
+\def\diag#1{\mathop{{\rm diag}\,\left(\,#1\,\right)}}
+\def\nn{\mathrm{NN}}
+\def\uio{\mathrm{UIO}}
+\def\refx{\mathrm{ref}}
+\def\Lo{L}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+%===============================================================================
+\begin{document}
+\begin{frontmatter}
+
+\title{Learning with Unknown Input Observers for Robust Nonlinear Estimation}
+
+\thanks[footnoteinfo]{This work was supported by SEGULA Engineering.}
+
+\author[First]{Q.H. Nguyen}
+\author[First]{A. Zemouche}
+\author[First]{H. Rafaralahy}
+\author[Second]{M. Haddad}
+
+\address[First]{Universit\'e de Lorraine, CNRS, CRAN, F-57000 Metz (e-mail: quang-huy.nguyen@univ-lorraine.fr).}
+\address[Second]{SEGULA Engineering, 19 rue d'Arras, 92000 Nanterre, France (e-mail: madjid.haddad@segula.fr)}
+
+\begin{abstract}
+This paper proposes a hybrid estimator for nonlinear systems affected by unknown dynamics. A regularized unknown input observer (UIO) first provides physics-consistent estimates of the state and unknown input, even when the standard rank condition is not directly satisfied. These estimates then supervise an online neural correction, yielding a teacher--student architecture that combines robustness and adaptability. The method is specialized to vehicle state estimation by separating tire-force residuals from remaining modeling errors. Compact LMI conditions certify the observer gains, while the vehicle case study shows how the UIO-generated labels are used for residual learning.
+\end{abstract}
+
+\begin{keyword}
+Robust estimation; Unknown input observer; Model learning; Neural network; Vehicle dynamics.
+\end{keyword}
+
+\end{frontmatter}
+
+\section{Introduction}\label{sec_introduction}
+
+Reliable vehicle state estimation is difficult when the available sensors do not reveal all the forces acting on the vehicle. Tire-road friction changes, load transfer, biases, delays, and discretization errors can all enter the dynamics as unknown inputs. Physics-based observers give useful robustness guarantees, but classical unknown input observers require structural rank conditions that are often too restrictive for practical sensing configurations \citep{Hou:256351,Trinh:TAC08,Phanomchoeng:ASME/TM14}. Data-driven estimators can learn nonlinear mismatch, yet pure learning approaches provide limited guarantees during online adaptation \citep{2006Apdat,HO_GP}.
+
+This paper combines both viewpoints. The first layer is a generalized UIO that reconstructs the state and an unknown input estimate. When the standard condition $\rank(CB)=\rank(B)$ is not available, the model is regularized so that the residual effect is explicitly bounded. The second layer is a neural observer trained by the UIO estimate rather than by an unavailable ground truth disturbance. The chapter result in \texttt{ch4\_main\_copy.tex} is merged here as a compact vehicle case study: the UIO teacher estimates tire-only residual forces, while the neural student learns the remaining mismatch from teacher-generated correction labels.
+
+The contribution is threefold: (i) a regularized continuous-time UIO design with an $\mathcal H^1$ error bound; (ii) a UIO-supervised neural residual learner with an $\mathcal L_2$ observer design condition; and (iii) a vehicle implementation that separates tire residual reconstruction from data-driven correction.
+
+\section{Regularized UIO Design}\label{sec_uio}
+
+Consider the nonlinear system
+\begin{equation}\label{sys_1}
+    \dot{x}=\varphi(x,u)+B\mu_x,\qquad y=Cx,
+\end{equation}
+where $x\in\mathbb R^{n_x}$, $u\in\mathbb R^{n_u}$, $y\in\mathbb R^{n_y}$, and $\mu_x\in\mathbb R^{n_\mu}$ is an unknown nonlinear term collecting unmodeled dynamics and disturbances. The matrices $B$ and $C$ are known. We assume that $n_\mu\le n_y$, that $\varphi(\cdot,u)$ is Lipschitz on the operating set, and that $\mu_x$ is $\mathcal L_2$-bounded.
+
+Direct unknown-input reconstruction usually requires
+\begin{equation}\label{rank}
+    \rank(CB)=\rank(B).
+\end{equation}
+To avoid losing feasibility when \eqref{rank} fails, we use the regularized descriptor representation
+\begin{equation}\label{ali_syst1}
+\begin{array}{l}
+    \dot{x}+E_{\delta_1}\dot{\mu}_x=\varphi(x,u)+B\mu_x+E\omega_{\delta_1},\\
+    y=Cx+D_{\delta_2}\mu_x+D\omega_{\delta_2},
+\end{array}
+\end{equation}
+where $E_{\delta_1}=\delta_1E$, $D_{\delta_2}=\delta_2D$, $\omega_{\delta_1}=\delta_1\dot{\mu}_x$, and $\omega_{\delta_2}=\delta_2\mu_x$. The matrices $E$ and $D$ are selected so that, with
+\begin{equation}\label{compact_descriptor}
+\begin{gathered}
+    \zeta=\begin{bmatrix}x\\ \mu_x\end{bmatrix},\quad
+    \mathbb E=\begin{bmatrix}I_{n_x}&E_{\delta_1}\end{bmatrix},\quad
+    \mathcal H=\begin{bmatrix}C&D_{\delta_2}\end{bmatrix},\\
+    \bar E=\begin{bmatrix}E&0\end{bmatrix},\quad
+    \bar D=\begin{bmatrix}0&D\end{bmatrix},\quad
+    \bm\omega_\delta=\begin{bmatrix}\omega_{\delta_1}\\ \omega_{\delta_2}\end{bmatrix},
+\end{gathered}
+\end{equation}
+the rank condition $\rank([\mathbb E^\top\ \mathcal H^\top]^\top)=n_x+n_\mu$ holds. Then \eqref{ali_syst1} becomes
+\begin{equation}\label{descriptor}
+    \mathbb E\dot{\zeta}=\varphi_\zeta(\zeta,u)+\bar E\bm\omega_\delta,\qquad
+    y=\mathcal H\zeta+\bar D\bm\omega_\delta,
+\end{equation}
+with $\varphi_\zeta(\zeta,u)=\varphi(x,u)+B\mu_x$.
+
+Let $P_\zeta$ and $Q_\zeta$ satisfy
+\begin{equation}\label{peqh}
+    P_\zeta\mathbb E+Q_\zeta\mathcal H=I_{n_x+n_\mu}.
+\end{equation}
+The observer is
+\begin{equation}\label{uio_observer}
+\dot{\eta}=P_\zeta\varphi_\zeta(\hat{\zeta},u)+K(y-\mathcal H\hat{\zeta}),\qquad
+\hat{\zeta}=\eta+Q_\zeta y .
+\end{equation}
+Defining $\tilde{\zeta}=\zeta-\hat{\zeta}$ and $\xi=\tilde{\zeta}+Q_\zeta\bar D\bm\omega_\delta$, the error dynamics can be written as
+\begin{equation}\label{xi_dyn}
+\dot{\xi}=(P_\zeta A_j-K\mathcal H)\xi+
+(\bar E-P_\zeta A_jQ_\zeta\bar D-K\mathcal D)\bm\omega_\delta
+\end{equation}
+for each vertex $A_j$ of a polytopic enclosure of the Jacobian of $\varphi_\zeta$, where $\mathcal D=(I+\mathcal H Q_\zeta)\bar D$.
+
+\begin{theorem}\label{ali_thm}
+If there exist $\mathcal P=\mathcal P^\top>0$, $\mathcal Q$, $\lambda>0$, and a fixed $\epsilon>0$ such that, for all Jacobian vertices $A_j$,
+\begin{equation}\label{ali_LMI}
+\begin{bmatrix}
+\Phi_j & \mathcal P\mathcal E_j-\mathcal Q^\top\mathcal D & \Psi_j\\
+\star & -\lambda I & \mathcal E_j^\top\mathcal P-\mathcal D^\top\mathcal Q\\
+\star & \star & -\epsilon^{-1}\mathcal P
+\end{bmatrix}<0,
+\end{equation}
+where
+\[
+\Phi_j=(P_\zeta A_j)^\top\mathcal P+\mathcal P(P_\zeta A_j)
+-\mathcal H^\top\mathcal Q-\mathcal Q^\top\mathcal H,
+\]
+\[
+\Psi_j=(P_\zeta A_j)^\top\mathcal P-\mathcal H^\top\mathcal Q,\qquad
+\mathcal E_j=\bar E-P_\zeta A_jQ_\zeta\bar D,
+\]
+then the observer gain $K=\mathcal P^{-1}\mathcal Q^\top$ ensures
+\begin{equation}\label{h1_bound}
+    \|\tilde{\zeta}\|_{\mathcal H^1}\le
+    \lambda_\delta\|\mu_x\|_{\mathcal H^1}+\beta\|\xi(0)\|.
+\end{equation}
+The constants $\lambda_\delta$ and $\beta$ are proportional to $\max(\delta_1,\delta_2)$ and $\sqrt{\lambda_{\max}(\mathcal P)}$, respectively.
+\end{theorem}
+
+\begin{pf}
+With $V=\xi^\top\mathcal P\xi$ and $\mathcal S=\epsilon\mathcal P$, the Schur complement of \eqref{ali_LMI} gives
+\[
+\dot V+\|\xi\|^2+\dot{\xi}^{\top}\mathcal S\dot{\xi}
+-\lambda\|\bm\omega_\delta\|^2\le0 .
+\]
+Integration on $[0,\infty)$ yields an $\mathcal H^1$ bound for $\xi$. Since $\tilde{\zeta}=\xi-Q_\zeta\bar D\bm\omega_\delta$ and $\|\bm\omega_\delta\|_{\mathcal L_2}\le\max(\delta_1,\delta_2)\|\mu_x\|_{\mathcal H^1}$, \eqref{h1_bound} follows.
+\end{pf}
+
+\section{Generalized Output-Derivative UIO}\label{output_derivative}
+
+The previous regularization is useful when \eqref{rank} is not satisfied, but it may not give zero-error convergence. A less conservative construction augments the system with $\chi_1=y$ and $\chi_2=\dot y$:
+\begin{equation}\label{gen_model}
+\begin{array}{rcl}
+\dot{\chi}_1&=&\chi_2,\\
+\dot{\chi}_2&=&C\bar\varphi_x(x,u)+C\dfrac{\partial\varphi}{\partial x}(x,u)B\mu_x+CB\dot{\mu}_x,\\
+\dot{x}&=&\varphi(x,u)+B\mu_x,\\
+y_\chi&=&\chi_1+C_\chi\chi_2+Cx,
+\end{array}
+\end{equation}
+where $\bar\varphi_x=(\partial\varphi/\partial x)\varphi$. Applying the same regularization to the $\dot{\chi}_2$ equation gives another descriptor model of the form \eqref{descriptor}, now with
+\[
+\zeta=\begin{bmatrix}\chi_1&\chi_2&x&\mu_x\end{bmatrix}^\top .
+\]
+The observer \eqref{uio_observer} and LMI \eqref{ali_LMI} apply directly after replacing the corresponding matrices. If $\rank(CB)=\rank(B)$, one can set $\delta_1=\delta_2=0$ with a suitable $C_\chi$, so $\bm\omega_\delta\equiv0$ and the error converges exponentially. If the rank condition fails, $\delta_1$ and $\delta_2$ tune the residual error bound. The auxiliary state $\hat{\chi}_2$ also provides a filtered estimate of $\dot y$, avoiding direct numerical differentiation of the measured output.
+
+\section{UIO-Supervised Residual Learning}\label{learning}
+
+The UIO estimate is not the final model; it is a robust teacher for learning the repeatable part of $\mu_x$. Decompose the generalized UIO output as
+\begin{equation}
+    \hat{\zeta}=\begin{bmatrix}\hat{\chi}_1&\hat{\chi}_2&\hat{x}_{\uio}&\hat{\mu}_x\end{bmatrix}^{\top}.
+\end{equation}
+A neural model $\mu_\theta=\mathcal N_\theta(\hat{x}_{\uio},\hat{\mu}_x,u)$ is inserted in a student observer
+\begin{equation}\label{learning_uio_e2}
+\dot{\hat{x}}_{\nn}=\varphi(\hat{x}_{\nn},u)+B\mu_\theta+\Lo_{\nn}(y-C\hat{x}_{\nn}).
+\end{equation}
+Writing the approximation error as $\Delta_x=\mu_x-\mu_\theta$, the student error $\epsilon_{\nn}=x-\hat{x}_{\nn}$ satisfies
+\begin{equation}\label{learning_error}
+\dot{\epsilon}_{\nn}=(A^x_j-\Lo_{\nn}C)\epsilon_{\nn}+B\Delta_x
+\end{equation}
+for each vertex $A^x_j$ enclosing the Jacobian of $\varphi$.
+
+\begin{theorem}\label{ali_thm2}
+If there exist $\mathcal P=\mathcal P^\top>0$, $\mathcal Q$, and $\sigma>0$ such that, for all $j$,
+\begin{equation}\label{ali_LMI_2}
+\begin{bmatrix}
+(A^x_j)^\top\mathcal P+\mathcal PA^x_j-C^\top\mathcal Q-\mathcal Q^\top C
+&\mathcal PB\\
+B^\top\mathcal P&-\sigma I
+\end{bmatrix}<0,
+\end{equation}
+then $\Lo_{\nn}=\mathcal P^{-1}\mathcal Q^\top$ gives
+\[
+\|\epsilon_{\nn}\|_{\mathcal L_2}\le \sqrt{\sigma}\|\Delta_x\|_{\mathcal L_2}
++\sqrt{\lambda_{\max}(\mathcal P)}\|\epsilon_{\nn}(0)\|.
+\]
+\end{theorem}
+
+The network parameters are updated with a composite loss
+\begin{equation}\label{loss_fun}
+\begin{split}
+\mathcal L(\theta)=&
+\|y-C\hat{x}_{\nn}\|_{T_y}^2+
+\|\hat{x}_{\nn}-\hat{x}_{\uio}\|_{T_u}^2\\
+&+\lambda_\mu\|\mu_\theta-\hat{\mu}_x\|^2+
+\lambda_\theta\|\theta\|^2 ,
+\end{split}
+\end{equation}
+where the UIO consistency and residual terms prevent the student from drifting while the online learner adapts.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.86\linewidth]{img/Apdapt_obs_shema_2_uio.png}
+    \caption{Hybrid UIO-supervised learning architecture.}
+    \label{fig_Adapt_observer_schema}
+\end{figure}
+
+\section{Vehicle Teacher--Student Case Study}\label{vehicle_case}
+
+The vehicle result is summarized with the state, input, and measurement vectors
+\begin{equation}\label{vehicle_vectors}
+\begin{aligned}
+x&=[v_x\ v_y\ r\ \psi\ X\ Y]^\top,\\
+u&=[a\ \delta]^\top,\qquad
+y=[v_x\ r\ \psi\ X\ Y]^\top .
+\end{aligned}
+\end{equation}
+The discrete vehicle model is written as
+\begin{equation}\label{eq_vehicle_discrete}
+x_{k+1}=f_{\rm nom}(x_k,u_k)+B_{\rm tire}(x_k,u_k)w_k+G(x_k,u_k)d_k+\nu_k,
+\end{equation}
+where $w_k=[\Delta F_{yf,k}\ \Delta F_{yr,k}]^\top$ contains tire-only residual forces and $d_k$ collects the remaining mismatch. In continuous time, the tire residual channel is induced by
+\begin{equation}\label{eq_btire_cont}
+\begin{bmatrix}\dot v_x\\ \dot v_y\\ \dot r\end{bmatrix}
+=f_{\rm nom,dyn}+
+\begin{bmatrix}
+0&0\\
+1/m&1/m\\
+l_f/I_z&-l_r/I_z
+\end{bmatrix}
+\begin{bmatrix}\Delta F_{yf}\\ \Delta F_{yr}\end{bmatrix}.
+\end{equation}
+Thus the teacher residual is physically interpretable and cannot become a generic error bucket.
+
+Layer 1 is an augmented-state EKF/UIO teacher. With
+$F_k=f_{\rm nom}(x_k,u_k)+B_{\rm tire}(x_k,u_k)w_k$,
+\begin{equation}\label{teacher}
+\chi_k=[x_k^\top\ w_k^\top]^\top,\qquad
+\chi_{k+1}=[F_k^\top\ w_k^\top]^\top+q_k .
+\end{equation}
+The teacher is not influenced by the neural model. It gives $\hat{x}^{(1)}_{k|k}$ and $\hat{w}_{k|k}$ and forms the label
+\begin{equation}\label{teacher_label}
+r_k=S\left(\hat{x}^{(1)}_{k+1|k+1}-\hat{x}^{(1)}_{k+1|k}\right),
+\end{equation}
+where $S$ selects $(v_x,v_y,r)$. This label captures the correction left after nominal dynamics and tire residual reconstruction.
+
+Layer 2 is the student estimator
+\begin{equation}\label{student_pred}
+\hat{x}^{(2)}_{k+1|k}=f_{\rm nom}(\hat{x}^{(2)}_{k|k},u_k)
+B_{\rm tire}(\hat{x}^{(2)}_{k|k},u_k)\hat{w}_{k|k}
+S^\top r_\theta(z_k),
+\end{equation}
+where $z_k=[\hat{x}^{(1)}_{k|k}\ u_k\ \rho_k\ {\rm flags}_k]^\top$. The online regression
+\begin{equation}\label{ch4_nn_loss}
+\min_\theta\sum_k \alpha_k\|r_\theta(z_k)-r_k\|^2
+\end{equation}
+uses gates $\alpha_k\in[0,1]$ to reject low-speed samples, yaw wrapping events, or large GNSS/IMU innovations.
+
+In the simulation study from the merged chapter, the baseline physics-only observer tracks measured channels but shows larger lateral-state deviations under tire and parameter mismatch. The two-layer student reduces these deviations by injecting $r_\theta$, while the teacher keeps the tire-force reconstruction independent of the learned correction. Residual accumulation in the learning update smooths transient spikes, and the loss decreases during online training, confirming that the UIO-generated labels provide a usable supervision signal for the remaining mismatch.
+
+\section{Conclusion}\label{sec7}
+
+This paper condensed a regularized UIO, an output-derivative generalized UIO, and a UIO-supervised neural residual learner into a single IFAC-length framework. The merged vehicle case study separates tire-only residual estimation from neural learning of leftover mismatch. This preserves a stable physics-based teacher while allowing the student observer to improve prediction online. Future work will validate the method on real driving data and convert the continuous-time guarantees into a discrete-time implementation suitable for embedded deployment.
+
+\bibliography{UIO_IFAC_refs}
+
+\end{document}

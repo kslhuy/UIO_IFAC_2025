@@ -1,0 +1,150 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+
+\begin{document}
+
+Yes, you can absolutely use a function other than an exponential function to convert a discrepancy into a trust score. The exponential function, such as \(\gamma = \exp\left(-\frac{D}{\sigma^2}\right)\), is just one of many possible choices, and there are several alternatives that might better suit your needs depending on how you want the trust score to behave as the discrepancy \(D\) changes. Below, I'll outline some alternative functions, explain how they work, and highlight when they might be preferable.
+
+\section*{Understanding the Goal}
+Before diving into alternatives, let's clarify the objective. The discrepancy \(D\) measures how much two estimates differ (e.g., a host's global estimate vs. a neighbor's). The trust score \(\gamma\) should be a value between 0 and 1, where:
+\begin{itemize}
+    \item \(\gamma \approx 1\) when \(D\) is small (high trust, estimates are close).
+    \item \(\gamma \approx 0\) when \(D\) is large (low trust, estimates differ significantly).
+\end{itemize}
+
+The function should ideally be:
+\begin{itemize}
+    \item \textbf{Decreasing}: As \(D\) increases, \(\gamma\) decreases.
+    \item \textbf{Bounded}: \(\gamma\) stays between 0 and 1.
+    \item \textbf{Tunable}: Adjustable to control sensitivity to \(D\).
+    \item \textbf{Smooth} (optional): For gradual changes in trust.
+\end{itemize}
+
+The exponential function satisfies these properties, but other functions can too, each with unique characteristics.
+
+\section*{Alternative Functions}
+
+Here are some viable alternatives to the exponential function, along with their formulas, properties, and use cases:
+
+\subsection*{1. Linear Decay Function}
+\begin{itemize}
+    \item \textbf{Formula}:
+    \[
+    \gamma = \max\left(1 - \frac{D}{D_{\text{max}}}, 0\right)
+    \]
+    \item \textbf{How It Works}: Trust decreases linearly from 1 to 0 as \(D\) goes from 0 to \(D_{\text{max}}\). If \(D \geq D_{\text{max}}\), \(\gamma = 0\).
+    \item \textbf{Properties}:
+    \begin{itemize}
+        \item Simple and computationally efficient.
+        \item Trust hits 0 at a specific threshold (\(D_{\text{max}}\)).
+    \end{itemize}
+    \item \textbf{When to Use}: Ideal if you have a clear maximum discrepancy beyond which trust should be zero, and you're okay with a steady, predictable decline.
+    \item \textbf{Drawback}: Trust may not decay nonlinearly, which might not match real-world scenarios where small discrepancies are more tolerable.
+\end{itemize}
+
+\subsection*{2. Inverse (Cauchy-like) Function}
+\begin{itemize}
+    \item \textbf{Formula}:
+    \[
+    \gamma = \frac{1}{1 + \frac{D}{\sigma}}
+    \]
+    \item \textbf{How It Works}: Trust decreases inversely with \(D\), starting at 1 when \(D = 0\) and approaching 0 as \(D\) grows large, but never quite reaching 0.
+    \item \textbf{Properties}:
+    \begin{itemize}
+        \item Decays more slowly than the exponential function, making it more forgiving of larger discrepancies.
+        \item \(\sigma\) tunes how quickly trust drops.
+    \end{itemize}
+    \item \textbf{When to Use}: Good if you want to maintain some trust even with moderate discrepancies, reflecting a system where large differences might still be plausible due to noise.
+    \item \textbf{Drawback}: Penalizes small discrepancies less harshly than the exponential function.
+\end{itemize}
+
+\subsection*{3. Sigmoid Function}
+\begin{itemize}
+    \item \textbf{Formula}:
+    \[
+    \gamma = \frac{1}{1 + \exp\left(a \cdot (D - b)\right)}
+    \]
+    \item \textbf{How It Works}: Produces an S-shaped curve. Trust stays near 1 for small \(D\), drops sharply around \(D = b\), and approaches 0 for large \(D\). Parameters \(a\) (steepness) and \(b\) (threshold) control the behavior.
+    \item \textbf{Properties}:
+    \begin{itemize}
+        \item Smooth transition with a rapid drop at a specific discrepancy.
+        \item Highly tunable for different trust sensitivities.
+    \end{itemize}
+    \item \textbf{When to Use}: Perfect if there's a known discrepancy threshold where trust should plummet (e.g., beyond typical noise levels).
+    \item \textbf{Drawback}: Requires tuning two parameters, which might complicate setup.
+\end{itemize}
+
+\subsection*{4. Power Function}
+\begin{itemize}
+    \item \textbf{Formula}:
+    \[
+    \gamma = 
+    \begin{cases} 
+    \left(1 - \frac{D}{D_{\text{max}}}\right)^p & \text{if } D < D_{\text{max}} \\
+    0 & \text{if } D \geq D_{\text{max}}
+    \end{cases}
+    \]
+    \item \textbf{How It Works}: Trust decreases based on a power law. The exponent \(p\) shapes the curve: \(p > 1\) for slow initial decay, \(p < 1\) for fast initial decay.
+    \item \textbf{Properties}:
+    \begin{itemize}
+        \item Flexible decay shape (concave or convex).
+        \item Reaches 0 at \(D_{\text{max}}\).
+    \end{itemize}
+    \item \textbf{When to Use}: Useful if you want to customize how quickly trust drops at different discrepancy levels.
+    \item \textbf{Drawback}: Needs both \(D_{\text{max}}\) and \(p\) to be set, requiring more tuning.
+\end{itemize}
+
+\subsection*{5. Piecewise Linear Function}
+\begin{itemize}
+    \item \textbf{Formula}:
+    \[
+    \gamma = 
+    \begin{cases} 
+    1 & \text{if } D < \text{threshold}_1 \\
+    \frac{\text{threshold}_2 - D}{\text{threshold}_2 - \text{threshold}_1} & \text{if } \text{threshold}_1 \leq D < \text{threshold}_2 \\
+    0 & \text{if } D \geq \text{threshold}_2 
+    \end{cases}
+    \]
+    \item \textbf{How It Works}: Trust is 1 for small \(D\), decreases linearly between two thresholds, and drops to 0 beyond \(\text{threshold}_2\).
+    \item \textbf{Properties}:
+    \begin{itemize}
+        \item Defines clear zones: full trust, partial trust, and no trust.
+        \item Easy to interpret and implement.
+    \end{itemize}
+    \item \textbf{When to Use}: Great if you have specific discrepancy ranges for acceptable and unacceptable differences.
+    \item \textbf{Drawback}: Not smooth; trust changes abruptly at thresholds.
+\end{itemize}
+
+\section*{Comparing to the Exponential Function}
+The exponential function \(\gamma = \exp\left(-\frac{D}{\sigma^2}\right)\) is popular because it:
+\begin{itemize}
+    \item Decreases smoothly and continuously.
+    \item Approaches 0 asymptotically (trust never fully vanishes, which might reflect residual uncertainty).
+    \item Uses one parameter (\(\sigma^2\)) that can relate to system noise.
+\end{itemize}
+
+However:
+\begin{itemize}
+    \item \textbf{Linear Decay} is simpler but less nuanced.
+    \item \textbf{Inverse Function} is more tolerant of larger \(D\).
+    \item \textbf{Sigmoid} offers a sharp trust drop at a threshold.
+    \item \textbf{Power Function} provides customizable decay shapes.
+    \item \textbf{Piecewise Linear} allows explicit trust zones.
+\end{itemize}
+
+\section*{Choosing the Right Function}
+The best alternative depends on your application:
+\begin{itemize}
+    \item \textbf{Want a sharp trust cutoff?} Use the linear decay or power function with a defined maximum \(D\).
+    \item \textbf{Prefer gradual decay with tolerance for larger discrepancies?} Try the inverse function.
+    \item \textbf{Need a threshold effect?} The sigmoid function is ideal.
+    \item \textbf{Have clear acceptable ranges?} Go with piecewise linear.
+\end{itemize}
+
+If you can share more about your system (e.g., how discrepancies behave or what trust means practically), I can refine the recommendation further. For now, the \textbf{inverse function} \(\gamma = \frac{1}{1 + \frac{D}{\sigma}}\) is a strong, simple alternative to the exponential, offering slower decay and easy tuning with \(\sigma\).
+
+Let me know if you'd like help implementing or tweaking one of these!
+
+\end{document}

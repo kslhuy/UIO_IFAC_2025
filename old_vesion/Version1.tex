@@ -1,0 +1,378 @@
+\documentclass[letterpaper, 10pt, conference]{ieeeconf}  % 
+\IEEEoverridecommandlockouts                              % This command is only needed if 
+                                                          % you want to use the \thanks command
+\overrideIEEEmargins    
+\usepackage{cite}
+
+\usepackage{algorithmic}
+
+\usepackage{textcomp}
+
+\usepackage{comment}
+
+%\usepackage{graphicx}      % include this line if your document contains figures
+%\usepackage{natbib}        % required for bibliography
+%===============================================================================
+% Needed to meet printer requirements.
+ \usepackage{latexsym,amssymb,amsfonts}
+\usepackage[applemac]{inputenc}
+\usepackage{rotating}
+\usepackage{cite}
+%\usepackage{graphicx}
+\usepackage{epstopdf}
+\usepackage{subfigure}
+%\usepackage{color}
+%\usepackage{xcolor}
+%
+%\usepackage{color}
+\usepackage[dvipsnames]{xcolor}
+%
+\usepackage[normalem]{ulem}
+\usepackage{isolatin1}
+%\usepackage{caption}
+%\usepackage{array,multirow,makecell}
+%\usepackage{placeins}
+%\usepackage{stackengine}
+%\usepackage{hyperref}
+\usepackage{fancybox}
+\usepackage{colortbl}
+\usepackage{float}
+\usepackage{comment}
+\usepackage{mathdots}
+%\usepackage{lmodern}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{dblfloatfix}
+\usepackage{kantlipsum}
+\usepackage{dblfloatfix}    % To enable figures at the bottom of page
+\usepackage{graphicx} % [demo] option for empty figure
+\usepackage{placeins}
+\usepackage{marginnote}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{fancybox}
+%\usepackage{empheq}
+\usepackage[overload]{empheq}
+
+\usepackage{bm}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{tikz}
+\usetikzlibrary{circuits.ee.IEC}
+\usepackage[european resistor, european voltage, european current]{circuitikz}
+\usetikzlibrary{arrows,shapes,positioning}
+\usetikzlibrary{decorations.markings,decorations.pathmorphing,
+decorations.pathreplacing}
+\usetikzlibrary{calc,patterns,shapes.geometric}
+\usetikzlibrary{shapes.multipart,positioning,patterns,backgrounds}
+\tikzstyle{titlebox}=[rectangle,inner sep=10pt,inner ysep=10pt,draw]%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\blacksquare{\hbox{\vrule width 4pt height 4pt depth 0pt}}
+\def\square{\hbox{\vrule\barox{\hrule\phantom{o}\hrule}\vrule}}
+\def\qed{\hfill \square}
+\def\qedp{\rightline{$\blacksquare$}}
+\def\EXPT{\mathop{{\rm E}}}
+\def\MIN{\mathop{{\rm min}}}
+\def\MAX{\mathop{{\rm max}}}
+\def\LIM{\mathop{{\longrightarrow}}}
+\def\UNION{\mathop{\bigcup}}
+\def\INTERSECT{\mathop{\bigcap}}
+\def\ARGMIN{\mathop{{\rm argmin}}}
+\def\ARGMAX{\mathop{{\rm argmax}}}
+\def\TOUND{\mathop{\longrightarrow}}
+\def\col#1{\mathop{{\rm col}\,\left(\,#1\,\right)}}
+\def\eqref#1{(\ref{#1})}
+\def\rank{\mathop{{\rm rank}}}
+
+\newcommand{\widebox}[2][0.5em]{\fbox{\hspace{#1}$\displaystyle #2$\hspace{#1}}}
+
+
+%\newcommand*\rank{\rm rank}
+\def\rank{\mathop{{\rm rank}}}
+
+%%%
+\newtheorem{prb}{\it Problem}%[section]
+\newtheorem{theorem}{\it Theorem}%[section]
+\newtheorem{lemma}{\it Lemma}%[section]
+\newtheorem{definition}{\it Definition}
+\newtheorem{remark}{\it Remark}%[section]
+\newtheorem{assumption}{\it Assumption}%[section]
+\newtheorem{example}{\it Example}%[section]b
+\newtheorem{annex}{\it Annex}%[section]b
+\newtheorem{prop}{\it Proposition}%[section]b
+
+
+
+
+
+
+
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+
+
+\title{\bf Distributed Observer for k-nearest neighbor in Connected Vehicle }
+\author{Q.H. Nguyen$^{1,2}$, Selsabil Bougherara $^{1,2}$, Shengya Meng $^{1}$, H. Rafaralahy $^{1}$, M. Haddad $^{2}$, A. Zemouche $^{1}$
+%
+\thanks{This work was supported by SEGULA Engineering. H. Rafaralahy and A. Zemouche would like to acknowledge the ANR agency for its partial financial support under the project ArtISMo ANR-20-CE48-0015.
+}
+%
+\thanks{$^{1}$ Universit\'e de Lorraine, CRAN  CNRS UMR 7039, 54400 Cosnes et Romain, France~(e-mail: \protect\url{ali.zemouche@univ-lorraine.fr}).}
+%
+\thanks{$^{2}$ SEGULA Engineering, 19 rue d'Arras, 92000 Nanterre, France~(e-mail: \protect\url{madjid.haddad@segula.fr}).}
+%
+\thanks{All relevant CARLA resources have been made available in \protect\href{https://github.com/kslhuy/CACC_UIO_simulink}{GitHub}.}
+}
+\maketitle
+
+\begin{abstract}
+This paper presents a solution to estimate state of k-nearest neighbor in platoon. A bunch of technic is used to secured estimation in the case of measurement fautlt in local vehicle and cyber-attack in communication channel .
+\end{abstract}
+
+\begin{keywords}
+Distributed observers, secure estimation, lyapunov stability, cyber-attack.
+\end{keywords}
+
+\section{Introduction}
+    
+
+The contributions of this paper are as follows:
+\begin{enumerate}
+\item On each vehicle, a local UIO is used for secure estimation of the state in the case measurement has a fault. 
+\item A Distributed observer collected the local state estimation of a k-neighbor vehicle to build a bigger system that can estimate all the states of the neighbor vehicles.
+\item Using some techniques like a neuro-adaptive observer for estimating the unknow uncertainty in the local vehicle, and PIO for estimation the difference between the local vehicle and other neighbor vehicles. 
+\item (Not decided yet) A bank of observers to detect faults in measurement, and use global fusion for have a secure estimation in local vehicle 
+\item (Not decided yet) Using L1-norm estimation for estimated the cyber-attack in the communications channels.
+
+\protect\href{https://github.com/kslhuy/CACC_UIO_simulink}{GitHub}.
+\end{enumerate}
+
+
+
+\subsection{CACC mathematical model}
+The dynamics of $i^{th}$ vehicle are a Position-Velocity-Acceleration third-order linear model given by the following set of equations:
+\begin{equation}\label{eq_1}
+      \left\{ \begin{array}{l}
+        \dot{p}_i(t) =v_i(t) \\
+        \dot{v}_i(t)  =a_i(t) + f_{vi}(v,a) \\
+        \dot{a}_i(t)  =\frac{1}{\tau_i} u_i(t)-\frac{1}{\tau_i} a_i(t) + f_{ai}(v,a)  \end{array}  \right.
+\end{equation}  
+where
+\begin{itemize}
+\item $p_i(t), v_i(t)$ and $a_i(t)$ denote the position, velocity and
+acceleration of the $i^{th}$  vehicle, respectively;
+\item $u_i(t)$ is the $i^{th}$ vehicle control input representing the desired
+driving/braking force or acceleration;
+ \item $\tau$ is the engine's constant time lag. 
+ \item $f_i$ is the nonlinear uncertainty 
+ % \item $\Delta_i$ perturbation that is injected in the system. 
+ \end{itemize}
+
+ All the equations can written :
+
+\begin{equation}\label{CACC}
+%\displaystyle
+       \begin{array}{l}
+        {x_i}(t+1)=A x_i + B  (u_i + f(x)_i + \Delta_i)  \\
+        y_{i}(t) = Cx_{i}\end{array} .
+\end{equation}  
+
+where 
+\begin{equation*}
+        A  =\begin{bmatrix}
+        0 & 1 & 0 \\
+        0 & 0 & 1 \\
+        0 & 0 & \frac{-1}{\tau}
+          \end{bmatrix},
+        B =\begin{bmatrix}
+        0 \\
+        0 \\
+        \frac{1}{\tau}
+          \end{bmatrix}, 
+        C =\begin{bmatrix}
+        1 & 0 & 0 \\
+        0 & 1 & 0 \\
+        0 & 0 & 1
+          \end{bmatrix}, 
+\end{equation*}
+
+Each vehicle has a full measurement state obtained in real-time \textbf{position} and \textbf{velocity} from a GPS mounted on the vehicle. 
+
+\section{Neuro-adative observer}
+We use the RBF neural network to approximate the nonlinear uncertainty in the system
+
+\begin{equation}
+    f(x,t)_i = W^T\Theta({x}_i) + \epsilon_i
+\end{equation}
+
+Let us assume $f(x,t)_i)$ can be approximated by
+\begin{equation}
+    \hat{f}(x,t)_i = \hat{W}^T\Theta(\hat{x}_i) 
+\end{equation}
+
+
+The UIO observer is given by: 
+\begin{equation}\label{UIO}
+    \left\{ \begin{array}{l}
+        z_{t+1} = {N}z_{t}+ {L}y + {M}u + G\hat{f}\\ 
+         \hat{x}_{t} = z_{t} + Qy
+     \end{array}\right.
+\end{equation}
+Adaptation law is: 
+\begin{align}
+    \hat{W}(t) = \alpha \hat{W}(t-\tau) + \beta( \hat{W}(t-\tau) + \hat{W}(t-\tau + 1)) \\+\gamma((y - \hat{y})^T C {A^{-1}}^T \Theta^T  
+\end{align}
+or
+\begin{align}
+    \hat{W}(t+1) = \hat{W}(t) + \gamma((y - \hat{y})^T C {A^{-1}}^T \Theta^T ) - \eta \left\| e_y\right\| \hat{W} )  
+\end{align}
+
+The weight error $\tilde{W} = W - \hat{W}$ and state variable error $\tilde{x} = x-\hat{x}$
+\\
+Using the system (2) and observer (5), the estimation error dynamics is rewritten as
+\\
+\begin{align}
+     \tilde{\dot{x}} = (PA - N + NQC - LC)x_t + N \tilde{x} + (PB - M)u_t \\- PB f(x,t)_i - G \hat{f}(x,t)_i 
+\end{align}
+   
+\\
+\begin{align}
+     \tilde{\dot{x}} = (PA -KC)\tilde{x} - PB( f(x,t)_i-\hat{f}(x,t)_i )
+\end{align}
+
+
+\section{Distributed system}
+
+\assumption{Each car $i$ has perfect knowledge only of its own dynamics, i.e. $\tau_i$ is known . The relation $\tau_j = \tau_i + d_{\tau_i} $ will be used . Here $d_{\tau}$ is unknown, but the upper and lower bounds are known. Because when a car connects to his neighborhood, some basic information like which car is share, so $\tau_j$ can be defined base on his type of car } 
+
+So we can write down the the virtual global system that represents all the k-neighbors of $i^th$ . 
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[scale=0.45]{img/Spar_Global_new.png}
+    \caption{Schematic diagram of the estimation method.}
+    \label{fig:information_boarcard}
+\end{figure}
+
+\begin{equation}\label{CACC_dis_neibor}
+        \mathbf{\hat{X}}(t+1)=\mathbf{A} \mathbf{X} + \mathbf{B}({U+\mathcal{F} + \mathcal{D}_{uk}}) 
+\end{equation}
+
+where 
+\begin{equation*}
+\mathbf{A} = I_N \otimes A_i, \quad \mathbf{B} = I_N \otimes B_i,
+\end{equation*}
+
+
+
+
+So the 
+
+\begin{itemize}
+\item $\mathbf{X} = [x_{i-k},..., x_{i} ,..., x_{i+k}]^T$ 
+\item $U = [u_i , ... u_i ,.. u_i ]^T$ 
+
+ \item $\mathcal{F} = [f_{i-k},..., f_{i} ,..., f_{i+k} ]$ 
+
+ \item $\mathcal{D}_{uk}$ is the uncertain in the controller input. 
+ \end{itemize}
+
+
+
+So the Global System's state can be ordered by position and have lead, follower, last . 
+
+\remark{It is difficult to get, or send the control input because it will be private. So we will consider that all the controller in vehicle $k^th$ that is the neighbor of $i^th$ vehicle will be  $u_k = u_i + d_{u_k}$ , so the controller in the virtual global system  $U = [u_{i} , ... u_i ,.. u_{i} ]^T$ }
+
+\assumption{In the virtual global system don't fault the system , only fault in the mesurement caused by the uncertain of the communications channels could be considered}
+
+k-neighbor of $i^th$ will send the estimated value $\hat{x}_k $ to the $i^th$ vehicle and , also send about the realtive position from lidar . The measurement of the virtual global system can be :
+\begin{equation*}\label{CACC}
+      \mathbf{Y}_i = \mathbf{C}_i X    
+\end{equation*}  
+
+Where $\mathbf{Y}_i = [\hat{x}_{i-k} ,..., \hat{x}_{i},..., \hat{x}_{i+k} ]^T$  
+$e_s$ is the cyber-attack  
+
+\begin{equation}
+\mathbf{C}_i=\left[\begin{array}{ccc}
+ & I_N \otimes C_i & \\
+\mathbf{1}_{\left|\mathcal{N}_i\right| \times 1} & \mathbf{-1}_{\left|\mathcal{N}_i\right| \times 1} & \mathbf{0}]
+\end{array}\right]
+\end{equation}
+
+where $\mathbf{1}_{\left|\mathcal{N}_i\right|-1 }$
+is diagonal vector is 1 , being the $\left|\mathcal{N}_i\right|-1$ dimensional ligne vector 
+
+For exemple 
+\begin{equation}
+    \mathbf{Y}_2 = \begin{bmatrix}
+         C & 0 & 0    \\
+         0 & C & 0   \\
+         0 & 0 & C   \\
+         \mathbf{1} & -\mathbf{1} & 0    \\
+         0 & \mathbf{1} & -\mathbf{1}      
+     \end{bmatrix}
+     \begin{bmatrix}
+     x_1 \\
+    x_2 \\
+    x_3 \\
+    \end{bmatrix}
+\end{equation}
+
+$\mathbf{1} = [1,0,0]$ and $\mathbf{-1} = [-1,0,0]$   
+
+\section{Observer for virtual global matrix}
+We can rewrite the sum of nonlinear and uncertain in the controller to : 
+    $\mathcal{G} = \mathcal{F} + \mathcal{D}_{uk}$ 
+
+So in the normal condition each vehicle will moving with the same velocity , and maintain L distance desire . So the dynamic of each vehicle will have a small error . 
+
+So we can use Proportial Intergral Observer for this : 
+\begin{equation}\label{obser_global}
+    \left\{ \begin{array}{l}
+        \mathbf{\hat{X}}(t+1)=\mathbf{A} \mathbf{\hat{X}} + \mathbf{B} U + H\mathcal{\hat{G}} + \mathbf{L}(\mathbf{Y} - \mathbf{C}\mathbf{X} )
+        \\ 
+         \mathcal{\hat{G}}(t+1) =\mathcal{\hat{G}} +  K(\mathbf{Y} - \mathbf{C}\mathbf{X})
+     \end{array}\right.
+\end{equation}
+ Then, the estimation errors are defined as
+ $e_{\hat{x}} (k) = x(k) - \hat{x}_i (k), \quad e_G (k) = \mathcal{G}(k) - \hat{\mathcal{G}} (k) $
+ 
+ Therefore, the dynamics of the estimation errors can be : 
+\begin{equation}
+    e_{\hat{x}_i} (k + 1) = (\mathbf{A} -\mathbf{LC}) e_{\hat{x}} (k) + He_G (k)
+\end{equation}
+
+
+\section{Conclusion}
+
+
+
+
+
+\bibliographystyle{IEEEtran}
+% \bibliography{biblio}
+
+%\bibitem{khalil2020fault} A. Khalil, M. Al Janaideh, K. F. Aljanaideh and D. Kundur, "Fault Detection, Localization, and Mitigation of a Network of Connected Autonomous Vehicles Using Transmissibility Identification," 2020 American Control Conference (ACC), Denver, CO, USA, 2020, pp. 386-391, doi: 10.23919/ACC45564.2020.9147801.
+%\bibitem{huang2022detection} Huang, X.; Wang, X. Detection and Isolation of False Data Injection Attack in Intelligent Transportation System via Robust State Observer. Processes 2022, 10, 1299. https://doi.org/10.3390/pr10071299
+%\bibitem{mousavinejad2019distributed} E. Mousavinejad, F. Yang, Q. -L. Han, X. Ge and L. Vlacic, "Distributed Cyber Attacks Detection and Recovery Mechanism for Vehicle Platooning," in IEEE Transactions on Intelligent Transportation Systems, vol. 21, no. 9, pp. 3821-3834, Sept. 2020, doi: 10.1109/TITS.2019.2934481.
+%\bibitem{yamamoto2021attack} Y. Yamamoto, N. Kuze and T. Ushio, "Attack Detection and Defense System Using an Unknown Input Observer for Cooperative Adaptive Cruise Control Systems," in IEEE Access, vol. 9, pp. 148810-148820, 2021, doi: 10.1109/ACCESS.2021.3124547.
+%\bibitem{cheng2023adaptive} Cheng P, Pan J, Zhang Y. Adaptive unknown input observer-based detection and identification method for intelligent transportation under malicious attack. Measurement and Control. 2023;56(7-8):1377-1386. doi:10.1177/00202940231159115
+%\bibitem{rajamani2002semi} R. Rajamani and C. Zhu, "Semi-autonomous adaptive cruise control 
+%systems," in IEEE Transactions on Vehicular Technology, vol. 51, no. 5, 
+%pp. 1186-1192, Sept. 2002.
+%\bibitem{darouach1994full} M. Darouach, M. Zasadzinski, and S. J. Xu, "Full-order observers for linear systems with unknown inputs," in IEEE Transactions on Automatic Control, vol. 39, no. 3, pp. 606-609, March 1994, doi: 10.1109/9.280770.
+%\bibitem{b8}Zhang and Zhu, 2017
+%\bibitem{b9}Zhu, 2012
+%\bibitem{b10} \url{https://github.com/kslhuy/CACC_UIO_simulink}
+
+%=================
+\bibliography{biblio}
+%=================
+
+
+\end{document}

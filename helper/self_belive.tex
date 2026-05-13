@@ -1,0 +1,407 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{graphicx}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage{hyperref}
+
+\title{Resilient Synchronization in Distributed Multi-Agent Systems Under Cyber-Physical Attacks}
+\author{Your Name}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section*{Expanded Summary of Section 1}
+
+Below is an expanded and detailed summary of \textbf{Section 1} from the paper \textit{"Resilient Synchronization of Distributed Multi-Agent Systems Under Attacks"} by Aquib Mustafa, Hamidreza Modares, and Rohollah Moghadam, published in \textit{Automatica} 115 (2020) 108869. This section introduces the problem, provides context, reviews related work, and outlines the paper’s contributions. I’ll elaborate on each subsection to give a comprehensive understanding while maintaining clarity and avoiding repetition of content already covered in the full resume.
+
+\subsection*{Section 1: Introduction}
+
+\subsubsection*{1.1. Problem Introduction}
+Section 1 begins by framing the challenge of ensuring \textbf{resilient synchronization} in \textbf{Distributed Multi-Agent Systems (DMASs)} under \textbf{cyber-physical attacks}. DMASs are networks of autonomous agents (e.g., robots, drones, or sensors) that collaborate to achieve a common goal, such as synchronizing their states to a common value or trajectory (e.g., aligning positions or velocities). Synchronization is critical in applications like cooperative robotics, power grids, and distributed sensor networks, where agents rely on local communication to coordinate without a central controller.
+
+The paper highlights the vulnerability of DMASs to \textbf{cyber-physical attacks}, which can target:
+\begin{itemize}
+    \item \textbf{Actuators}: Injecting malicious control signals to disrupt agent behavior.
+    \item \textbf{Sensors}: Corrupting state measurements to mislead agents.
+    \item \textbf{Communication links}: Altering data exchanged between agents.
+\end{itemize}
+
+Such attacks can destabilize the network, prevent synchronization, or cause agents to converge to incorrect values. The authors emphasize the need for \textbf{resilient control strategies} that detect and mitigate attacks while ensuring intact (uncompromised) agents achieve synchronization. Unlike centralized systems, DMASs rely on distributed protocols, making resilience challenging due to limited global information and the potential for stealthy attacks that evade traditional detection methods.
+
+\subsubsection*{1.2. Review of Related Work}
+The paper provides a comprehensive review of prior work on attack detection and mitigation in cyber-physical systems (CPS) and DMASs, positioning its contributions within the broader field. The review is divided into two parts: general CPS security and DMAS-specific approaches.
+
+\paragraph*{General Cyber-Physical Systems (CPS)}
+\begin{itemize}
+    \item \textbf{Estimation and Control Under Attacks}:
+    \begin{itemize}
+        \item Fawzi et al. (2014) and Shoukry and Tabuada (2016) developed algorithms for state estimation and control in CPS under attacks, focusing on reconstructing true states despite corrupted measurements.
+        \item Yan et al. (2017) proposed a \textbf{passivity-based} approach to mitigate attacks by leveraging system energy properties to stabilize dynamics.
+        \item Teixeira et al. (2015) categorized attacks based on the attacker’s knowledge, resources, and impact, introducing the concept of \textbf{safe sets} to quantify attack effects.
+    \end{itemize}
+    \item \textbf{Game-Theoretic Approaches}:
+    \begin{itemize}
+        \item Akyol et al. (2017), Kanellopoulos and Vamvoudakis (2019b), Sayin and Başar (2017), and Vamvoudakis et al. (2014) used game theory to model attacker-defender interactions, designing resilient state estimation strategies.
+        \item Kanellopoulos and Vamvoudakis (2019a) introduced \textbf{proactive and reactive defense mechanisms} to protect sensors and actuators from attacks.
+    \end{itemize}
+    \item \textbf{Limitation}: These works focus on centralized or single-system CPS, not DMASs, where the goal is distributed synchronization across multiple agents. The distributed nature of DMASs requires unique approaches to handle local communication and network topology.
+\end{itemize}
+
+\paragraph*{Distributed Multi-Agent Systems (DMASs)}
+\begin{itemize}
+    \item \textbf{Attack Detection and Mitigation}:
+    \begin{itemize}
+        \item Pasqualetti et al. (2012), Sundaram and Hadjicostis (2011), and Weerakkody et al. (2017) proposed methods to detect and mitigate attacks in DMASs, often relying on monitoring discrepancies in agent states.
+        \item LeBlanc et al. (2013), LeBlanc and Koutsoukos (2018), and others developed \textbf{mean square subsequence-based} resilient control protocols, where agents discard neighbors’ information if their states deviate significantly from their own.
+        \item Jin et al. (2017) designed \textbf{adaptive local control protocols} using observer-based methods to mitigate attacks without explicitly identifying them.
+    \end{itemize}
+    \item \textbf{Game-Theoretic Frameworks}:
+    \begin{itemize}
+        \item Vamvoudakis and Hespanha (2018) modeled DMASs as an attacker-defender game on networks with unknown topologies, where defenders inject control inputs to achieve consensus while attenuating attack signals.
+        \item Pirani et al. (2019) used a \textbf{controllability Gramian-based} game-theoretic approach for resilient distributed consensus.
+    \end{itemize}
+    \item \textbf{Survey}:
+    \begin{itemize}
+        \item Dibaji et al. (2019) provided a comprehensive survey, categorizing DMAS security strategies into \textbf{prevention}, \textbf{resilience}, and \textbf{detection \& isolation}. This survey underscores the growing interest in DMAS security but highlights gaps in handling sophisticated attacks.
+    \end{itemize}
+    \item \textbf{Limitations of Existing DMAS Approaches}:
+    \begin{itemize}
+        \item Most methods rely on \textbf{discrepancy-based detection}, where agents discard neighbors’ data if their states differ significantly. However, the paper argues that \textbf{stealthy attacks} can make all agents unstable simultaneously, rendering these methods ineffective (e.g., by causing uniform errors that appear legitimate).
+        \item Discrepancy-based approaches may mistakenly discard valid information caused by legitimate state changes (e.g., during initial synchronization when states naturally differ), slowing convergence and harming network connectivity.
+        \item Many approaches assume prior knowledge of the maximum number of compromised agents and specific network connectivity conditions, which may not hold in practice.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection*{1.3. Contributions and Outline}
+The paper outlines its main contributions, which address the limitations of prior work by providing a robust framework for resilient synchronization in DMASs. The contributions are:
+
+\begin{enumerate}
+    \item \textbf{Attack Analysis}:
+    \begin{itemize}
+        \item The authors analyze the adverse effects of cyber-physical attacks on DMAS synchronization, providing conditions under which:
+        \begin{itemize}
+            \item An attack destabilizes the entire network (e.g., attacks on root nodes).
+            \item Local neighborhood tracking errors of intact agents converge to zero, despite failing to synchronize (e.g., attacks on non-root nodes).
+        \end{itemize}
+        \item This analysis enables the design of detection mechanisms tailored to sophisticated attacks, including stealthy ones that evade discrepancy-based methods.
+    \end{itemize}
+    
+    \item \textbf{Attack Detection}:
+    \begin{itemize}
+        \item Two \textbf{Kullback-Leibler (KL) divergence-based detectors} are proposed to identify attacks:
+        \begin{itemize}
+            \item One for attacks causing zero local tracking errors (e.g., \textbf{IMP-based attacks} exploiting system dynamics).
+            \item Another for attacks causing nonzero tracking errors (e.g., \textbf{non-IMP-based attacks} like random signals).
+        \end{itemize}
+        \item These detectors combine to handle a wide range of deception attacks, using only local information to detect neighbors’ misbehavior.
+    \end{itemize}
+    
+    \item \textbf{Attack Mitigation}:
+    \begin{itemize}
+        \item A novel mitigation strategy introduces \textbf{self-belief} (an agent’s confidence in its own information) and \textbf{trust} (confidence in neighbors’ information) metrics, computed based on KL-divergence results.
+        \item Each agent forms a \textbf{weighted local neighborhood tracking error} that incorporates trust and self-belief, dynamically adjusting the network topology to isolate compromised agents while preserving legitimate information.
+        \item This approach avoids the pitfalls of discrepancy-based methods, maintaining network connectivity and convergence speed.
+    \end{itemize}
+\end{enumerate}
+
+The section concludes with an outline of the paper’s structure:
+\begin{itemize}
+    \item \textbf{Section 2}: Preliminaries on graph theory and DMAS dynamics.
+    \item \textbf{Section 3}: Overview of the consensus problem in DMASs.
+    \item \textbf{Section 4}: Attack modeling and vulnerability analysis.
+    \item \textbf{Section 5}: KL-divergence-based attack detection mechanisms.
+    \item \textbf{Section 6}: Self-belief and trust-based mitigation strategy.
+    \item \textbf{Section 7}: Simulation results validating the approach.
+    \item \textbf{Section 8}: Conclusions and future directions.
+\end{itemize}
+
+\subsection*{Expanded Insights}
+\begin{itemize}
+    \item \textbf{Motivation}: The introduction emphasizes the growing threat of cyber-physical attacks in DMASs, driven by their increasing use in critical applications (e.g., autonomous vehicles, smart grids). The distributed nature of DMASs makes them particularly vulnerable, as attackers can exploit local communication to disrupt global behavior.
+    \item \textbf{Gap Identification}: The review critiques existing methods for their reliance on discrepancy-based detection, which fails against stealthy attacks that manipulate states uniformly across agents. The authors also note that discarding valid information due to state differences can degrade performance, motivating their belief-based approach.
+    \item \textbf{Novelty}: The paper’s use of KL-divergence for detection and the introduction of self-belief and trust metrics are significant departures from prior work. These methods leverage statistical divergence to detect anomalies and adaptively reweight information, offering a more nuanced response to attacks.
+    \item \textbf{Scope}: The focus on linear dynamics and directed graphs provides a solid foundation, but the authors acknowledge potential extensions to nonlinear systems or time-varying topologies, setting the stage for future research.
+\end{itemize}
+
+\subsection*{Key Takeaways}
+\begin{itemize}
+    \item \textbf{Problem}: Ensuring synchronization in DMASs under cyber-physical attacks is critical but challenging due to distributed communication and stealthy attacks.
+    \item \textbf{Related Work}: Existing CPS and DMAS security methods are limited by their reliance on discrepancy-based detection, which fails against sophisticated attacks and may discard valid information.
+    \item \textbf{Contributions}: The paper provides a comprehensive framework with attack analysis, KL-divergence-based detection, and a self-belief/trust-based mitigation strategy, ensuring resilient synchronization for intact agents.
+    \item \textbf{Structure}: The paper is organized to systematically build from problem definition to theoretical analysis, detection, mitigation, and validation.
+\end{itemize}
+
+
+\section*{Summary}
+This paper addresses the resilience of distributed multi-agent systems (DMASs) with linear dynamics against cyber-physical attacks, focusing on synchronization under adversarial conditions. The authors analyze the impact of attacks, propose detection mechanisms using Kullback-Leibler (KL) divergence, and introduce a mitigation strategy based on self-belief and trust metrics. The work provides conditions for network destabilization, designs attack detectors, and ensures synchronization of intact agents despite attacks.
+
+\section*{Key Contributions}
+\begin{enumerate}
+    \item \textbf{Attack Analysis}:
+    \begin{itemize}
+        \item The paper categorizes attacks into \textbf{Internal Model Principle (IMP)-based} and \textbf{non-IMP-based} attacks, based on whether the attack signal exploits knowledge of the system dynamics.
+        \item Conditions are derived under which attacks destabilize the entire network (e.g., IMP-based attacks on root nodes) or cause local neighborhood tracking errors of intact agents to converge to zero while failing to synchronize (e.g., non-IMP-based attacks on non-root nodes).
+        \item The analysis highlights vulnerabilities in DMASs, particularly stealthy attacks that could mislead traditional discrepancy-based detection methods.
+    \end{itemize}
+
+    \item \textbf{Attack Detection}:
+    \begin{itemize}
+        \item Two KL-divergence-based detectors are designed:
+        \begin{itemize}
+            \item One for IMP-based attacks, where the local neighborhood tracking error may converge to zero despite desynchronization.
+            \item Another for non-IMP-based attacks, where the tracking error does not converge to zero.
+        \end{itemize}
+        \item These detectors use local information to identify misbehavior in neighbors, enabling robust detection of various deception attacks.
+    \end{itemize}
+
+    \item \textbf{Attack Mitigation}:
+    \begin{itemize}
+        \item A novel mitigation framework introduces \textbf{self-belief} (trustworthiness of an agent’s own information) and \textbf{trust} (confidence in neighbors’ information) metrics.
+        \item Self-belief is computed based on KL-divergence between error sequences, decreasing when an agent is compromised or receives corrupted data.
+        \item Trust is updated using KL-divergence between an agent’s state and its neighbors’ states, allowing agents to identify and discard information from compromised neighbors.
+        \item A resilient control protocol incorporates these metrics into a weighted local neighborhood tracking error, adjusting the network topology dynamically to isolate compromised agents.
+    \end{itemize}
+
+    \item \textbf{Theoretical Guarantees}:
+    \begin{itemize}
+        \item The proposed resilient control protocol ensures that intact agents achieve synchronization (i.e., consensus) despite attacks, provided the time-varying graph remains 1-robust and contains a spanning tree.
+        \item The approach avoids discarding legitimate information due to state discrepancies, preserving network connectivity and convergence speed.
+    \end{itemize}
+
+    \item \textbf{Simulation Results}:
+    \begin{itemize}
+        \item Simulations with five homogeneous agents demonstrate the effectiveness of the proposed methods.
+        \item For IMP-based attacks (e.g., sinusoidal signals matching system dynamics), an attack on a root node destabilizes the network, while an attack on a non-root node affects only reachable agents.
+        \item For non-IMP-based attacks (e.g., random signals), the impact is localized to reachable agents.
+        \item The detection and mitigation mechanisms successfully isolate compromised agents, allowing intact agents to achieve consensus.
+    \end{itemize}
+\end{enumerate}
+
+\section*{Structure of the Paper}
+\begin{itemize}
+    \item \textbf{Section 1}: Introduces the problem of resilient synchronization in DMASs, reviews related work, and outlines contributions.
+    \item \textbf{Section 2}: Provides preliminaries on graph theory, including definitions of directed graphs, adjacency matrices, and Laplacian matrices.
+    \item \textbf{Section 3}: Describes the consensus problem for leaderless DMASs with linear dynamics and defines the local neighborhood tracking error.
+    \item \textbf{Section 4}: Models attacks on actuators and sensors, categorizes them as IMP-based or non-IMP-based, and analyzes their impact on synchronization.
+    \item \textbf{Section 5}: Presents KL-divergence-based attack detection mechanisms for both attack types.
+    \item \textbf{Section 6}: Details the mitigation strategy, including self-belief and trust calculations and the resilient control protocol.
+    \item \textbf{Section 7}: Reports simulation results for IMP-based and non-IMP-based attacks, validating the proposed approach.
+    \item \textbf{Section 8}: Concludes with a summary and acknowledgment of contributions from Prof. Tamer Başar.
+    \item \textbf{Appendix}: Includes proofs of key lemmas, such as the KL-divergence calculations for detection.
+\end{itemize}
+
+\section*{Technical Details}
+\begin{itemize}
+    \item \textbf{System Model}:
+    \begin{itemize}
+        \item Agents have linear dynamics: $\dot{x}_i = A x_i + B u_i$, where $A$ is marginally stable (eigenvalues on the imaginary axis).
+        \item The control protocol is $u_i = c K \eta_i$, where $\eta_i$ is the local neighborhood tracking error, $c$ is a coupling gain, and $K$ is a feedback gain matrix.
+        \item The communication graph is directed, with a spanning tree ensuring synchronization under normal conditions.
+    \end{itemize}
+
+    \item \textbf{Attack Model}:
+    \begin{itemize}
+        \item Actuator attacks: $u_i^c = u_i + \beta_i u_i^d$, where $\beta_i = 1$ if attacked, else 0.
+        \item Sensor attacks: $x_i^c = x_i + \alpha_i x_i^d$, where $\alpha_i = 1$ if attacked, else 0.
+        \item IMP-based attacks exploit system dynamics ($\dot{f}_i = \psi f_i$) with eigenvalues overlapping those of $A$, while non-IMP-based attacks do not.
+    \end{itemize}
+
+    \item \textbf{Detection Mechanism}:
+    \begin{itemize}
+        \item KL-divergence measures the difference between error sequences ($\varphi_i, \tau_i$ for IMP-based; $\eta_i^0, \eta_i$ for non-IMP-based).
+        \item Detection thresholds ($\gamma_i$) distinguish intact ($H_0$) from compromised ($H_1$) states.
+    \end{itemize}
+
+    \item \textbf{Mitigation Mechanism}:
+    \begin{itemize}
+        \item Self-belief ($\xi_i(t)$) is the minimum of beliefs under IMP-based ($c_i^1(t)$) and non-IMP-based ($c_i^2(t)$) attacks, computed via differential equations.
+        \item Trust ($\Omega_{ij}(t)$) is the maximum of self-belief and a neighbor-specific trust value ($\eta_{ij}(t)$).
+        \item The resilient tracking error is $\tilde{\eta}_i = \sum_{j \in N_i} \Omega_{ij}(t) \xi_j(t) a_{ij} (x_j - x_i) + \omega_i$, leading to the control protocol $\tilde{u}_i = c K \tilde{\eta}_i$.
+    \end{itemize}
+
+    \item \textbf{Assumptions}:
+    \begin{itemize}
+        \item The graph has a spanning tree (Assumption 1).
+        \item The system dynamics matrix $A$ is marginally stable (Assumption 2).
+        \item At most $q$ neighbors of each intact agent are compromised, with at least $q+1$ intact neighbors (Assumption 3).
+    \end{itemize}
+
+    \item \textbf{Theorems}:
+    \begin{itemize}
+        \item \textbf{Theorem 2}: IMP-based attacks on root nodes destabilize the network.
+        \item \textbf{Theorem 3}: Non-IMP-based attacks on non-root nodes cause local errors to converge to zero for intact agents, but not synchronization.
+        \item \textbf{Theorem 4 \& 5}: KL-divergence-based detectors identify IMP-based and non-IMP-based attacks, respectively.
+        \item \textbf{Theorem 6}: The resilient control protocol ensures synchronization for intact agents under a 1-robust time-varying graph.
+    \end{itemize}
+\end{itemize}
+
+\section*{Strengths and Innovations}
+\begin{itemize}
+    \item \textbf{Comprehensive Analysis}: The paper provides a thorough vulnerability assessment, identifying conditions for network destabilization and error convergence.
+    \item \textbf{Robust Detection}: KL-divergence-based detectors handle both sophisticated (IMP-based) and general (non-IMP-based) attacks.
+    \item \textbf{Adaptive Mitigation}: The self-belief and trust framework dynamically adjusts the network topology, preserving legitimate information and preventing attack propagation.
+    \item \textbf{Practical Validation}: Simulations demonstrate the approach’s effectiveness in realistic scenarios with noise and varying attack types.
+\end{itemize}
+
+\section*{Limitations and Future Work}
+\begin{itemize}
+    \item \textbf{Assumptions}: The reliance on a spanning tree and marginal stability of $A$ may limit applicability to some systems.
+    \item \textbf{Scalability}: The computational complexity of KL-divergence calculations for large networks is not discussed.
+    \item \textbf{Noise Sensitivity}: While simulations include Gaussian noise, the robustness to other noise types or higher noise levels could be explored.
+    \item \textbf{Future Directions}: The authors suggest extending the framework to nonlinear dynamics, time-varying topologies with intermittent connectivity, or integrating machine learning for attack prediction.
+\end{itemize}
+
+\section*{Conclusion}
+The paper presents a robust framework for resilient synchronization in DMASs under cyber-physical attacks. By combining rigorous attack analysis, KL-divergence-based detection, and a trust/self-belief mitigation strategy, it ensures that intact agents achieve consensus despite sophisticated attacks. The approach is theoretically sound, practically validated, and offers a significant advancement in securing distributed control systems.
+.
+
+
+
+
+\section{Root Node and Non-Root Node}
+
+\subsection{Root Node}
+\begin{itemize}
+    \item \textbf{Definition}: In a directed graph (digraph) $\mathcal{G} = (\mathcal{V}, \mathcal{E})$, a \textbf{root node} is a node from which there exists a directed path to every other node in the graph. In other words, it is a node that can "reach" all other nodes through directed edges.
+    
+    \item \textbf{Context in the Paper}:
+    \begin{itemize}
+        \item The paper assumes the communication graph has a \textbf{spanning tree} (Assumption 1, Section 3, Page 3), meaning there is at least one node (the root) from which all other nodes are reachable via directed paths.
+        \item A root node is critical in distributed multi-agent systems (DMASs) because it influences the entire network's behavior. For example, an attack on a root node (e.g., Agent 1 in the simulation, Section 7.1, Page 10) can destabilize the entire network due to its connectivity (Theorem 2, Page 10).
+        \item In the simulation (Fig. 2, Page 10), Agent 1 is a root node because it has directed paths to all other agents (e.g., through the communication topology).
+    \end{itemize}
+\end{itemize}
+
+\subsection{Non-Root Node}
+\begin{itemize}
+    \item \textbf{Definition}: A \textbf{non-root node} is any node in the graph that is not a root node. It does not have directed paths to all other nodes in the graph.
+    
+    \item \textbf{Context in the Paper}:
+    \begin{itemize}
+        \item Non-root nodes have limited influence compared to root nodes. An attack on a non-root node (e.g., Agent 5 in the simulation, Section 7.1, Page 10) only affects agents reachable from it (e.g., Agent 4) and does not destabilize the entire network (Theorem 3, Page 11).
+        \item For instance, in Fig. 4 (Page 11), when Agent 5 (a non-root node) is under an IMP-based attack, only Agent 4 (directly connected to Agent 5) fails to synchronize, while other agents remain unaffected.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Key Insight}
+\begin{itemize}
+    \item The distinction matters because the impact of an attack depends on the node's position in the graph. Root nodes are more critical, as compromising them can propagate errors throughout the network, while non-root nodes have localized effects.
+\end{itemize}
+
+\section{1-Robust Time-Varying Graph}
+
+\subsection{1-Robust Graph}
+\begin{itemize}
+    \item \textbf{Definition}: A directed graph $\mathcal{G} = (\mathcal{V}, \mathcal{E})$ is \textbf{r-robust} (Definition 8, Page 10) if, for every pair of nonempty, disjoint subsets of nodes ($v_1, v_2 \subset \mathcal{V}$), at least one of the subsets is \textbf{r-reachable}. A subset $v_s \subset \mathcal{V}$ is \textbf{r-reachable} (Definition 7, Page 10) if there exists at least one node in $v_s$ that has at least $r$ neighbors outside $v_s$.
+    \begin{itemize}
+        \item For \textbf{r = 1} (i.e., 1-robust), this means that for any two disjoint subsets of nodes, at least one subset has a node with at least one neighbor outside that subset.
+    \end{itemize}
+    
+    \item \textbf{Intuition}: A 1-robust graph ensures a minimal level of connectivity such that the graph cannot be easily split into isolated parts. It guarantees that information can flow across the network, even if some nodes are compromised or removed.
+    
+    \item \textbf{Context in the Paper}:
+    \begin{itemize}
+        \item The paper considers a \textbf{time-varying graph} $\mathcal{G}(t) = (\mathcal{V}, \mathcal{E}(t))$ (Section 6.3, Page 10), where the edges $\mathcal{E}(t)$ change over time due to the mitigation mechanism. This mechanism adjusts edge weights based on \textbf{trust} ($\Omega_{ij}(t)$) and \textbf{self-belief} ($\xi_j(t)$) values, effectively removing edges to compromised agents.
+        \item The paper assumes the time-varying graph remains \textbf{1-robust} (Theorem 6, Page 10), meaning that even as compromised agents are isolated, the graph retains enough connectivity for intact agents to communicate and synchronize.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Time-Varying Graph}
+\begin{itemize}
+    \item \textbf{Definition}: A time-varying graph is a directed graph where the set of edges $\mathcal{E}(t)$ changes over time. In the paper, the graph's topology evolves as agents update their trust and self-belief values, effectively modifying the adjacency matrix by weighting edges with $\Omega_{ij}(t) \xi_j(t) a_{ij}$ (Equation 65, Page 9).
+    
+    \item \textbf{Why Time-Varying?}: The mitigation mechanism dynamically isolates compromised agents by reducing the weight of their connections (i.e., setting $\Omega_{ij}(t) \approx 0$ for compromised neighbors). This changes the graph's structure over time, but the 1-robustness ensures that the network remains connected enough for synchronization.
+\end{itemize}
+
+\subsection{Connection to Spanning Tree}
+\begin{itemize}
+    \item \textbf{Lemma 6} (Page 10, citing LeBlanc et al., 2013) states that a time-varying directed graph $\mathcal{G}(t)$ has a \textbf{directed spanning tree} if and only if it is \textbf{1-robust}. A spanning tree ensures there is a root node from which all other nodes are reachable, which is critical for synchronization in DMASs (Section 3, Page 3).
+    
+    \item In the paper, the 1-robustness of $\mathcal{G}(t)$ guarantees that, despite attacks and topology changes, the graph retains a spanning tree among intact agents ($\mathcal{N}_{\text{int}}$), allowing them to achieve consensus (Theorem 6, Page 10).
+\end{itemize}
+
+\subsection{Key Insight}
+\begin{itemize}
+    \item A \textbf{1-robust time-varying graph} is a graph that, despite changes in connectivity (e.g., isolating compromised agents), maintains minimal robustness (r = 1) to ensure a spanning tree exists. This ensures that intact agents can still communicate and synchronize, even under attacks.
+\end{itemize}
+
+\section{Clarifying Graph Notions}
+
+To further clarify the graph-related concepts in the paper, here's a breakdown of key terms and their roles in the context of DMASs:
+
+\subsection{Directed Graph (Digraph) (Section 2, Page 2)}
+\begin{itemize}
+    \item \textbf{Definition}: A digraph $\mathcal{G} = (\mathcal{V}, \mathcal{E})$ consists of a set of nodes $\mathcal{V} = \{v_1, \ldots, v_N\}$ (representing agents) and a set of directed edges $\mathcal{E} \subseteq \mathcal{V} \times \mathcal{V}$ (representing communication links). An edge $(v_j, v_i) \in \mathcal{E}$ means agent $j$ sends information to agent $i$.
+    
+    \item \textbf{Adjacency Matrix}: $\mathcal{A}^d = [a_{ij}]$, where $a_{ij} > 0$ if $(v_j, v_i) \in \mathcal{E}$, else $a_{ij} = 0$. This matrix encodes the graph's connectivity.
+    
+    \item \textbf{Neighbors}: The set of neighbors of node $v_i$ is $\mathcal{N}_i = \{v_j : (v_j, v_i) \in \mathcal{E}\}$, i.e., agents that send information to agent $i$.
+\end{itemize}
+
+\subsection{Graph Laplacian Matrix (Section 3, Page 3)}
+\begin{itemize}
+    \item \textbf{Definition}: The Laplacian matrix $\mathcal{L}$ is derived from the adjacency matrix and the degree matrix. It is used to model the dynamics of consensus in DMASs.
+    
+    \item \textbf{Properties}: $\mathcal{L}$ has at least one zero eigenvalue, and all nonzero eigenvalues have positive real parts. If the graph has a spanning tree, zero is a simple eigenvalue (Lemma 1, Page 3).
+    
+    \item \textbf{Role}: The Laplacian matrix appears in the global dynamics of the system (Equation 68, Page 10) and determines the stability of the consensus protocol.
+\end{itemize}
+
+\subsection{Spanning Tree (Section 3, Page 3)}
+\begin{itemize}
+    \item \textbf{Definition}: A directed graph has a spanning tree if there exists a root node from which all other nodes are reachable via directed paths.
+    
+    \item \textbf{Role}: A spanning tree is the minimum requirement for synchronization in a directed graph (Section 3, Page 3). It ensures that information from at least one node can propagate to all others, enabling consensus.
+\end{itemize}
+
+\subsection{r-Reachable and r-Robust (Definitions 7 and 8, Page 10)}
+\begin{itemize}
+    \item \textbf{r-Reachable}: A subset of nodes $v_s$ is r-reachable if at least one node in $v_s$ has $r$ or more neighbors outside $v_s$. This measures how well-connected a subset is to the rest of the graph.
+    
+    \item \textbf{r-Robust}: A graph is r-robust if every pair of disjoint subsets has at least one subset that is r-reachable. This quantifies the graph's resilience to node or edge failures.
+    
+    \item \textbf{1-Robust}: The minimal robustness level (r = 1) ensures that the graph remains connected enough to have a spanning tree, even if some nodes are compromised.
+\end{itemize}
+
+\subsection{Time-Varying Graph in Context (Section 6.3, Page 10)}
+\begin{itemize}
+    \item The graph $\mathcal{G}(t)$ changes as agents adjust their trust and self-belief values. The edge weights $a_{ij}(t) = \Omega_{ij}(t) \xi_j(t) a_{ij}$ reflect the confidence in neighbors' information.
+    
+    \item The 1-robustness ensures that, even as compromised agents are isolated, the remaining network of intact agents ($\mathcal{N}_{\text{int}}$) maintains a spanning tree, guaranteeing synchronization.
+\end{itemize}
+
+\section{Example for Clarity}
+
+Consider the communication topology in \textbf{Fig. 2} (Page 10) with 5 agents:
+\begin{itemize}
+    \item \textbf{Nodes}: Agents 1, 2, 3, 4, 5.
+    \item \textbf{Edges}: Directed edges represent communication (e.g., Agent 1 $\rightarrow$ Agent 2, Agent 5 $\rightarrow$ Agent 4).
+    \item \textbf{Root Node}: Agent 1 is a root node because it has directed paths to all other agents (e.g., Agent 1 $\rightarrow$ Agent 2 $\rightarrow$ Agent 3, etc.).
+    \item \textbf{Non-Root Node}: Agent 5 is a non-root node because it only reaches Agent 4 directly and cannot reach Agents 1, 2, or 3.
+    \item \textbf{Attack Impact}:
+    \begin{itemize}
+        \item An IMP-based attack on Agent 1 (root) destabilizes all agents (Fig. 3, Page 11).
+        \item An attack on Agent 5 (non-root) only affects Agent 4 (Fig. 4, Page 11).
+    \end{itemize}
+    \item \textbf{1-Robust Time-Varying Graph}:
+    \begin{itemize}
+        \item Initially, the graph is fixed (Fig. 2). When Agent 5 is attacked, the mitigation mechanism reduces the weight of the edge from Agent 5 to Agent 4 ($\Omega_{45}(t) \approx 0$).
+        \item The resulting time-varying graph $\mathcal{G}(t)$ remains 1-robust because the remaining intact agents (1, 2, 3, 4) maintain enough connectivity (e.g., Agent 1 still reaches others).
+        \item This ensures a spanning tree exists among intact agents, allowing them to synchronize (Fig. 6, Page 11).
+    \end{itemize}
+\end{itemize}
+
+\section{Summary}
+
+\begin{itemize}
+    \item \textbf{Root Node}: A node that can reach all other nodes via directed paths (e.g., Agent 1). Attacks on root nodes can destabilize the entire network.
+    \item \textbf{Non-Root Node}: A node that cannot reach all others (e.g., Agent 5). Attacks on non-root nodes have localized effects.
+    \item \textbf{1-Robust Time-Varying Graph}: A directed graph that evolves over time (due to trust/self-belief adjustments) but maintains minimal robustness (r = 1), ensuring a spanning tree exists. This guarantees that intact agents can synchronize despite attacks.
+    \item \textbf{Graph Notions}: The paper uses directed graphs, adjacency matrices, Laplacian matrices, spanning trees, and robustness concepts to model communication and ensure resilient synchronization.
+\end{itemize}
+
+
+\end{document}

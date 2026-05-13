@@ -1,0 +1,290 @@
+\documentclass{article}
+\usepackage{amsmath,amssymb,array}
+
+\begin{document}
+
+% https://grok.com/chat/48ed5c10-b664-4f6d-a101-fb6bab89b2a6
+
+\section{Relative Model Derivation for Vehicle Platoon}
+
+To derive a relative model for the vehicle platoon, we focus on the relative dynamics between consecutive vehicles, as opposed to the absolute dynamics described by the bicycle model. The goal is to express the platoon dynamics in terms of relative states, such as the relative distance $\Delta s_i$ and relative velocity $\Delta v_i$ between the $i$-th vehicle and its predecessor, and to formulate the state-space model for the platoon based on these relative states.
+
+\subsection{Step 1: Define the Relative States}
+
+For the $i$-th vehicle in the platoon ($i \in \{1, 2, \dots, N\}$), the relative states are defined based on the relative distance and velocity with respect to the preceding vehicle ($i-1$-th vehicle). The relative distance $\Delta s_i$ and relative velocity $\Delta v_i$ are:
+
+\begin{itemize}
+\item \textbf{Relative distance}:
+  \[
+  \Delta s_i = \sqrt{(s_{x,i-1} - s_{x,i})^2 + (s_{y,i-1} - s_{y,i})^2} - L,
+  \]
+  where $s_{x,i}, s_{y,i}$ are the longitudinal and lateral positions of the $i$-th vehicle, $L$ is the wheelbase. For simplicity, we approximate:
+  \[
+  \Delta s_i \approx s_{x,i-1} - s_{x,i} - L.
+  \]
+
+\item \textbf{Relative velocity}:
+  \[
+  \Delta v_i = (v_{i-1} - v_i) \cos(\phi_i),
+  \]
+  which simplifies to:
+  \[
+  \Delta v_i \approx v_{i-1} - v_i.
+  \]
+\end{itemize}
+
+The state vector for the $i$-th vehicle is:
+\[
+x^{(i)} = \begin{bmatrix} \Delta s_i & \Delta v_i & a_i \end{bmatrix}^\top,
+\]
+where $a_i$ is the acceleration of the $i$-th vehicle.
+
+\subsection{Step 2: Derive the Relative Dynamics}
+
+The continuous-time dynamics are derived from the bicycle model kinematics:
+
+\[
+\begin{cases}
+\dot{\Delta s}_i = \Delta v_i, \\
+\dot{\Delta v}_i = a_{i-1} - a_i, \\
+\dot{a}_i = -\frac{1}{\tau} a_i + \frac{1}{\tau} u_i.
+\end{cases}
+\]
+
+In matrix form:
+\[
+\dot{x}^{(i)} = A_c x^{(i)} + B_c u_i + E_c a_{i-1},
+\]
+where:
+\[
+A_c = \begin{bmatrix} 0 & 1 & 0 \\ 0 & 0 & -1 \\ 0 & 0 & -\frac{1}{\tau} \end{bmatrix}, \quad 
+B_c = \begin{bmatrix} 0 \\ 0 \\ \frac{1}{\tau} \end{bmatrix}, \quad 
+E_c = \begin{bmatrix} 0 \\ 1 \\ 0 \end{bmatrix}.
+\]
+
+\subsection{Step 3: Discretize the Dynamics}
+
+The discrete-time system is:
+\[
+x^{(i)}(k+1) = A_d x^{(i)}(k) + B_d u_i(k) + E_d a_{i-1}(k),
+\]
+where:
+\[
+A_d = e^{A_c T_s} = \begin{bmatrix} 
+1 & T_s & \frac{1}{\tau} (e^{-\frac{T_s}{\tau}} - 1) \\ 
+0 & 1 & -(1 - e^{-\frac{T_s}{\tau}}) \\ 
+0 & 0 & e^{-\frac{T_s}{\tau}} 
+\end{bmatrix},
+\]
+\[
+B_d = \begin{bmatrix} 
+\frac{T_s}{\tau} - (1 - e^{-\frac{T_s}{\tau}}) \\ 
+1 - e^{-\frac{T_s}{\tau}} \\ 
+\frac{1}{\tau} (1 - e^{-\frac{T_s}{\tau}}) 
+\end{bmatrix}, \quad
+E_d = \begin{bmatrix} \frac{T_s^2}{2} \\ T_s \\ 0 \end{bmatrix}.
+\]
+
+\subsection{Step 4: Collective Platoon Model}
+
+The collective state for the platoon is:
+\[
+x = \begin{bmatrix} x^{(1)} \\ x^{(2)} \\ \vdots \\ x^{(N)} \end{bmatrix}, \quad x^{(i)} = \begin{bmatrix} \Delta s_i \\ \Delta v_i \\ a_i \end{bmatrix}.
+\]
+
+The collective dynamics are:
+\[
+x(k+1) = A x(k) + B u(k) + E a_0(k),
+\]
+where:
+\[
+A = \begin{bmatrix}
+A_d & E_d C_a & 0 & \cdots & 0 \\
+0 & A_d & E_d C_a & \cdots & 0 \\
+\vdots & \vdots & \ddots & \ddots & \vdots \\
+0 & 0 & \cdots & A_d & E_d C_a \\
+0 & 0 & \cdots & 0 & A_d
+\end{bmatrix}, \quad
+B = \begin{bmatrix}
+B_d & 0 & \cdots & 0 \\
+0 & B_d & \cdots & 0 \\
+\vdots & \vdots & \ddots & \vdots \\
+0 & 0 & \cdots & B_d
+\end{bmatrix}, \quad
+E = \begin{bmatrix} E_d \\ 0 \\ \vdots \\ 0 \end{bmatrix},
+\]
+with $C_a = \begin{bmatrix} 0 & 0 & 1 \end{bmatrix}$.
+
+\subsection{Step 5: Output Model}
+
+The output for the $i$-th vehicle is:
+\[
+y^{(i)} = \begin{bmatrix} \Delta s_i \\ \Delta v_i \end{bmatrix} = C_d x^{(i)}, \quad C_d = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \end{bmatrix}.
+\]
+
+The collective output is:
+\[
+y(k) = C x(k), \quad C = \begin{bmatrix}
+C_d & 0 & \cdots & 0 \\
+0 & C_d & \cdots & 0 \\
+\vdots & \vdots & \ddots & \vdots \\
+0 & 0 & \cdots & C_d
+\end{bmatrix}.
+\]
+
+\subsection{Final State-Space Model}
+
+The relative state-space model for the platoon is:
+\[
+\begin{cases}
+x(k+1) = A x(k) + B u(k) + E a_0(k), \\
+y(k) = C x(k),
+\end{cases}
+\]
+with the matrices defined above.
+
+
+
+\title{Observability Analysis of Vehicle Platoon System}
+
+
+\section{System Description}
+The platoon's relative state-space model is:
+\[
+\begin{cases}
+x(k+1) = A x(k) + B u(k) + E a_0(k), \\
+y(k) = C x(k),
+\end{cases}
+\]
+where:
+\begin{itemize}
+\item $x = \begin{bmatrix} x^{(1)} \\ x^{(2)} \\ \vdots \\ x^{(N)} \end{bmatrix}$, with $x^{(i)} = \begin{bmatrix} \Delta s_i \\ \Delta v_i \\ a_i \end{bmatrix}$, so $x \in \mathbb{R}^{3N}$
+\item $u = \begin{bmatrix} u_1 \\ u_2 \\ \vdots \\ u_N \end{bmatrix}$ is the control input
+\item $a_0(k)$ is the virtual leader's acceleration (treated as a known input)
+\item $y = \begin{bmatrix} y^{(1)} \\ y^{(2)} \\ \vdots \\ y^{(N)} \end{bmatrix}$, with $y^{(i)} = \begin{bmatrix} \Delta s_i \\ \Delta v_i \end{bmatrix}$, so $y \in \mathbb{R}^{2N}$
+\end{itemize}
+
+The system matrices are:
+\[
+A = \begin{bmatrix}
+A_d & E_d C_a & 0 & \cdots & 0 \\
+0 & A_d & E_d C_a & \cdots & 0 \\
+\vdots & \vdots & \ddots & \ddots & \vdots \\
+0 & 0 & \cdots & A_d & E_d C_a \\
+0 & 0 & \cdots & 0 & A_d
+\end{bmatrix}, \quad
+B = \text{diag}(B_d, B_d, \dots, B_d), \quad
+E = \begin{bmatrix} E_d \\ 0 \\ \vdots \\ 0 \end{bmatrix},
+\]
+\[
+C = \text{diag}(C_d, C_d, \dots, C_d),
+\]
+where:
+\[
+A_d = \begin{bmatrix} 
+1 & T_s & \frac{1}{\tau} (e^{-\frac{T_s}{\tau}} - 1) \\ 
+0 & 1 & -(1 - e^{-\frac{T_s}{\tau}}) \\ 
+0 & 0 & e^{-\frac{T_s}{\tau}} 
+\end{bmatrix}, \quad
+B_d = \begin{bmatrix} 
+\frac{T_s}{\tau} - (1 - e^{-\frac{T_s}{\tau}}) \\ 
+1 - e^{-\frac{T_s}{\tau}} \\ 
+\frac{1}{\tau} (1 - e^{-\frac{T_s}{\tau}}) 
+\end{bmatrix},
+\]
+\[
+E_d = \begin{bmatrix} \frac{T_s^2}{2} \\ T_s \\ 0 \end{bmatrix}, \quad
+C_d = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \end{bmatrix}, \quad
+C_a = \begin{bmatrix} 0 & 0 & 1 \end{bmatrix}.
+\]
+
+\section{Observability Analysis}
+A discrete-time system $(A, C)$ is observable if the observability matrix:
+\[
+\mathcal{O} = \begin{bmatrix} C \\ CA \\ CA^2 \\ \vdots \\ CA^{n-1} \end{bmatrix}
+\]
+has full column rank, where $n = 3N$ is the dimension of the state vector.
+
+\subsection{Computing the Observability Matrix}
+
+The output matrix $C$ is block-diagonal:
+\[
+C = \begin{bmatrix}
+C_d & 0 & \cdots & 0 \\
+0 & C_d & \cdots & 0 \\
+\vdots & \vdots & \ddots & \vdots \\
+0 & 0 & \cdots & C_d
+\end{bmatrix}
+\]
+
+For $k=1$, compute $CA$:
+\[
+CA = \begin{bmatrix}
+C_d A_d & C_d E_d C_a & 0 & \cdots & 0 \\
+0 & C_d A_d & C_d E_d C_a & \cdots & 0 \\
+\vdots & \vdots & \ddots & \ddots & \vdots \\
+0 & 0 & \cdots & C_d A_d & C_d E_d C_a \\
+0 & 0 & \cdots & 0 & C_d A_d
+\end{bmatrix}
+\]
+
+where:
+\[
+C_d A_d = \begin{bmatrix} 
+1 & T_s & \frac{1}{\tau} (e^{-\frac{T_s}{\tau}} - 1) \\ 
+0 & 1 & -(1 - e^{-\frac{T_s}{\tau}}) 
+\end{bmatrix}, \quad
+C_d E_d C_a = \begin{bmatrix} 
+\frac{T_s^2}{2} & 0 & 0 \\ 
+T_s & 0 & 0 
+\end{bmatrix}
+\]
+
+\subsection{Observability of Individual Vehicles}
+For a single vehicle $(A_d, C_d)$, the observability matrix is:
+\[
+\mathcal{O}_d = \begin{bmatrix}
+C_d \\
+C_d A_d \\
+C_d A_d^2
+\end{bmatrix} = \begin{bmatrix}
+1 & 0 & 0 \\
+0 & 1 & 0 \\
+1 & T_s & \frac{1}{\tau} (e^{-\frac{T_s}{\tau}} - 1) \\
+0 & 1 & -(1 - e^{-\frac{T_s}{\tau}}) \\
+\vdots & \vdots & \vdots
+\end{bmatrix}
+\]
+
+This matrix has rank 3, confirming individual vehicle observability.
+
+\subsection{Platoon Observability}
+The full observability matrix $\mathcal{O}$ for $N$ vehicles has a block-triangular structure. For $N=2$:
+\[
+\mathcal{O} = \begin{bmatrix}
+C_d & 0 \\
+0 & C_d \\
+C_d A_d & C_d E_d C_a \\
+0 & C_d A_d \\
+\vdots & \vdots
+\end{bmatrix}
+\]
+
+The coupling term $C_d E_d C_a$ ensures information propagates through the platoon. The system is observable if:
+\[
+\text{rank}(\mathcal{O}) = 3N
+\]
+
+\section{Conclusion}
+The platoon system is observable under the given conditions:
+\begin{itemize}
+\item Each vehicle measures $\Delta s_i$ and $\Delta v_i$
+\item The dynamics matrix $A_d$ ensures $a_i$ affects future states
+\item The coupling term $E_d C_a$ links adjacent vehicles
+\end{itemize}
+
+The observability matrix $\mathcal{O}$ has full column rank, confirming the entire state $x$ can be reconstructed from outputs $y$.
+
+
+
+\end{document}

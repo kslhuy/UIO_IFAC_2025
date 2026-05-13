@@ -1,0 +1,348 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb}
+\usepackage[colorlinks=true, linkcolor=blue, citecolor=blue]{hyperref}
+
+\title{Summary of ``Characterizing Trust and Resilience in Distributed Consensus for Cyberphysical Systems''}
+\author{Michal Yemini, Angelia Nedić, Andrea J. Goldsmith, and Stephanie Gil}
+\date{Published in \textit{IEEE Transactions on Robotics}, Vol. 38, No. 1, February 2022}
+
+\begin{document}
+
+\maketitle
+
+\section*{Detailed Summary of the Introduction}
+The introduction outlines the critical problem of achieving resilient distributed consensus in multiagent systems, particularly in cyberphysical systems (CPSs), where malicious or noncooperative agents can disrupt coordination. It emphasizes the importance of consensus algorithms in enabling coordinated behaviors in multiagent systems and highlights their vulnerability to adversarial attacks. The authors introduce their approach, which leverages stochastic trust values ($\alpha_{ij}$) between agents to enhance resilience, and provide a survey of related work to contextualize their contributions.
+
+\subsection*{Core Problem}
+\begin{itemize}
+    \item \textbf{Consensus in Multiagent Systems}: Consensus is fundamental for coordinating behaviors in multiagent systems, such as robots, autonomous vehicles, or sensors in CPSs. These systems rely on agents agreeing on a common value or state through distributed communication.
+    \item \textbf{Vulnerability to Malicious Agents}: Consensus algorithms are highly susceptible to malicious agents (e.g., Byzantine agents) or noncooperative behaviors, which can manipulate the consensus value or prevent convergence entirely \cite{ref1,ref2,ref3,ref4,ref5}. Traditional performance guarantees for consensus often fail when agents do not cooperate \cite{ref6,ref7}.
+\end{itemize}
+
+\subsection*{Objective}
+The authors aim to develop a unified mathematical framework to characterize the resilience of consensus systems when stochastic trust values are available. These trust values, derived from physical channels (e.g., wireless signals), help distinguish legitimate from malicious agents, enabling robust consensus even in adversarial settings.
+
+\subsection*{Survey of Related Work (Section I-A)}
+The introduction includes a comprehensive survey of prior work on consensus, resilient consensus, and techniques for detecting or mitigating malicious agents. Below is a detailed breakdown of the survey, focusing on techniques for detecting malicious agents and related concepts:
+
+\begin{enumerate}
+    \item \textbf{Consensus Fundamentals}:
+    \begin{itemize}
+        \item \textbf{Historical Context}: The consensus problem has been extensively studied, with foundational results on convergence conditions \cite{ref25,ref26,ref27,ref28,ref29}, convergence rates \cite{ref30,ref31,ref32}, and implementation strategies \cite{ref33,ref34}.
+        \item \textbf{Key Insight}: These works establish the theoretical underpinnings of consensus but assume cooperative agents, which does not hold in adversarial settings.
+    \end{itemize}
+    
+    \item \textbf{Resilient Consensus}:
+    \begin{itemize}
+        \item \textbf{Definition}: Resilient consensus refers to achieving consensus despite noncooperative agents, which may be faulty or malicious.
+        \item \textbf{Importance in CPSs}: The need for resilience is critical in CPSs (e.g., multirobot systems, power grids, traffic management) due to their role in critical infrastructure and susceptibility to attacks \cite{ref7,ref35,ref36,ref37,ref38,ref39,ref40,ref41,ref42}.
+        \item \textbf{Challenges}: Malicious agents can exploit vulnerabilities in consensus protocols, leading to incorrect consensus values or failure to converge \cite{ref1,ref2,ref3,ref4}.
+    \end{itemize}
+    
+    \item \textbf{Techniques for Detecting Malicious Agents}:
+    The survey discusses several approaches to detect or mitigate malicious agents, primarily focusing on data-driven and connectivity-based methods, with emerging interest in physical channel-based validation:
+    
+    \begin{itemize}
+        \item \textbf{Data-Driven Detection}:
+        \begin{itemize}
+            \item \textbf{Outlier Rejection}: Many works use transmitted data to identify malicious agents by detecting outliers or inconsistencies in agent values \cite{ref8}. For example, algorithms may discard extreme values to mitigate the influence of malicious agents.
+            \item \textbf{Limitations}: These methods often require strong assumptions, such as a maximum number of malicious agents (typically less than half the network connectivity) or high network connectivity to ensure detection \cite{ref1,ref5,ref6}. The classical result from Dolev \cite{ref1} states that consensus is achievable only if malicious agents comprise less than half the network connectivity.
+            \item \textbf{Example}: The work in \cite{ref8} demonstrates asymptotic convergence to a point within the convex hull of legitimate agents' initial values, but this requires specific connectivity conditions.
+        \end{itemize}
+        
+        \item \textbf{Network Connectivity-Based Approaches}:
+        \begin{itemize}
+            \item \textbf{Graph-Theoretic Constraints}: Traditional resilient consensus relies on graph connectivity to limit the influence of malicious agents. For instance, a network must have sufficient connectivity (e.g., at least $2f+1$ neighbors, where $f$ is the number of malicious agents) to tolerate Byzantine faults \cite{ref1}.
+            \item \textbf{Limitations}: When the number of malicious agents exceeds this threshold, undetected malicious agents can control the consensus value, rendering the system vulnerable.
+        \end{itemize}
+        
+        \item \textbf{Physical Channel-Based Validation}:
+        \begin{itemize}
+            \item \textbf{Emerging Approach}: CPSs offer additional physical channels (e.g., camera data, wireless signals, lidar, radar) that can validate transmitted data and quantify trust between agents \cite{ref11,ref12,ref13,ref14,ref44,ref45}.
+            \item \textbf{Wireless Signals}: The wireless community has shown that signals can provide information for tracking, localization \cite{ref15,ref16,ref18,ref48,ref49,ref50}, authentication \cite{ref19,ref51,ref52}, and thwarting spoofing attacks \cite{ref53}. For example, directional signal profiles derived from channel state information can verify agent identity \cite{ref49,ref54}.
+            \item \textbf{Trust Derivation}: The authors' prior work \cite{ref20} introduced a scalar trust value $\alpha_{ij} \in (-0.5, 0.5)$, computed from wireless signal profiles, which quantifies the likelihood that a transmission comes from a legitimate or spoofed node. This is particularly effective against Sybil attacks, where malicious agents impersonate multiple identities.
+        \end{itemize}
+    \end{itemize}
+    
+    \item \textbf{Specific Techniques for Malicious Agent Detection}:
+    The survey implicitly categorizes detection techniques into three broad classes based on the literature:
+    \begin{itemize}
+        \item \textbf{Statistical Analysis of Transmitted Data}: Methods that analyze agent values over time to detect anomalies (e.g., \cite{ref8}). These are limited by the need for consistent data patterns and fail against sophisticated attacks (e.g., drift attacks).
+        \item \textbf{Network Topology Analysis}: Techniques that leverage graph structure to isolate malicious agents, requiring high connectivity \cite{ref1,ref5,ref6}. These are ineffective when malicious agents dominate the network.
+        \item \textbf{Physical Signal-Based Trust}: Emerging methods that use physical channel data to derive trust metrics, as in \cite{ref20,ref55,ref56}. These are promising for CPSs, as they exploit inherent physical properties (e.g., signal strength, directionality) to validate agent identity.
+    \end{itemize}
+    
+    \item \textbf{Number of Techniques}:
+    \begin{itemize}
+        \item The survey does not explicitly quantify the number of distinct techniques but references a broad range of approaches across data-driven, connectivity-based, and physical channel-based methods. At least \textbf{three primary categories} (statistical, topological, physical) are discussed, with multiple sub-techniques within each (e.g., outlier rejection, connectivity thresholds, signal profile analysis).
+        \item Specific examples include:
+        \begin{itemize}
+            \item Outlier rejection algorithms \cite{ref8}.
+            \item Connectivity-based fault tolerance \cite{ref1}.
+            \item Wireless signal-based trust derivation \cite{ref20,ref49,ref54}.
+            \item Authentication and spoofing prevention using physical channels \cite{ref19,ref51,ref53}.
+        \end{itemize}
+    \end{itemize}
+    
+    \item \textbf{Gaps in Existing Work}:
+    \begin{itemize}
+        \item \textbf{Connectivity Constraints}: Most traditional methods fail when malicious agents exceed half the network connectivity, a significant limitation for large-scale CPSs.
+        \item \textbf{Sophisticated Attacks}: Data-driven methods struggle with attacks that mimic legitimate behavior (e.g., drift attacks).
+        \item \textbf{Lack of Unified Framework}: Prior work lacks a comprehensive mathematical framework to integrate trust observations for resilient consensus, especially in adversarial settings with many malicious agents.
+    \end{itemize}
+\end{enumerate}
+
+\subsection*{Contributions in Context}
+The authors position their work as a significant advancement over existing techniques by:
+\begin{itemize}
+    \item \textbf{Relaxing Connectivity Constraints}: Unlike classical results \cite{ref1}, their framework achieves convergence even when malicious agents exceed half the network connectivity.
+    \item \textbf{Leveraging Trust Observations}: By using stochastic $\alpha_{ij}$ values, the framework can detect and mitigate malicious agents more effectively than data-driven or connectivity-based methods alone.
+    \item \textbf{Unified Mathematical Framework}: The article provides a rigorous theoretical foundation for resilient consensus, integrating trust observations to achieve convergence, bound deviation, and ensure fast convergence rates.
+\end{itemize}
+
+\subsection*{Roadmap of the Article}
+The introduction concludes by outlining the article's structure:
+\begin{itemize}
+    \item \textbf{Section I-A}: Provides the survey of related work (summarized above).
+    \item \textbf{Section II}: Introduces the consensus model, trust model ($\alpha_{ij}$), and malicious agent influence.
+    \item \textbf{Section III}: Presents theoretical results on convergence, deviation, and convergence rate.
+    \item \textbf{Section IV}: Discusses simulation results.
+    \item \textbf{Section V}: Explores implications and future work.
+    \item \textbf{Section VI}: Concludes the article.
+\end{itemize}
+
+\section*{Résumé of the Introduction}
+The introduction establishes the importance of resilient consensus in multiagent CPSs, highlighting the vulnerability of consensus algorithms to malicious agents. It surveys prior work, categorizing techniques for detecting malicious agents into:
+\begin{enumerate}
+    \item \textbf{Data-Driven Methods} (e.g., outlier rejection \cite{ref8}), limited by connectivity and attack sophistication.
+    \item \textbf{Network Connectivity-Based Methods} (e.g., graph-theoretic constraints \cite{ref1}), which fail when malicious agents dominate.
+    \item \textbf{Physical Channel-Based Methods} (e.g., wireless signal-derived trust \cite{ref20,ref49,ref54}), which are promising for CPSs.
+\end{enumerate}
+
+At least three broad categories of detection techniques are discussed, with multiple sub-techniques (e.g., statistical analysis, connectivity thresholds, signal profile analysis). The survey identifies gaps in existing methods, such as strict connectivity requirements and ineffectiveness against sophisticated attacks. The authors propose a novel framework that uses stochastic trust values ($\alpha_{ij}$) to achieve resilient consensus, relaxing traditional constraints and providing strong performance guarantees. This sets the stage for their theoretical and simulation-based contributions in the subsequent sections.
+
+\section*{References (from the Introduction)}
+The introduction cites numerous works, including:
+\begin{itemize}
+    \item \cite{ref1} Dolev (1982): Byzantine fault tolerance.
+    \item \cite{ref5,ref6}: Vulnerabilities and connectivity-based resilience.
+    \item \cite{ref8}: Asymptotic convergence with malicious agents.
+    \item \cite{ref11,ref12,ref13,ref14,ref44,ref45}: Physical channel validation.
+    \item \cite{ref15,ref16,ref18,ref48,ref49,ref50}: Wireless signal-based tracking and localization.
+    \item \cite{ref19,ref51,ref52}: Authentication using wireless signals.
+    \item \cite{ref20,ref49,ref54}: Trust derivation from wireless signals.
+    \item \cite{ref25,ref26,ref27,ref28,ref29,ref30,ref31,ref32,ref33,ref34}: Consensus fundamentals.
+    \item \cite{ref35,ref36,ref37,ref38,ref39,ref40,ref41,ref42}: Security in CPSs.
+\end{itemize}
+
+
+\section*{Overview}
+This article presents a mathematical framework to enhance the resilience of distributed consensus in multiagent cyberphysical systems (CPSs) by leveraging stochastic trust values between agents. The authors address the vulnerability of consensus algorithms to malicious agents, proposing a trust-based approach that achieves robust performance even when malicious agents outnumber legitimate ones.
+
+\section*{Key Contributions}
+\begin{enumerate}
+    \item \textbf{Convergence}: The framework demonstrates almost sure convergence to a common limit value, even when malicious agents exceed half the network connectivity, surpassing traditional limits where consensus fails under such conditions.
+    \item \textbf{Deviation Control}: The deviation from the true consensus value (nominal average consensus) is bounded with high probability, approaching zero exponentially by utilizing trust observations and an observation period $T_0$.
+    \item \textbf{Convergence Rate}: The expected convergence rate decays exponentially, influenced by the quality of trust observations ($\alpha_{ij}$), enabling finite-time convergence with arbitrarily high probability.
+\end{enumerate}
+
+\section*{Methodology}
+\begin{itemize}
+    \item \textbf{Trust Model}: Stochastic trust values ($\alpha_{ij}$) represent the probability of trust between agents, derived from physical channels like wireless signals. These values are close to 0.5 for legitimate agents and -0.5 for spoofed nodes, aiding in distinguishing malicious agents.
+    \item \textbf{Two-Stage Consensus Protocol}:
+    \begin{enumerate}
+        \item \textbf{Observation Stage}: Agents collect $\alpha_{ij}$ values over a time window $T_0$ to classify agents as trustworthy or malicious without updating consensus values.
+        \item \textbf{Consensus Stage}: Agents use a modified consensus protocol, incorporating data only from trusted agents based on $\alpha_{ij}$.
+    \end{enumerate}
+    \item \textbf{Malicious Agent Models}:
+    \begin{itemize}
+        \item \textbf{Maximal Deviation Input}: Malicious agents choose values to maximize deviation from the true consensus.
+        \item \textbf{Drift Malicious Input}: Malicious agents add a time-varying drift to legitimate agent values, making detection harder.
+    \end{itemize}
+\end{itemize}
+
+\section*{Theoretical Results}
+\begin{itemize}
+    \item Convergence is guaranteed almost surely under specific conditions on $\alpha_{ij}$ and network connectivity.
+    \item The deviation from the true consensus value decreases exponentially with $T_0$, allowing recovery of nominal consensus.
+    \item Correct classification of agents (malicious vs. legitimate) is achieved in finite time with probability 1, with an exponential convergence rate tied to trust observation quality.
+\end{itemize}
+
+\section*{Simulation Results}
+\begin{itemize}
+    \item Simulations with 5, 15, and 30 malicious agents (up to twice the number of legitimate agents) show that increasing $T_0$ significantly reduces deviation from the true consensus.
+    \item The framework outperforms classical results, which fail when malicious agents exceed half the network connectivity (e.g., tolerating only up to 2 malicious agents in the tested setup).
+    \item Higher variance in $\alpha_{ij}$ (controlled by parameter $\ell$) increases deviation, but larger $T_0$ mitigates this effect.
+\end{itemize}
+
+\section*{Discussion and Future Work}
+\begin{itemize}
+    \item The framework assumes a fixed network topology but suggests adaptability to dynamic topologies (e.g., B-connected graphs).
+    \item The quality of $\alpha_{ij}$ observations is critical; future work could explore deriving more precise trust values from physical channels.
+    \item The results provide a foundation for trust-based resilience in CPSs, applicable to multirobot systems, autonomous vehicles, and critical infrastructure.
+\end{itemize}
+
+\section*{Conclusion}
+The article establishes a robust mathematical framework for resilient consensus in CPSs, leveraging stochastic trust to achieve convergence, bound deviation, and ensure fast convergence rates despite significant malicious interference. This approach significantly advances the security and coordination of multiagent systems.
+
+\section*{References}
+The article builds on prior work in consensus algorithms, Byzantine fault tolerance, and trust derivation from physical channels, citing foundational studies like Dolev (1982) and the authors' previous work (Gil et al., 2017).
+
+
+
+
+% \title{Summary of ``Secure State Estimation and Control of Cyber-Physical Systems: A Survey''}
+
+
+\maketitle
+
+\textbf{Published in}: IEEE Transactions on Systems, Man, and Cybernetics: Systems, Vol. 51, No. 1, January 2021 \\
+\textbf{Authors}: Derui Ding, Qing-Long Han, Xiaohua Ge, Jun Wang
+
+\section*{Overview}
+This article provides a comprehensive survey of secure state estimation and control techniques for cyber-physical systems (CPSs), which integrate physical processes with cyber infrastructure. CPSs are critical in applications like energy, transportation, manufacturing, and healthcare but are vulnerable to cyberattacks due to their interconnected nature. The paper reviews recent advancements, categorizes approaches, presents application examples, and highlights future research challenges.
+
+\section*{Key Points}
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Cyber-Physical Systems (CPSs)}:
+    \begin{itemize}
+        \item CPSs combine physical and cyber components, utilizing sensors, actuators, and communication networks for monitoring and control.
+        \item They are integral to modern industries (e.g., smart grids, water distribution, intelligent transportation) but face severe security threats due to expanded attack surfaces and the potential for catastrophic failures.
+        \item Notable incidents (e.g., Stuxnet, Ukrainian power grid attacks) underscore the need for robust security measures.
+    \end{itemize}
+    
+    \item \textbf{Typical Cyberattacks}:
+    \begin{itemize}
+        \item \textbf{Denial-of-Service (DoS) Attacks}: Disrupt data availability by consuming resources, modeled using Bernoulli sequences, Markov processes, or frequency/duration constraints.
+        \item \textbf{Deception Attacks}: Compromise data integrity, including:
+        \begin{itemize}
+            \item \textbf{False Data Injection (FDI) Attacks}: Manipulate data to mislead system components, often requiring system knowledge for stealth.
+            \item \textbf{Replay Attacks}: Record and retransmit data to degrade performance.
+            \item \textbf{Covert/Zero-Dynamics Attacks}: Exploit system dynamics to remain undetected.
+        \end{itemize}
+        \item Challenges include unknown attack characteristics and complex system dynamics.
+    \end{itemize}
+    
+    \item \textbf{Secure State Estimation}:
+    \begin{itemize}
+        \item \textbf{Objective}: Reconstruct system states from potentially corrupted sensor data.
+        \item \textbf{Approaches}:
+        \begin{itemize}
+            \item \textbf{Variance-Based Estimation}:
+            \begin{itemize}
+                \item \textbf{Passive Defense}: Minimizes estimation error variance assuming known attack characteristics (e.g., bounded deception attacks) [References: 16, 55].
+                \item \textbf{Active Detection}: Integrates detection mechanisms (e.g., $\chi^2$ detectors) to identify and remove compromised data [References: 15, 42, 58, 92].
+            \end{itemize}
+            \item \textbf{Stability-Based Estimation}:
+            \begin{itemize}
+                \item \textbf{Passive Defense}: Uses disturbance attenuation (e.g., $H_\infty$ performance) to handle worst-case scenarios [References: 41, 50, 56, 86].
+                \item \textbf{Active Detection}: Employs attack isolation and attenuation, addressing sparse attacks via optimization techniques [References: 6, 12, 35, 47, 78, 79].
+            \end{itemize}
+            \item \textbf{Other Methods}: Include ellipsoidal set-based detection and maximum correntropy criteria for robust estimation [References: 36, 52, 53, 63, 77, 81].
+        \end{itemize}
+        \item Challenges: Handling unknown attack statistics, ensuring scalability, and managing complex data transmission dynamics.
+    \end{itemize}
+    
+    \item \textbf{Secure Control}:
+    \begin{itemize}
+        \item \textbf{Objective}: Maintain system performance and stability under cyberattacks.
+        \item \textbf{Categories}:
+        \begin{itemize}
+            \item \textbf{Centralized Secure Control}:
+            \begin{itemize}
+                \item Uses switched system theory for DoS attacks, focusing on tolerable attack frequency/duration [References: 29, 73, 74, 102].
+                \item Employs active detection (e.g., $\chi^2$, cumulative sum detectors) to identify attacks [References: 5, 26, 60].
+                \item Applies game theory to model defender-attacker interactions, deriving optimal strategies [References: 57, 94, 95, 96, 101].
+            \end{itemize}
+            \item \textbf{Distributed Secure Control}:
+            \begin{itemize}
+                \item Addresses spatially distributed CPSs, focusing on resilience against attacks like Byzantine agents [References: 1, 70, 84].
+                \item Uses impulsive controllers and consensus algorithms for attack attenuation [References: 39, 90].
+            \end{itemize}
+            \item \textbf{Resource-Aware Secure Control}:
+            \begin{itemize}
+                \item Integrates communication scheduling (e.g., event-triggered protocols) to optimize resource use [References: 34, 37, 38, 98, 103].
+                \item Addresses challenges from data sparsity caused by attacks and scheduling [References: 19, 30, 43, 44, 54, 71].
+            \end{itemize}
+        \end{itemize}
+        \item Challenges: Balancing detection precision with real-time control, ensuring scalability, and handling Zeno behavior in event-triggered systems.
+    \end{itemize}
+    
+    \item \textbf{Application Examples}:
+    \begin{itemize}
+        \item \textbf{Water Distribution Systems}:
+        \begin{itemize}
+            \item Utilizes SCADA systems for remote monitoring and control.
+            \item Secure state estimation frameworks detect and isolate attacks (e.g., water pilfering, replay attacks) using model-based techniques and statistical detection [References: 3, 4, 24, 25, 59].
+        \end{itemize}
+        \item \textbf{Wide-Area Power Systems}:
+        \begin{itemize}
+            \item Employs wide-area monitoring, protection, and control (WAMPAC) systems.
+            \item Secure estimation and control mitigate FDI and DoS attacks, ensuring grid stability [References: 8, 11, 48, 49, 51, 64, 72].
+        \end{itemize}
+    \end{itemize}
+    
+    \item \textbf{Future Research Challenges}:
+    \begin{itemize}
+        \item \textbf{Attack Location and Isolation}: Develop mechanisms to accurately locate and isolate attacks across cyber-physical domains.
+        \item \textbf{Complex Time Series Analysis}: Address simultaneous cyberattacks, communication scheduling, and network-induced phenomena (e.g., delays, packet losses).
+        \item \textbf{Scalable Solutions}: Design scalable estimation and control strategies for plug-and-play CPSs.
+        \item \textbf{Data-Driven Approaches}: Leverage IoT and data-driven methods for security when model-based approaches are impractical [Reference: 7].
+        \item \textbf{AI-Based Methods}: Develop intelligent estimation and control algorithms to handle sophisticated, unknown attacks [Reference: 27].
+    \end{itemize}
+\end{enumerate}
+
+\section*{Conclusion}
+The survey underscores the critical role of secure state estimation and control in ensuring the reliability and safety of CPSs against cyberattacks. While significant progress has been made, practical limitations and emerging threats necessitate further research into scalable, data-driven, and AI-based solutions to enhance CPS security.
+
+
+\begin{thebibliography}{99}
+\bibitem{ref1} Dolev, D. (1982). Byzantine fault tolerance.
+\bibitem{ref2} Reference 2.
+\bibitem{ref3} Reference 3.
+\bibitem{ref4} Reference 4.
+\bibitem{ref5} Reference 5.
+\bibitem{ref6} Reference 6.
+\bibitem{ref7} Reference 7.
+\bibitem{ref8} Reference 8.
+\bibitem{ref11} Reference 11.
+\bibitem{ref12} Reference 12.
+\bibitem{ref13} Reference 13.
+\bibitem{ref14} Reference 14.
+\bibitem{ref15} Reference 15.
+\bibitem{ref16} Reference 16.
+\bibitem{ref18} Reference 18.
+\bibitem{ref19} Reference 19.
+\bibitem{ref20} Reference 20.
+\bibitem{ref25} Reference 25.
+\bibitem{ref26} Reference 26.
+\bibitem{ref27} Reference 27.
+\bibitem{ref28} Reference 28.
+\bibitem{ref29} Reference 29.
+\bibitem{ref30} Reference 30.
+\bibitem{ref31} Reference 31.
+\bibitem{ref32} Reference 32.
+\bibitem{ref33} Reference 33.
+\bibitem{ref34} Reference 34.
+\bibitem{ref35} Reference 35.
+\bibitem{ref36} Reference 36.
+\bibitem{ref37} Reference 37.
+\bibitem{ref38} Reference 38.
+\bibitem{ref39} Reference 39.
+\bibitem{ref40} Reference 40.
+\bibitem{ref41} Reference 41.
+\bibitem{ref42} Reference 42.
+\bibitem{ref44} Reference 44.
+\bibitem{ref45} Reference 45.
+\bibitem{ref48} Reference 48.
+\bibitem{ref49} Reference 49.
+\bibitem{ref50} Reference 50.
+\bibitem{ref51} Reference 51.
+\bibitem{ref52} Reference 52.
+\bibitem{ref53} Reference 53.
+\bibitem{ref54} Reference 54.
+\bibitem{ref55} Reference 55.
+\bibitem{ref56} Reference 56.
+\end{thebibliography}
+
+\end{document}

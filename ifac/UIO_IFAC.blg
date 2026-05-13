@@ -1,0 +1,48 @@
+This is BibTeX, Version 0.99d
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: UIO_IFAC.aux
+Reallocating 'name_of_file' (item size: 1) to 9 items.
+The style file: ifacconf.bst
+Reallocating 'name_of_file' (item size: 1) to 14 items.
+Database file #1: UIO_IFAC_refs.bib
+You've used 5 entries,
+            2921 wiz_defined-function locations,
+            632 strings with 5802 characters,
+and the built_in function-call counts, 3355 in all, are:
+= -- 275
+> -- 132
+< -- 2
++ -- 49
+- -- 42
+* -- 267
+:= -- 499
+add.period$ -- 17
+call.type$ -- 5
+change.case$ -- 39
+chr.to.int$ -- 5
+cite$ -- 5
+duplicate$ -- 245
+empty$ -- 256
+format.name$ -- 61
+if$ -- 652
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 54
+newline$ -- 36
+num.names$ -- 20
+pop$ -- 99
+preamble$ -- 1
+purify$ -- 34
+quote$ -- 0
+skip$ -- 73
+stack$ -- 0
+substring$ -- 194
+swap$ -- 144
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 45
+warning$ -- 0
+while$ -- 25
+width$ -- 0
+write$ -- 77

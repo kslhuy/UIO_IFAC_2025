@@ -1,0 +1,298 @@
+\chapter[Two-Layer Residual Learning for Vehicle State Estimation]{Two-Layer Residual Learning for Vehicle State Estimation}\label{chp4_chap}
+\chaptermark{Two-Layer Residual Learning for Vehicle State Estimation}
+
+\objectif{This chapter proposes a vehicle-centric, two-layer estimation framework that combines physics-based reconstruction of tire-force residuals with data-driven learning of remaining modeling errors. The key idea is to \emph{separate} uncertainties into:
+\begin{itemize}
+    \item a \textbf{Layer-1 (Teacher)} component that captures \emph{tire-only} residual forces with a constrained, physics-informed estimator; and
+    \item a \textbf{Layer-2 (Student)} component that learns the \emph{leftover mismatch} (biases, delays, low-speed artifacts, unmodeled couplings) as an online neural correction.
+\end{itemize}
+The chapter (i) formalizes this uncertainty split for a bicycle model, (ii) details an augmented-state EKF teacher that estimates tire residuals as a random walk, (iii) derives a teacher-supervised residual label and a gated online learning rule, and (iv) demonstrates the approach in simulation under parametric mismatch.
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}\label{ch4_sec_intro}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Reliable state estimation is essential for autonomous driving, where feedback controllers rely on accurate knowledge of vehicle motion states and disturbance forces. In practice, even well-established vehicle models suffer from structured mismatch: tire-road friction changes with temperature and road condition, cornering stiffness varies with load transfer, and low-speed operation introduces poorly conditioned terms (e.g., $1/v_x$ couplings) \cite{RajamaniBOOK}.
+
+A common modeling choice is to treat these effects as \emph{unknown inputs} and to reconstruct them jointly with the state \cite{darouach1994full}. However, vehicle sensor sets are often limited (e.g., $v_x$ from wheel speed, $\psi$ and $r$ from IMU, GPS position), which makes it difficult to uniquely attribute the estimation error to a specific physical source. Purely data-driven methods can compensate for mismatch, but without explicit structure they may learn spurious correlations and degrade in safety-critical scenarios.
+
+This chapter adopts a \textbf{two-layer decomposition} inspired by practical observer design:
+\begin{itemize}
+    \item \textbf{Layer-1 (Teacher):} estimate the state while reconstructing \emph{tire-force residuals only}. This keeps the unknown-input channel physically meaningful and reduces the risk of the residual becoming a generic ``error bucket''.
+    \item \textbf{Layer-2 (Student):} learn an additional correction term that explains the part of the teacher correction that is \emph{not} explained by nominal dynamics plus tire residuals.
+\end{itemize}
+The separation is enforced by (i) choosing a tire-residual injection structure derived from Newton--Euler equations and (ii) training the neural network exclusively from teacher-generated labels, with explicit gating to avoid unreliable operating conditions.
+
+Figure~\ref{fig:ch4_two_layer_arch} summarizes the information flow: the teacher is never influenced by the neural component, while the student can leverage both the teacher tire-residual estimate and the learned correction.
+
+%----------------------
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[
+        >=Latex,
+        node distance=14mm,
+        block/.style={draw, rounded corners, align=center, minimum height=10mm, minimum width=32mm},
+        small/.style={draw, rounded corners, align=center, minimum height=9mm, minimum width=28mm, font=\small},
+        line/.style={->, thick}
+    ]
+        \node[block, fill=blue!10] (plant) {Vehicle\\plant};
+
+        \node[block, fill=green!10, left=34mm of plant] (teacher) {Layer-1 Teacher\\EKF + $w_{\text{tire}}$};
+        \node[block, fill=green!10, above=18mm of teacher] (student) {Layer-2 Student\\NN-corrected estimator};
+
+        \node[small, fill=gray!10, below=18mm of teacher] (label) {Teacher label\\$r_k$};
+        \node[small, fill=orange!10, left=34mm of student] (nn) {Neural model\\$\hat r_k=r_\theta(z_k)$};
+
+        \draw[line] (plant) -- node[above, font=\small] {$y_k$} (student);
+        \draw[line] (plant) -- node[below, font=\small] {$y_k$} (teacher);
+
+        \draw[line] (teacher) -- node[left, font=\small] {$\hat x^{(1)}_{k|k},\hat w_{k|k}$} (label);
+        \draw[line] (label) -- node[below, font=\small] {train} (nn);
+        \draw[line] (nn) -- node[above, font=\small] {$\hat r_k$} (student);
+
+        \draw[line] (teacher) |- node[pos=0.25, right, font=\small] {$\hat w_{k|k}$} (student);
+    \end{tikzpicture}
+    \caption{Two-layer teacher--student estimation architecture. Layer-1 reconstructs tire-only residuals $w_{\text{tire}}$; Layer-2 learns a remaining correction $r_\theta(\cdot)$ from teacher-generated labels and injects it into a separate student estimator.}
+    \label{fig:ch4_two_layer_arch}
+\end{figure}
+%----------------------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Vehicle Model and Uncertainty Decomposition}\label{ch4_sec_model}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{State, inputs, and measurements}\label{ch4_subsec_state_meas}
+We consider a planar vehicle model with states that cover both dynamics and kinematics. A typical choice is
+\begin{equation}
+    x := \begin{bmatrix} v_x & v_y & r & \psi & X & Y \end{bmatrix}^{\top},
+\end{equation}
+where $v_x$ and $v_y$ are the longitudinal and lateral velocities in the body frame, $r$ is the yaw rate, $\psi$ is the yaw angle, and $(X,Y)$ is the global position.
+The inputs are the commanded longitudinal acceleration and steering angle,
+\begin{equation}
+    u := \begin{bmatrix} a & \delta \end{bmatrix}^{\top}.
+\end{equation}
+
+The available measurements depend on the platform. In practice, a minimal sensor set for lateral observability contains at least a yaw-rate measurement (gyro). A representative measurement vector is
+\begin{equation}
+    y := \begin{bmatrix} v_x & r & \psi & X & Y \end{bmatrix}^{\top},
+\end{equation}
+with $v_x$ from wheel speed (or fused speed), $r$ from IMU, and $(\psi,X,Y)$ from IMU/GNSS fusion.
+If only $(v_x,X,Y)$ are available, $v_y$ becomes weakly observable and the estimation tends to rely on numerical differentiation of GNSS positions, which is noisy and delayed. In the remainder, we assume that $r$ is measured and that the sampling time is sufficiently small to support dynamic estimation.
+
+\subsection{Nominal bicycle model with tire residuals}\label{ch4_subsec_bicycle}
+For clarity, we write the dynamics under the compact form
+\begin{equation}\label{eq:ch4_nominal_model}
+    x_{k+1} = f_{\text{nom}}(x_k,u_k) + B_{\text{tire}}(x_k,u_k)\,w_k + G(x_k,u_k)\,d_k + \nu_k,
+\end{equation}
+\begin{equation}\label{eq:ch4_measurement_model}
+    y_k = h(x_k,u_k) + \epsilon_k,
+\end{equation}
+where $f_{\text{nom}}(\cdot)$ is a discretized bicycle model (e.g., Euler discretization of the standard continuous-time model \cite{RajamaniBOOK}), $\nu_k$ is process noise, and $\epsilon_k$ is measurement noise.
+The term $w_k$ represents \textbf{tire-only} residuals, while $d_k$ captures any \textbf{non-tire} mismatch.
+
+\paragraph{Layer-1 residual (tire-only).}
+We choose $w_k$ to directly represent residual tire forces, for instance
+\begin{equation}\label{eq:ch4_wtire_def}
+    w_k := \begin{bmatrix} \Delta F_{yf,k} & \Delta F_{yr,k} \end{bmatrix}^{\top},
+\end{equation}
+which capture the unmodeled part of the front/rear lateral forces beyond the nominal tire model. The corresponding injection structure is dictated by the planar Newton--Euler equations. In continuous time,
+\begin{equation}\label{eq:ch4_btire_cont}
+    \begin{bmatrix} \dot v_x \\ \dot v_y \\ \dot r \end{bmatrix}
+    = f_{\text{nom,dyn}}(\cdot) +
+    \underbrace{\begin{bmatrix}
+        0 & 0 \\
+        \tfrac{1}{m} & \tfrac{1}{m} \\
+        \tfrac{l_f}{I_z} & -\tfrac{l_r}{I_z}
+    \end{bmatrix}}_{B_{\text{tire,cont}}}
+    \begin{bmatrix} \Delta F_{yf} \\ \Delta F_{yr} \end{bmatrix}
+    + \cdots,
+\end{equation}
+so that the discrete-time $B_{\text{tire}}$ in \eqref{eq:ch4_nominal_model} is obtained by discretization (e.g., $B_{\text{tire}}\approx \Delta t\,B_{\text{tire,cont}}$ for Euler discretization).
+
+\paragraph{Layer-2 residual (everything else).}
+The variable $d_k$ is designed to represent residual effects that should \emph{not} be explained by tire forces, such as slowly varying sensor biases, time delays, unmodeled aerodynamic drag, discretization errors, and low-speed artifacts. The matrix $G(\cdot)$ selects which state channels are affected. In this chapter, we focus on corrections in the dynamic channels $(v_x,v_y,r)$.
+
+\paragraph{Avoiding double counting.}
+To keep the decomposition meaningful, the Layer-2 correction should not replicate the degrees of freedom already assigned to $w_k$. A practical guideline is to ensure that the NN correction is injected through channels that are distinct (or explicitly regularized) relative to $B_{\text{tire}}$. When the same channels must be used (e.g., corrections added to $\dot v_y$ and $\dot r$), the separation is enforced by \emph{using the teacher} to explain tire effects first, and training the NN on the teacher \emph{leftover} only (Section~\ref{ch4_sec_learning}).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Layer-1 Teacher: Tire-Residual EKF}\label{ch4_sec_teacher}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The goal of Layer-1 is to estimate the vehicle state while reconstructing the tire residual $w_k$ in a physically interpretable form. We adopt an augmented-state EKF \cite{kalman1960new} because it is widely used in vehicle estimation and naturally handles nonlinear dynamics and sensor models.
+
+\subsection{Augmented state and random-walk model}\label{ch4_subsec_augmented_ekf}
+Define the augmented state
+\begin{equation}
+    \chi_k := \begin{bmatrix} x_k \\ w_k \end{bmatrix},
+    \qquad
+    w_{k+1} = w_k + \eta_k,
+\end{equation}
+where $\eta_k$ is a zero-mean noise modeling the slow evolution of the residual tire forces (random walk). The teacher process model is
+\begin{equation}\label{eq:ch4_teacher_process}
+    \chi_{k+1} =
+    \begin{bmatrix}
+        f_{\text{nom}}(x_k,u_k) + B_{\text{tire}}(x_k,u_k) w_k \\
+        w_k
+    \end{bmatrix}
+    +
+    \begin{bmatrix}
+        \nu_k \\ \eta_k
+    \end{bmatrix}.
+\end{equation}
+The measurement model is
+\begin{equation}\label{eq:ch4_teacher_meas}
+    y_k = h(x_k,u_k) + \epsilon_k,
+\end{equation}
+where $h(\cdot)$ maps the state to the available sensors (wheel speed, gyro, heading, GNSS position, etc.).
+
+\subsection{Teacher EKF recursion (summary)}\label{ch4_subsec_teacher_recursion}
+At each time step, the teacher performs:
+\begin{itemize}
+    \item \textbf{Prediction:} propagate \eqref{eq:ch4_teacher_process} to obtain $(\hat\chi^{(1)}_{k|k-1},P^{(1)}_{k|k-1})$.
+    \item \textbf{Update:} incorporate measurement $y_k$ via \eqref{eq:ch4_teacher_meas} to obtain $(\hat\chi^{(1)}_{k|k},P^{(1)}_{k|k})$.
+\end{itemize}
+The resulting teacher estimates are denoted
+\begin{equation}
+    \hat x^{(1)}_{k|k} \in \mathbb{R}^{n_x},\qquad \hat w_{k|k} \in \mathbb{R}^{n_w}.
+\end{equation}
+Because $w_k$ is part of the state, the EKF update uses sensor information to attribute a portion of the innovation to the tire residual channels, constrained by the physical injection matrix $B_{\text{tire}}$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Layer-2 Learning: Teacher-Supervised Residual Labels}\label{ch4_sec_learning}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Layer-2 aims to learn systematic mismatch that remains after accounting for nominal dynamics and tire residuals. This section follows a strict \textbf{teacher--student separation}: the teacher never uses the neural correction, and all learning targets are generated from teacher quantities only. This prevents ``label leakage'' where the student would be trained to match its own behavior.
+
+\subsection{Residual label from the teacher correction}\label{ch4_subsec_label}
+Let $\hat x^{(1)}_{k+1|k}$ be the one-step teacher prediction of the state (before measurement update at time $k+1$), and $\hat x^{(1)}_{k+1|k+1}$ the updated estimate (after using $y_{k+1}$). The \textbf{teacher correction} is
+\begin{equation}\label{eq:ch4_teacher_correction}
+    \Delta \hat x^{(1)}_{k} := \hat x^{(1)}_{k+1|k+1} - \hat x^{(1)}_{k+1|k}.
+\end{equation}
+This term aggregates the part of the measured behavior that was not explained by the teacher prediction model. Since the teacher already includes $w_k$ (tire-only), $\Delta \hat x^{(1)}_{k}$ is a natural proxy for the \emph{remaining} mismatch.
+
+We only learn corrections in the dynamic channels $(v_x,v_y,r)$. Let $S\in\mathbb{R}^{3\times n_x}$ be a selection matrix such that
+\begin{equation}
+    x_{\text{dyn}} = Sx = \begin{bmatrix} v_x & v_y & r \end{bmatrix}^{\top}.
+\end{equation}
+The \textbf{label} used to train the neural network is then
+\begin{equation}\label{eq:ch4_label_def}
+    r_k := S\,\Delta \hat x^{(1)}_{k} \in \mathbb{R}^{3}.
+\end{equation}
+
+\subsection{NN input and gating}\label{ch4_subsec_gating}
+The neural network is queried with a feature vector $z_k$ built from quantities available at time $k$,
+\begin{equation}\label{eq:ch4_features}
+    z_k := \begin{bmatrix}
+        \hat x^{(1)}_{k|k} \\ u_k \\ \rho_k \\ \text{flags}_k
+    \end{bmatrix},
+\end{equation}
+where $\rho_k$ collects scheduling variables (e.g., $v_x$ and $1/v_x$), and \text{flags}$_k$ may include low-speed indicators, GNSS quality flags, or innovation norms.
+
+Since $r_k$ contains measurement noise and can be unreliable in specific regimes (very low speed, yaw wrap events, GNSS jumps), we introduce a \textbf{gating weight} $\alpha_k\in[0,1]$ that down-weights (or discards) training samples when the label is not trustworthy. Typical gates include:
+\begin{itemize}
+    \item $v_x < v_{\min}$ (ill-conditioned slip-angle expressions);
+    \item large angle discontinuities (yaw wrapping) unless $\psi$ is unwrapped or represented by $(\sin\psi,\cos\psi)$;
+    \item large normalized innovations indicating outliers in GNSS/IMU fusion.
+\end{itemize}
+
+\subsection{Online learning objective}\label{ch4_subsec_learning_objective}
+Let $r_\theta(\cdot)$ be a neural model (e.g., an MLP) that predicts the residual correction. The online learning problem is posed as a weighted least-squares regression
+\begin{equation}\label{eq:ch4_nn_loss}
+    \min_{\theta}\ \sum_{k} \alpha_k\,\big\|r_\theta(z_k) - r_k\big\|^2.
+\end{equation}
+The gating weights $\alpha_k$ protect the learner from fitting transient artifacts and prevent the student from injecting aggressive corrections in regimes where the teacher label is dominated by noise.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Layer-2 Student: NN-Corrected State Estimation}\label{ch4_sec_student}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The student estimator runs in parallel with the teacher. It uses the same nominal vehicle model but corrects the prediction using the learned residual. Importantly, it may use the teacher tire-residual estimate $\hat w_{k|k}$ as an additional input, while \emph{never} feeding its own state back into the teacher.
+
+\subsection{Student prediction with learned correction}\label{ch4_subsec_student_pred}
+Denote the student state estimate by $\hat x^{(2)}_{k|k}$. The student one-step prediction is
+\begin{equation}\label{eq:ch4_student_pred}
+    \hat x^{(2)}_{k+1|k} =
+    f_{\text{nom}}\!\left(\hat x^{(2)}_{k|k},u_k\right)
+    + B_{\text{tire}}\!\left(\hat x^{(2)}_{k|k},u_k\right)\hat w_{k|k}
+    + S^{\top}\,\hat r_k,
+\end{equation}
+where $\hat r_k := r_\theta(z_k)$ and $S^{\top}$ injects the learned correction only into $(v_x,v_y,r)$ channels.
+
+\subsection{Student measurement update}\label{ch4_subsec_student_update}
+After prediction, the student incorporates the measurement $y_{k+1}$ using the same measurement model \eqref{eq:ch4_measurement_model} (e.g., via EKF or a Luenberger-type correction depending on the chosen implementation). The student update keeps the corrected state consistent with the available sensors while allowing the learned model to improve prediction accuracy between updates.
+
+\subsection{Implementation notes}\label{ch4_subsec_impl_notes}
+\begin{itemize}
+    \item \textbf{Yaw representation:} representing yaw by $(\sin\psi,\cos\psi)$ in the innovation helps avoid large spurious residuals at $\pm\pi$ wrap.
+    \item \textbf{Safety during learning:} the student correction can be bounded (component-wise saturation) and slowly enabled (gain scheduling on $\|\hat r_k\|$) to ensure conservative behavior during early training.
+    \item \textbf{No teacher contamination:} the teacher must remain a pure physics-based estimator; only teacher outputs should supervise the NN. This ensures that the learned residual reflects repeatable mismatch rather than a self-referential error.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Simulation Study}\label{ch4_sec_simulation}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+This section illustrates the two-layer approach on a nonlinear dynamic bicycle plant subject to parametric mismatch. The simulated plant follows standard lateral dynamics with nonlinear tire residuals \cite{RajamaniBOOK}, while the teacher and student rely on a nominal model with simplified tire behavior.
+
+\subsection{Plant model}
+The nonlinear bicycle dynamics (continuous-time) can be written as
+\begin{subequations}\label{eq:ch4_bicycle_plant}
+\begin{align}
+    \dot{v}_x &= a - \frac{F_{yf}\sin(\delta)}{m} + r v_y, \\
+    \dot{v}_y &= \frac{F_{yr}}{m} + \frac{F_{yf}\cos(\delta)}{m} - r v_x, \\
+    \dot{\psi} &= r, \\
+    \dot{r} &= \frac{l_fF_{yf}\cos(\delta)}{I_z} - \frac{l_rF_{yr}}{I_z}, \\
+    \dot{X} &= v_x\cos(\psi) - v_y\sin(\psi), \\
+    \dot{Y} &= v_x\sin(\psi) + v_y\cos(\psi).
+\end{align}
+\end{subequations}
+The lateral forces are decomposed into a nominal linear component and an unknown residual:
+\begin{equation}
+    F_{yf}=C_f\alpha_f + \Delta F_{yf}, \qquad
+    F_{yr}=C_r\alpha_r + \Delta F_{yr},
+\end{equation}
+with slip angles
+\begin{equation}
+    \alpha_f=\delta-\frac{v_y+l_f r}{v_x}, \qquad
+    \alpha_r=-\frac{v_y-l_r r}{v_x}.
+\end{equation}
+The quantities $(\Delta F_{yf},\Delta F_{yr})$ correspond exactly to the Layer-1 residual $w_k$ defined in \eqref{eq:ch4_wtire_def}.
+
+\subsection{Results}
+Figures~\ref{fig:state_estimate_wo}--\ref{fig:loss} illustrate representative outcomes. The baseline (physics-only) observer tracks measured channels reliably but exhibits larger deviations on lateral states under mismatch. The two-layer student improves prediction by injecting the learned residual, while the teacher provides a stable physical reference and a consistent label for learning.
+
+\begin{figure}[hb!]
+    \centering
+    \includegraphics[width=9cm,height=5.5cm]{ch4/img/fig_state_batch_2.png}
+    \caption{State estimation without residual accumulation: comparison between the true state, the NN-corrected student, and a baseline physics-only observer.}
+    \label{fig:state_estimate_wo}
+\end{figure}
+
+\begin{figure}[hb!]
+    \centering
+    \includegraphics[width=9cm,height=5.5cm]{ch4/img/fig_state_batch_5.png}
+    \caption{State estimation with residual accumulation (batching) in the learning update. Accumulation mitigates transient spikes and reduces estimation noise.}
+    \label{fig:state_estimate_w}
+\end{figure}
+
+\begin{figure}[hb!]
+    \centering
+    \includegraphics[width=9cm,height=7cm]{ch4/img/fig_f_2.png}
+    \caption{Reconstruction of tire-force residuals and learned mismatch: the teacher estimates $(\Delta F_{yf},\Delta F_{yr})$ while the student refines state prediction by learning the leftover correction.}
+    \label{fig:Uncertainty}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=9.5cm,height=4.5cm]{ch4/img/loss.eps}
+    \caption{Evolution of the learning loss \eqref{eq:ch4_nn_loss} during online training.}
+    \label{fig:loss}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Conclusion}\label{ch4_sec_conclusion}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+This chapter introduced a two-layer estimation strategy tailored to vehicle dynamics with structured uncertainty. By constraining Layer-1 to reconstruct tire-only residual forces through a physics-informed injection structure, the framework preserves interpretability and avoids using the unknown-input channel as a generic error term. Layer-2 then learns the systematic leftover mismatch from teacher-supervised labels, with gating mechanisms to prevent training on unreliable regimes. The resulting student estimator improves prediction and tracking under parametric mismatch while keeping the teacher independent and stable.

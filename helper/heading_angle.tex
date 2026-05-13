@@ -1,0 +1,188 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\title{Heading Check Using Position Reports and Radar Azimuth}
+\author{Your Name}
+\date{\today}
+
+\begin{document}
+
+% https://grok.com/chat/5a481862-1782-4087-934f-2fbdf1c331d7
+\maketitle
+
+Adding a heading check using existing data like position reports or radar azimuth is indeed feasible and can be implemented to verify the orientation of vehicles in a platoon when direct verification is critical. This can enhance the reliability of cooperative driving systems, such as platooning or Cooperative Adaptive Cruise Control (CACC), by ensuring that reported headings from platoon members are trustworthy. Below, I'll explain how this can be done step-by-step using these two data sources.
+
+\section*{1. Using Position Reports for Heading Verification}
+
+\subsection*{Overview}
+Vehicles in a platoon periodically send beacon messages containing their position (e.g., \(X, Y\) coordinates) and reported heading angle (\(\theta_y\)). By analyzing consecutive position reports, the host vehicle can estimate the target vehicle's actual heading and compare it to the reported heading.
+
+\subsection*{How It Works}
+\begin{itemize}
+    \item \textbf{Step 1: Collect Position Data} \\
+    The host vehicle records two consecutive position reports from the target vehicle, for example:
+    \begin{itemize}
+        \item At time \(t-1\): \((X_{t-1}, Y_{t-1})\)
+        \item At time \(t\): \((X_t, Y_t)\)
+    \end{itemize}
+
+    \item \textbf{Step 2: Calculate Estimated Heading (\(\theta_{\text{est}}\))} \\
+    The direction of motion between these two positions represents the target's estimated heading. This can be calculated using the arctangent function:
+    \[
+    \theta_{\text{est}} = \text{atan2}(Y_t - Y_{t-1}, X_t - X_{t-1})
+    \]
+    Here, \(\text{atan2}\) computes the angle in radians between the positive X-axis and the vector from \((X_{t-1}, Y_{t-1})\) to \((X_t, Y_t)\), correctly handling all quadrants.
+
+    \item \textbf{Step 3: Compare with Reported Heading} \\
+    The target vehicle reports its heading \(\theta_y\) in its beacon message. The host computes the difference between the reported and estimated headings:
+    \[
+    \theta_{\text{diff}} = |\theta_y - \theta_{\text{est}}|
+    \]
+    Since headings are circular (0° to 360°), ensure the smallest angle difference is used. For example:
+    \[
+    \theta_{\text{diff}} = \min(|\theta_y - \theta_{\text{est}}|, 2\pi - |\theta_y - \theta_{\text{est}}|)
+    \]
+
+    \item \textbf{Step 4: Compute a Trust Value} \\
+    A trust value for the heading can be defined, decreasing as the difference grows:
+    \[
+    \theta_y = \max\left(1 - \frac{\theta_{\text{diff}}}{\theta_{\text{max}}}, 0\right)
+    \]
+    Here, \(\theta_{\text{max}}\) is a threshold (e.g., 90° or \(\pi/2\) radians). If \(\theta_{\text{diff}}\) exceeds \(\theta_{\text{max}}\), the trust drops to zero, indicating unreliable heading data.
+\end{itemize}
+
+\subsection*{Why It's Feasible}
+\begin{itemize}
+    \item Position reports are already part of standard beacon messages in platooning systems (e.g., via V2V communication).
+    \item The calculation is simple and uses data the host vehicle already receives, requiring no additional sensors.
+\end{itemize}
+
+\subsection*{Considerations}
+\begin{itemize}
+    \item \textbf{Frequency:} Position updates must be frequent (e.g., every 100 ms) to accurately capture heading changes, especially during turns.
+    \item \textbf{Noise:} GPS data can be noisy, so smoothing techniques (e.g., averaging multiple positions) may improve accuracy.
+\end{itemize}
+
+\section*{2. Using Radar Azimuth for Heading Verification}
+
+\subsection*{Overview}
+The host vehicle's radar provides the relative position of the target vehicle, including the azimuth angle (\(\theta_r\)), which is the angle between the host's heading and the line of sight to the target. By combining this with the host's own heading (\(\theta_h\)), an expected heading for the target can be inferred and compared to its reported heading.
+
+\subsection*{How It Works}
+\begin{itemize}
+    \item \textbf{Step 1: Collect Radar and Host Data} \\
+    \begin{itemize}
+        \item Radar provides the azimuth angle \(\theta_r\) (relative to the host's heading) and distance to the target.
+        \item The host knows its own heading \(\theta_h\) from its inertial measurement unit (IMU).
+    \end{itemize}
+
+    \item \textbf{Step 2: Estimate Target's Expected Heading (\(\theta_{\text{exp}}\))} \\
+    Assuming the target vehicle is following a similar path (e.g., directly ahead in a platoon), its heading can be approximated as:
+    \[
+    \theta_{\text{exp}} = \theta_h + \theta_r
+    \]
+    For example:
+    \begin{itemize}
+        \item If the target is directly ahead, \(\theta_r \approx 0\), so \(\theta_{\text{exp}} \approx \theta_h\).
+        \item If the target is slightly to the right, \(\theta_r > 0\), adjusting the expected heading accordingly.
+    \end{itemize}
+
+    \item \textbf{Step 3: Compare with Reported Heading} \\
+    Compute the difference between the reported heading \(\theta_y\) and the expected heading:
+    \[
+    \theta_{\text{diff}} = |\theta_y - \theta_{\text{exp}}|
+    \]
+    Adjust for circular angles as in the position-based method.
+
+    \item \textbf{Step 4: Compute a Trust Value} \\
+    Use the same trust formula:
+    \[
+    \theta_y = \max\left(1 - \frac{\theta_{\text{diff}}}{\theta_{\text{max}}}, 0\right)
+    \]
+\end{itemize}
+
+\subsection*{Why It's Feasible}
+\begin{itemize}
+    \item Radar systems are commonly installed on modern vehicles and provide azimuth data as part of their output.
+    \item The host's heading is readily available from its IMU, making this method practical with existing sensors.
+\end{itemize}
+
+\subsection*{Considerations}
+\begin{itemize}
+    \item \textbf{Assumptions:} This works best when the target is directly ahead or behind, as lateral offsets or complex maneuvers can skew the azimuth-based estimate.
+    \item \textbf{Accuracy:} Radar azimuth measurements may vary due to the target's shape or orientation, so this method is better for detecting large errors rather than subtle discrepancies.
+\end{itemize}
+
+\section*{Integrating the Heading Check}
+The trust value (\(\theta_y\)) from either method can be incorporated into a broader trust assessment for the target vehicle. For example, if the original trust score is based on velocity (\(v_y\)), distance (\(d_y\)), and acceleration (\(a_y\)):
+\[
+t_y = v_y \cdot d_y \cdot a_y
+\]
+Add the heading trust value with a weight (\(w_\theta\)):
+\[
+t_y = v_y \cdot d_y \cdot a_y \cdot \theta_y^{w_\theta}
+\]
+\begin{itemize}
+    \item Set \(w_\theta\) higher if heading accuracy is critical (e.g., in curves).
+    \item Use a lower \(w_\theta\) if heading is less important (e.g., in straight-line driving).
+\end{itemize}
+
+\section*{Practical Implementation}
+\begin{itemize}
+    \item \textbf{Data Synchronization:} Align position reports and radar data in time for accurate comparisons.
+    \item \textbf{Threshold Tuning:} Set \(\theta_{\text{max}}\) based on your application (e.g., 90° for highway driving, larger for urban turns).
+    \item \textbf{Combining Methods:} If both position reports and radar are available, compute trust values from each and use the minimum or average for robustness.
+    \item \textbf{Real-Time Feasibility:} These calculations are computationally lightweight, making them suitable for real-time systems.
+\end{itemize}
+
+\section*{Conclusion}
+Adding a heading check using position reports or radar azimuth is feasible because it leverages data already available in platooning systems—beacon messages and radar outputs. By estimating the target's heading from consecutive positions or radar azimuth and comparing it to the reported heading, the host vehicle can detect discrepancies and assign a trust value. This enhances safety and reliability in cooperative driving, especially when orientation verification is critical, all without requiring new sensors or infrastructure.
+
+\section*{LiDAR}
+
+
+LiDAR is a sensor that emits laser beams to measure distances to objects, generating a point cloud---a collection of data points representing the surrounding environment. In a platooning scenario, where vehicles travel closely in a line, a LiDAR on one vehicle (the host) can scan the rear of the vehicle ahead or the front of the vehicle behind, depending on its position.
+
+To determine the angle or heading of another vehicle, the host vehicle's LiDAR captures a point cloud of the target vehicle's rear (assuming a forward-facing LiDAR). This point cloud reflects the shape and position of the rear surface. If both vehicles are aligned with the same heading, the rear of the target vehicle faces the host directly, and the point cloud shows a consistent pattern matching the vehicle's geometry. However, if the target vehicle's heading differs---say, it's turning---the point cloud will appear skewed, as the laser beams hit the rear at an angle, possibly revealing parts of the vehicle's side.
+
+\subsection*{How to Measure the Angle}
+To quantify the angle:
+\begin{enumerate}
+    \item \textbf{Fit a Plane to the Point Cloud}: Assuming the vehicle's rear is approximately flat, a plane can be fitted to the point cloud data using techniques like least squares or RANSAC (a robust method that handles noise and outliers). This plane represents the rear surface.
+    \item \textbf{Determine the Normal Vector}: The plane has a normal vector---a line perpendicular to it. For a vehicle facing away from the host, this normal points toward the host, opposite to the target's heading.
+    \item \textbf{Compare Headings}: The host vehicle has its own heading vector (e.g., pointing north if moving north). The target's heading can be inferred from the negation of the normal vector (i.e., flipping the normal to point in the direction the target is facing). The angle between the host's heading and the target's inferred heading indicates the heading difference.
+    \item \textbf{Focus on the Horizontal Plane}: Since vehicle headings are typically horizontal, the normal and heading vectors are projected onto the XY plane (ignoring vertical components). The angle between these projected vectors is calculated as:
+    \[
+    \theta_{\text{diff}} = \arccos\left(\vec{h}_{xy} \cdot (-\vec{n}_{xy})\right)
+    \]
+    where \(\vec{h}_{xy}\) is the host's heading and \(\vec{n}_{xy}\) is the target's rear normal, both in the horizontal plane.
+\end{enumerate}
+
+For example:
+\begin{itemize}
+    \item If both vehicles face north, the target's rear normal points south, and the angle between the host's heading (north) and the negated normal (north) is \(0^\circ\), indicating alignment.
+    \item If the target turns \(10^\circ\) east, the angle becomes \(10^\circ\), showing the heading difference.
+\end{itemize}
+
+\subsection*{Practical Considerations}
+\begin{itemize}
+    \item \textbf{Accuracy}: High-resolution LiDAR provides dense point clouds, enabling precise plane fitting and angle measurement.
+    \item \textbf{Challenges}: 
+    \begin{itemize}
+        \item \textbf{Occlusions}: Partial views of the rear due to other objects can affect accuracy, though platooning's close spacing helps.
+        \item \textbf{Curved Surfaces}: Non-flat rears may complicate plane fitting, but many vehicles have sufficiently planar areas.
+        \item \textbf{Noise}: LiDAR data can include outliers, which RANSAC can filter out.
+    \end{itemize}
+    \item \textbf{Simplifications}: If vehicles have known features (e.g., reflective markers or taillights), detecting these could simplify angle calculation, though plane fitting works without such assumptions.
+\end{itemize}
+
+In a platooning context, where the host's forward-facing LiDAR scans the preceding vehicle's rear, this method is particularly effective. The short distance ensures a clear, detailed point cloud, making LiDAR a reliable tool for verifying orientation.
+
+So, yes, LiDAR can indeed be used to check the angle of a vehicle's heading in a platoon by analyzing the point cloud and calculating the relative orientation.
+
+
+
+\end{document}

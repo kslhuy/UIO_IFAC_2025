@@ -1,0 +1,121 @@
+\begin{thebibliography}{17}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\urlprefix}{URL }
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi:\discretionary{}{}{}#1}\else
+  \providecommand{\doi}{doi:\discretionary{}{}{}\begingroup
+  \urlstyle{rm}\Url}\fi
+
+\bibitem[{Abdollahi et~al.(2006)Abdollahi, Talebi, and Patel}]{2006Apdat}
+Abdollahi, F., Talebi, H.A., and Patel, R.V. (2006).
+\newblock A stable neural network-based observer with application to
+  flexible-joint manipulators.
+\newblock \emph{IEEE Transactions on Neural Networks}, 17(1), 118--129.
+\newblock \doi{10.1109/TNN.2005.863458}.
+
+\bibitem[{Arezki et~al.(2023)Arezki, Zemouche, Alessandri, and
+  Bagnerini}]{Hasni_LCSS_24}
+Arezki, H., Zemouche, A., Alessandri, A., and Bagnerini, P. (2023).
+\newblock {LMI} design procedure for incremental input/output-to-state
+  stability in nonlinear systems.
+\newblock \emph{IEEE Control Systems Letters}, 7, 3403--3408.
+\newblock \doi{10.1109/LCSYS.2023.3331684}.
+
+\bibitem[{Bakhshande and S{\"o}ffker(2015)}]{PIOreview}
+Bakhshande, F. and S{\"o}ffker, D. (2015).
+\newblock Proportional--integral--observer: A brief survey with special
+  attention to the actual methods using {ACC} benchmark.
+\newblock \emph{IFAC-PapersOnLine}, 48.
+\newblock \doi{10.3182/20150218-3-AU-30250//978-3-902823-71-70058}.
+
+\bibitem[{Barfoot(2017)}]{State_Esti2017}
+Barfoot, T.D. (2017).
+\newblock State estimation for robotics.
+\newblock \urlprefix\url{https://api.semanticscholar.org/CorpusID:65172180}.
+
+\bibitem[{Benallouch et~al.(2017)Benallouch, Outbib, Boutayeb, and
+  Laroche}]{Benallouch:TCST17}
+Benallouch, M., Outbib, R., Boutayeb, M., and Laroche, E. (2017).
+\newblock Robust observers for a class of nonlinear systems using {PEM} fuel
+  cells as a simulated case study.
+\newblock \emph{IEEE Transactions on Control Systems Technology}.
+\newblock \doi{10.1109/TCST.2017.2658181}.
+
+\bibitem[{Buisson-Fenet et~al.(2021)Buisson-Fenet, Morgenthaler, Trimpe, and
+  Di~Meglio}]{HO_GP}
+Buisson-Fenet, M., Morgenthaler, V., Trimpe, S., and Di~Meglio, F. (2021).
+\newblock Joint state and dynamics estimation with high-gain observers and
+  gaussian process models.
+\newblock \emph{IEEE Control Systems Letters}, 5(5), 1627--1632.
+\newblock \doi{10.1109/LCSYS.2020.3042412}.
+
+\bibitem[{Chaouche et~al.(2022)Chaouche, Zemouche, Ramdani, Chaib~Draa, and
+  Delattre}]{chaouche2022unknown}
+Chaouche, A., Zemouche, A., Ramdani, M., Chaib~Draa, K., and Delattre, D.
+  (2022).
+\newblock Unknown input estimation algorithms for a class of {LPV}/nonlinear
+  systems with application to wastewater treatment process.
+\newblock \emph{Proceedings of the Institution of Mechanical Engineers, Part I:
+  Journal of Systems and Control Engineering}, 236(7), 1372--1385.
+
+\bibitem[{Charandabi and Marquez(2014)}]{Marquez:Auto14}
+Charandabi, B.A. and Marquez, H.J. (2014).
+\newblock A novel approach to unknown input filter design for discrete-time
+  linear systems.
+\newblock \emph{Automatica}, 50(2), 2835--2839.
+
+\bibitem[{Hassan et~al.(2013)Hassan, Zemouche, and Boutayeb}]{Hassan13a}
+Hassan, L., Zemouche, A., and Boutayeb, M. (2013).
+\newblock Robust unknown input observers for nonlinear time-delay systems.
+\newblock \emph{SIAM Journal on Control and Optimization}, 51(4), 2735--2752.
+
+\bibitem[{Hou and M{\"u}ller(1992)}]{Hou:256351}
+Hou, M. and M{\"u}ller, P.C. (1992).
+\newblock Design of observers for linear systems with unknown inputs.
+\newblock \emph{IEEE Transactions on Automatic Control}, 37(6), 871--875.
+
+\bibitem[{Jeon et~al.(2020)Jeon, Xie, Zemouche, and
+  Rajamani}]{jeon2020simultaneous}
+Jeon, W., Xie, Z., Zemouche, A., and Rajamani, R. (2020).
+\newblock Simultaneous cyber-attack detection and radar sensor health
+  monitoring in connected {ACC} vehicles.
+\newblock \emph{IEEE Sensors Journal}, 21(14), 15741--15752.
+
+\bibitem[{Nguyen et~al.(2024)Nguyen, Sadki, Rafaralahy, Haddad, and
+  Zemouche}]{nguyen2024cyberattack}
+Nguyen, Q.H., Sadki, O., Rafaralahy, H., Haddad, M., and Zemouche, A. (2024).
+\newblock Cyberattack detection by using a discrete-time model-based unknown
+  input observer.
+\newblock \emph{IEEE Control Systems Letters}, 8, 856--861.
+
+\bibitem[{Phanomchoeng and Rajamani(2014)}]{Phanomchoeng:ASME/TM14}
+Phanomchoeng, G. and Rajamani, R. (2014).
+\newblock Real-time estimation of rollover index for tripped rollovers with a
+  novel unknown input nonlinear observer.
+\newblock \emph{IEEE/ASME Transactions on Mechatronics}, 19(2), 743--754.
+
+\bibitem[{S{\"o}ffker et~al.(1995)S{\"o}ffker, Yu, and M{\"u}ller}]{PIO_1995}
+S{\"o}ffker, D., Yu, T.J., and M{\"u}ller, P.C. (1995).
+\newblock State estimation of dynamical systems with nonlinearities by using
+  proportional-integral observer.
+\newblock \emph{International Journal of Systems Science}, 26, 1571--1582.
+
+\bibitem[{Trinh and Fernando(2011)}]{trinh2011functional}
+Trinh, H. and Fernando, T. (2011).
+\newblock \emph{Functional Observers for Dynamical Systems}, volume 420.
+\newblock Springer Science \& Business Media.
+
+\bibitem[{Trinh et~al.(2008)Trinh, Tran, and Fernando}]{Trinh:TAC08}
+Trinh, H., Tran, T.D., and Fernando, T. (2008).
+\newblock Disturbance decoupled observers for systems with unknown inputs.
+\newblock \emph{IEEE Transactions on Automatic Control}, 53(10), 2397--2402.
+
+\bibitem[{Zemouche and Boutayeb(2009)}]{Zemouche-Boutayeb-2009}
+Zemouche, A. and Boutayeb, M. (2009).
+\newblock Nonlinear-observer-based $\mathcal{H}_{\infty}$ synchronization and
+  unknown input recovery.
+\newblock \emph{IEEE Transactions on Circuits and Systems I: Regular Papers},
+  56(8), 1720--1731.
+
+\end{thebibliography}
