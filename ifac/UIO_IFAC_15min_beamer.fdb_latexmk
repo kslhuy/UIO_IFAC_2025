@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1787259580.47061 "UIO_IFAC_15min_beamer.tex" "UIO_IFAC_15min_beamer.pdf" "UIO_IFAC_15min_beamer" 1787259584.50175 0
+["pdflatex"] 1787260030.11591 "c:/Users/Quang Huy Nugyen/Downloads/UIO_IFAC_2025/ifac/UIO_IFAC_15min_beamer.tex" "UIO_IFAC_15min_beamer.pdf" "UIO_IFAC_15min_beamer" 1787260034.063 0
   "../fig/IFAC_2026_banner.png" 1787237155 28240 597cb2c84246b3395a103d574d9af68a ""
   "../fig/R.png" 1764335790 56576 4153466c189781e0c9b023121e0bbde1 ""
   "../fig/image001.png" 1709649953 7441 f3d27395fbc748d20a39f9491b95290e ""
@@ -280,10 +280,11 @@
   "C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/tex/latex/translator/translator.sty" 1622471510 8765 56d370785f0143111ff9898b5adfe08e ""
   "C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1700127522 55487 80a65caedd3722f4c20a14a69e785d8f ""
-  "UIO_IFAC_15min_beamer.aux" 1787259584 2367 c22126b64ff4255b82db5e4159ffc53b "pdflatex"
-  "UIO_IFAC_15min_beamer.nav" 1787259584 1574 f5abf7444d939a8c2cd188b6df8c9c87 "pdflatex"
-  "UIO_IFAC_15min_beamer.out" 1787259581 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "UIO_IFAC_15min_beamer.aux" 1787260033 2367 c22126b64ff4255b82db5e4159ffc53b "pdflatex"
+  "UIO_IFAC_15min_beamer.nav" 1787260033 1574 f5abf7444d939a8c2cd188b6df8c9c87 "pdflatex"
+  "UIO_IFAC_15min_beamer.out" 1787260031 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
   "UIO_IFAC_15min_beamer.tex" 1787259553 36664 4a7d3a7508a1b2ef4e0714083000252b ""
+  "c:/Users/Quang Huy Nugyen/Downloads/UIO_IFAC_2025/ifac/UIO_IFAC_15min_beamer.tex" 1787259553 36664 4a7d3a7508a1b2ef4e0714083000252b ""
   (generated)
   "UIO_IFAC_15min_beamer.aux"
   "UIO_IFAC_15min_beamer.log"

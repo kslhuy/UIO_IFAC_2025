@@ -1,6 +1,6 @@
-PWD C:\Users\Quang Huy Nugyen\Downloads\UIO_IFAC_2025\ifac
+PWD c:\Users\Quang Huy Nugyen\Downloads\UIO_IFAC_2025\ifac
 INPUT C:\Users\Quang Huy Nugyen\AppData\Local\MiKTeX\miktex\data\le\pdftex\pdflatex.fmt
-INPUT UIO_IFAC_15min_beamer.tex
+INPUT c:\Users\Quang Huy Nugyen\Downloads\UIO_IFAC_2025\ifac\UIO_IFAC_15min_beamer.tex
 OUTPUT UIO_IFAC_15min_beamer.log
 INPUT C:\Users\Quang Huy Nugyen\AppData\Local\Programs\MiKTeX\tex\latex\beamer\beamer.cls
 INPUT C:\Users\Quang Huy Nugyen\AppData\Local\Programs\MiKTeX\tex\latex\beamer\beamer.cls
