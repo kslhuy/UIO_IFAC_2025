@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2024.2.25)  20 AUG 2026 17:12
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2024.2.25)  20 AUG 2026 22:59
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -825,12 +825,48 @@ Package: inputenc 2021/02/14 v1.3d Input encoding file
 \inpenc@prehook=\toks46
 \inpenc@posthook=\toks47
 )
+(C:\Users\Quang Huy Nugyen\AppData\Local\Programs\MiKTeX\tex/latex/lm\lmodern.s
+ty
+Package: lmodern 2015/05/01 v1.6.1 Latin Modern Fonts
+LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
+(Font)                  OT1/cmr/m/n --> OT1/lmr/m/n on input line 22.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `normal'
+(Font)                  OML/cmm/m/it --> OML/lmm/m/it on input line 23.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
+(Font)                  OMS/cmsy/m/n --> OMS/lmsy/m/n on input line 24.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
+(Font)                  OMX/cmex/m/n --> OMX/lmex/m/n on input line 25.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 26.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `bold'
+(Font)                  OML/cmm/b/it --> OML/lmm/b/it on input line 27.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
+(Font)                  OMS/cmsy/b/n --> OMS/lmsy/b/n on input line 28.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
+(Font)                  OMX/cmex/m/n --> OMX/lmex/m/n on input line 29.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
+(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 31.
+LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
+(Font)                  OT1/cmss/m/n --> OT1/lmss/m/n on input line 32.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
+(Font)                  OT1/cmr/m/it --> OT1/lmr/m/it on input line 33.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
+(Font)                  OT1/cmtt/m/n --> OT1/lmtt/m/n on input line 34.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 35.
+LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
+(Font)                  OT1/cmss/bx/n --> OT1/lmss/bx/n on input line 36.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
+(Font)                  OT1/cmr/bx/it --> OT1/lmr/bx/it on input line 37.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
+(Font)                  OT1/cmtt/m/n --> OT1/lmtt/m/n on input line 38.
+)
 (C:\Users\Quang Huy Nugyen\AppData\Local\Programs\MiKTeX\tex/latex/tools\bm.sty
 Package: bm 2023/07/08 v1.2f Bold Symbol Support (DPC/FMi)
 \symboldoperators=\mathgroup6
 \symboldletters=\mathgroup7
 \symboldsymbols=\mathgroup8
-Package bm Info: No bold for \OMX/cmex/m/n, using \pmb.
+Package bm Info: No bold for \OMX/lmex/m/n, using \pmb.
 Package bm Info: No bold for \U/msa/m/n, using \pmb.
 Package bm Info: No bold for \U/msb/m/n, using \pmb.
 LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 149.
@@ -985,6 +1021,12 @@ File: tikzlibraryfit.code.tex 2023-01-15 v3.1.10 (3.1.10)
 ndlayer/tikz/libraries\tikzlibrarycalc.code.tex
 File: tikzlibrarycalc.code.tex 2023-01-15 v3.1.10 (3.1.10)
 )
+LaTeX Font Info:    Trying to load font information for T1+lmss on input line 1
+49.
+
+(C:\Users\Quang Huy Nugyen\AppData\Local\Programs\MiKTeX\tex/latex/lm\t1lmss.fd
+File: t1lmss.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
 (C:\Users\Quang Huy Nugyen\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3
 backend-pdftex.def
 File: l3backend-pdftex.def 2024-01-04 L3 backend support: PDF output (pdfTeX)
@@ -993,24 +1035,24 @@ File: l3backend-pdftex.def 2024-01-04 L3 backend support: PDF output (pdfTeX)
 ) (UIO_IFAC_15min_beamer.aux)
 \openout1 = `UIO_IFAC_15min_beamer.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 103.
-LaTeX Font Info:    ... okay on input line 103.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 103.
-LaTeX Font Info:    ... okay on input line 103.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 103.
-LaTeX Font Info:    ... okay on input line 103.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 103.
-LaTeX Font Info:    ... okay on input line 103.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 103.
-LaTeX Font Info:    ... okay on input line 103.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 103.
-LaTeX Font Info:    ... okay on input line 103.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 103.
-LaTeX Font Info:    ... okay on input line 103.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 103.
-LaTeX Font Info:    ... okay on input line 103.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 103.
-LaTeX Font Info:    ... okay on input line 103.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 149.
+LaTeX Font Info:    ... okay on input line 149.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 149.
+LaTeX Font Info:    ... okay on input line 149.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 149.
+LaTeX Font Info:    ... okay on input line 149.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 149.
+LaTeX Font Info:    ... okay on input line 149.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 149.
+LaTeX Font Info:    ... okay on input line 149.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 149.
+LaTeX Font Info:    ... okay on input line 149.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 149.
+LaTeX Font Info:    ... okay on input line 149.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 149.
+LaTeX Font Info:    ... okay on input line 149.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 149.
+LaTeX Font Info:    ... okay on input line 149.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -1072,7 +1114,7 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 topdf-sys.cfg
 File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 ))
-Package hyperref Info: Link coloring OFF on input line 103.
+Package hyperref Info: Link coloring OFF on input line 149.
  (UIO_IFAC_15min_beamer.out) (UIO_IFAC_15min_beamer.out)
 \@outlinefile=\write5
 \openout5 = `UIO_IFAC_15min_beamer.out'.
@@ -1102,69 +1144,138 @@ Dictionary: translator-numbers-dictionary, Language: English
 ranslator-theorem-dictionary-English.dict
 Dictionary: translator-theorem-dictionary, Language: English 
 ) (UIO_IFAC_15min_beamer.nav)
-LaTeX Font Info:    Trying to load font information for U+msa on input line 138
+<../fig/image001.png, id=14, 118.041pt x 23.48775pt>
+File: ../fig/image001.png Graphic file (type png)
+<use ../fig/image001.png>
+Package pdftex.def Info: ../fig/image001.png  used on input line 188.
+(pdftex.def)             Requested size: 60.0578pt x 11.9501pt.
+<../fig/R.png, id=16, 1218.5525pt x 501.875pt>
+File: ../fig/R.png Graphic file (type png)
+<use ../fig/R.png>
+Package pdftex.def Info: ../fig/R.png  used on input line 188.
+(pdftex.def)             Requested size: 42.82103pt x 17.64056pt.
+LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 1
+88.
+
+(C:\Users\Quang Huy Nugyen\AppData\Local\Programs\MiKTeX\tex/latex/lm\ot1lmr.fd
+File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 1
+88.
+
+(C:\Users\Quang Huy Nugyen\AppData\Local\Programs\MiKTeX\tex/latex/lm\omllmm.fd
+File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 
+188.
+
+(C:\Users\Quang Huy Nugyen\AppData\Local\Programs\MiKTeX\tex/latex/lm\omslmsy.f
+d
+File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 
+188.
+
+(C:\Users\Quang Huy Nugyen\AppData\Local\Programs\MiKTeX\tex/latex/lm\omxlmex.f
+d
+File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10> on input line 188.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <7> on input line 188.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <5> on input line 188.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 188
 .
 
 (C:\Users\Quang Huy Nugyen\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\ums
 a.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 138
+LaTeX Font Info:    Trying to load font information for U+msb on input line 188
 .
 
 (C:\Users\Quang Huy Nugyen\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\ums
 b.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-<../fig/IFAC_2026_banner.png, id=14, 237.88875pt x 473.51906pt>
+<../fig/IFAC_2026_banner.png, id=17, 237.88875pt x 473.51906pt>
 File: ../fig/IFAC_2026_banner.png Graphic file (type png)
 <use ../fig/IFAC_2026_banner.png>
-Package pdftex.def Info: ../fig/IFAC_2026_banner.png  used on input line 138.
-(pdftex.def)             Requested size: 89.88321pt x 178.91753pt.
+Package pdftex.def Info: ../fig/IFAC_2026_banner.png  used on input line 188.
+(pdftex.def)             Requested size: 89.87595pt x 178.8981pt.
  [1
 
-{C:/Users/Quang Huy Nugyen/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map} <.
-./fig/IFAC_2026_banner.png>] [2
+{C:/Users/Quang Huy Nugyen/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:
+/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-ec.
+enc} <../fig/image001.png> <../fig/R.png (PNG copy)> <../fig/IFAC_2026_banner.p
+ng>] [2
 
-] [3
+{C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-
+rm.enc}{C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/enc/dvips
+/lm/lm-mathit.enc}]
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <9> on input line 243.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <6> on input line 243.
+ [3
 
-] [4
+{C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-
+mathsy.enc}] [4
 
 ] [5
 
-] [6
+{C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-
+mathex.enc}]
+LaTeX Font Info:    Trying to load font information for OT1+lmss on input line 
+356.
+
+(C:\Users\Quang Huy Nugyen\AppData\Local\Programs\MiKTeX\tex/latex/lm\ot1lmss.f
+d
+File: ot1lmss.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+) [6
 
 ] [7
 
 ] [8
 
-] [9
+]
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <12> on input line 484.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <8> on input line 484.
+ [9
+
+] [10
+
+] [11
 
 ]
-<../img/traj_control_py.png, id=111, 588.0369pt x 499.1448pt>
+<../img/traj_control_py.png, id=126, 588.0369pt x 499.1448pt>
 File: ../img/traj_control_py.png Graphic file (type png)
 <use ../img/traj_control_py.png>
-Package pdftex.def Info: ../img/traj_control_py.png  used on input line 520.
-(pdftex.def)             Requested size: 188.29228pt x 159.82861pt.
- [10
-
- <../img/traj_control_py.png>]
-<../img/State_est_py.png, id=120, 575.5101pt x 458.6736pt>
-File: ../img/State_est_py.png Graphic file (type png)
-<use ../img/State_est_py.png>
-Package pdftex.def Info: ../img/State_est_py.png  used on input line 546.
-(pdftex.def)             Requested size: 194.55559pt x 155.0581pt.
- [11
-
- <../img/State_est_py.png>]
-<../img/tireforce_slip_py.png, id=129, 577.1964pt x 410.4936pt>
-File: ../img/tireforce_slip_py.png Graphic file (type png)
-<use ../img/tireforce_slip_py.png>
-Package pdftex.def Info: ../img/tireforce_slip_py.png  used on input line 572.
-(pdftex.def)             Requested size: 241.51367pt x 171.76099pt.
+Package pdftex.def Info: ../img/traj_control_py.png  used on input line 619.
+(pdftex.def)             Requested size: 188.27434pt x 159.81337pt.
  [12
 
- <../img/tireforce_slip_py.png>] [13
+ <../img/traj_control_py.png>]
+<../img/State_est_py.png, id=135, 575.5101pt x 458.6736pt>
+File: ../img/State_est_py.png Graphic file (type png)
+<use ../img/State_est_py.png>
+Package pdftex.def Info: ../img/State_est_py.png  used on input line 645.
+(pdftex.def)             Requested size: 194.52924pt x 155.03711pt.
+ [13
+
+ <../img/State_est_py.png>]
+<../img/tireforce_slip_py.png, id=145, 577.1964pt x 410.4936pt>
+File: ../img/tireforce_slip_py.png Graphic file (type png)
+<use ../img/tireforce_slip_py.png>
+Package pdftex.def Info: ../img/tireforce_slip_py.png  used on input line 671.
+(pdftex.def)             Requested size: 241.48726pt x 171.74219pt.
+ [14
+
+ <../img/tireforce_slip_py.png>] [15
 
 ]
 \tf@nav=\write6
@@ -1176,7 +1287,8 @@ Package pdftex.def Info: ../img/tireforce_slip_py.png  used on input line 572.
 \tf@snm=\write8
 \openout8 = `UIO_IFAC_15min_beamer.snm'.
 
- (UIO_IFAC_15min_beamer.aux)
+
+(UIO_IFAC_15min_beamer.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-13>
@@ -1185,54 +1297,48 @@ Package rerunfilecheck Info: File `UIO_IFAC_15min_beamer.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 26196 strings out of 474462
- 526716 string characters out of 5737655
- 1945998 words of memory out of 5000000
- 47928 multiletter control sequences out of 15000+600000
- 585289 words of font info for 110 fonts, out of 8000000 for 9000
+ 26375 strings out of 474462
+ 531162 string characters out of 5737655
+ 1948998 words of memory out of 5000000
+ 48080 multiletter control sequences out of 15000+600000
+ 670518 words of font info for 116 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  128i,19n,123p,619b,1091s stack positions out of 10000i,1000n,20000p,200000b,200000s
- <C:\Users\Quang Huy Nugyen\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/
-dpi600\ecsx0700.pk> <C:\Users\Quang Huy Nugyen\AppData\Local\MiKTeX\fonts/pk/lj
-four/jknappen/ec/dpi600\ecsx1000.pk> <C:\Users\Quang Huy Nugyen\AppData\Local\M
-iKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecss0700.pk> <C:\Users\Quang Huy Nugye
-n\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecsx0900.pk> <C:\User
-s\Quang Huy Nugyen\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecss
-1200.pk> <C:\Users\Quang Huy Nugyen\AppData\Local\MiKTeX\fonts/pk/ljfour/jknapp
-en/ec/dpi600\ecss1000.pk> <C:\Users\Quang Huy Nugyen\AppData\Local\MiKTeX\fonts
-/pk/ljfour/jknappen/ec/dpi600\ecss0900.pk> <C:\Users\Quang Huy Nugyen\AppData\L
-ocal\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecsx1200.pk> <C:\Users\Quang Huy
- Nugyen\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecsx1440.pk><C:
-/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfon
-ts/cm/cmex10.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts
-/type1/public/amsfonts/cmextra/cmex9.pfb><C:/Users/Quang Huy Nugyen/AppData/Loc
-al/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/Quang Hu
-y Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi12.pf
-b><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/a
-msfonts/cm/cmmi5.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/f
-onts/type1/public/amsfonts/cm/cmmi6.pfb><C:/Users/Quang Huy Nugyen/AppData/Loca
-l/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/Quang Huy 
-Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi9.pfb><
-C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsf
-onts/cm/cmr10.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/font
-s/type1/public/amsfonts/cm/cmr5.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Pr
-ograms/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/Quang Huy Nugye
-n/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Use
-rs/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/c
-m/cmr9.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1
-/public/amsfonts/cm/cmss8.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs
-/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/Quang Huy Nugyen/Ap
-pData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Users/
-Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/c
-msy6.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/p
-ublic/amsfonts/cm/cmsy7.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/M
-iKTeX/fonts/type1/public/amsfonts/cm/cmsy9.pfb><C:/Users/Quang Huy Nugyen/AppDa
-ta/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msam10.pfb><C:/Use
-rs/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/s
-ymbols/msbm10.pfb>
-Output written on UIO_IFAC_15min_beamer.pdf (13 pages, 1829811 bytes).
+<C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/l
+m/lmex10.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/typ
+e1/public/lm/lmmi10.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTe
+X/fonts/type1/public/lm/lmmi12.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Pro
+grams/MiKTeX/fonts/type1/public/lm/lmmi5.pfb><C:/Users/Quang Huy Nugyen/AppData
+/Local/Programs/MiKTeX/fonts/type1/public/lm/lmmi6.pfb><C:/Users/Quang Huy Nugy
+en/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmmi7.pfb><C:/Users/Quan
+g Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmmi9.pfb><C:/
+Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmr1
+0.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/publ
+ic/lm/lmr12.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/
+type1/public/lm/lmr5.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKT
+eX/fonts/type1/public/lm/lmr6.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Prog
+rams/MiKTeX/fonts/type1/public/lm/lmr7.pfb><C:/Users/Quang Huy Nugyen/AppData/L
+ocal/Programs/MiKTeX/fonts/type1/public/lm/lmr8.pfb><C:/Users/Quang Huy Nugyen/
+AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmr9.pfb><C:/Users/Quang Hu
+y Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmss10.pfb><C:/Use
+rs/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmss12.
+pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public
+/lm/lmss8.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/ty
+pe1/public/lm/lmss9.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTe
+X/fonts/type1/public/lm/lmssbx10.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/P
+rograms/MiKTeX/fonts/type1/public/lm/lmsy10.pfb><C:/Users/Quang Huy Nugyen/AppD
+ata/Local/Programs/MiKTeX/fonts/type1/public/lm/lmsy5.pfb><C:/Users/Quang Huy N
+ugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmsy6.pfb><C:/Users/Q
+uang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmsy7.pfb><
+C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/l
+msy9.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/p
+ublic/amsfonts/symbols/msam10.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Prog
+rams/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb><C:/Users/Quang Huy 
+Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm7.
+pfb>
+Output written on UIO_IFAC_15min_beamer.pdf (15 pages, 1957043 bytes).
 PDF statistics:
- 597 PDF objects out of 1000 (max. 8388607)
- 27 named destinations out of 1000 (max. 500000)
- 63 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 285 PDF objects out of 1000 (max. 8388607)
+ 31 named destinations out of 1000 (max. 500000)
+ 73 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -4,11 +4,19 @@
 \usefonttheme{professionalfonts}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
+% Use scalable outline fonts.  The bitmap EC fonts produced by the default
+% T1 setup can be clipped by Edge's PDF renderer at some full-screen zooms.
+\usepackage{lmodern}
 \usepackage{amsmath,amssymb,bm,mathtools}
 \usepackage{booktabs}
 \usepackage{graphicx}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,fit,calc}
+
+% Ask browser PDF viewers to show one complete slide at a time.  In
+% particular, this avoids the last page being bottom-aligned and cropped in
+% Edge's continuous full-screen view.
+\hypersetup{pdfstartview=Fit,pdfpagelayout=SinglePage}
 
 \graphicspath{{../img/}{../}}
 
@@ -41,12 +49,15 @@
 \setlength{\leftmarginii}{1.1em}
 
 % Speaker notes ---------------------------------------------------------------
-% Keep this as \shownotesfalse for the PDF sent to the projector/audience.
-% Change it to \shownotestrue and compile a second PDF for your laptop.
-% That presenter PDF places each slide on the left and its private notes on
-% the right; use it only on the presenter display in an extended desktop.
+% A normal compilation creates the slide-only audience PDF.
+% UIO_IFAC_15min_presenter_notes.tex defines \presenternotes before loading this
+% file and creates the side-by-side PDF expected by Pympress (--notes=right).
 \newif\ifshownotes
-\shownotesfalse
+\ifdefined\presenternotes
+  \shownotestrue
+\else
+  \shownotesfalse
+\fi
 \ifshownotes
   \setbeameroption{show notes on second screen=right}
 \else
@@ -94,6 +105,41 @@
   signal/.style={font=\scriptsize\color{ifacmuted}, midway, fill=white, inner sep=1.5pt}
 }
 
+% Reused first as the global roadmap, then repeated at the Layer-2 transition.
+\newcommand{\teacherarchitecture}{%
+  \vspace{0.12cm}
+  \centering
+  \begin{tikzpicture}
+    \node[block, text width=3.35cm] (plant) at (-0.30,0)
+      {\textbf{Plant}\\[0.5mm]$\dot x=\varphi(x,u)+B\mu_x$};
+    \node[block, text width=2.70cm] (uio) at (3.90,1.30)
+      {\textbf{Layer 1}\\generalized UIO\\[0.5mm]
+       $\hat x_{\rm UIO},\ \hat\mu_x$};
+    \node[learnblock, text width=2.75cm] (model) at (8.10,1.30)
+      {Residual learner\\$\mu_\theta(\hat x_{\rm NN},\mathrm{UIO},u)$};
+    \node[learnblock, text width=3.00cm] (nao) at (8.10,-1.30)
+      {Layer 2: neural adaptive observer\\$\hat x_{\rm NN}$};
+
+    \node[font=\scriptsize\bfseries\color{ifacblue}, above=0.18cm of uio]
+      {CERTIFIED TEACHER};
+    \node[font=\scriptsize\bfseries\color{ifacgreen}, above=0.18cm of model]
+      {ADAPTIVE STUDENT};
+
+    \draw[flow] (plant.north east) --
+      node[signal, pos=.50, above] {$y,\,u$} (uio.west);
+    \draw[learnflow] (uio.east) -- (model.west);
+    \draw[learnflow] (model.south) --
+      node[signal, pos=.50, right] {$\mu_\theta$} (nao.north);
+    \draw[flow] (plant.south east) --
+      node[signal, pos=.52, below] {$y,\,u$} (nao.west);
+  \end{tikzpicture}
+
+  \vspace{0.28cm}
+  \scriptsize\textcolor{ifacblue}{\textbf{Teacher:}} bounded, physics-based supervisory signals
+  \hspace{1.6em}
+  \textcolor{ifacgreen}{\textbf{Student:}} adaptive residual learning
+}
+
 \title[Learning with Unknown Input Observers]{Learning with Unknown Input Observers\\for Robust Nonlinear Estimation}
 \subtitle{A hybrid, certified estimator for systems with unknown dynamics}
 \author{Q. H. Nguyen \and L. Qi \and A. Zemouche \and H. Rafaralahy \and M. Haddad}
@@ -119,9 +165,14 @@
         {\color{ifacmuted}\insertinstitute\par}
         \vspace{0.88cm}
         \color{ifacblue}\rule{\linewidth}{1.3pt}\par
-        \vspace{0.28cm}
-        \large \textbf{Core idea:} use a bounded unknown-input observer as a reliable
-        \textcolor{ifacgreen}{teacher} for a neural adaptive observer.
+        \vspace{0.22cm}
+        \hbox to \linewidth{%
+          \hfill
+          \raisebox{0.07cm}{\includegraphics[height=0.42cm,keepaspectratio]{../fig/image001.png}}%
+          \hspace{0.55cm}%
+          \includegraphics[height=0.62cm,keepaspectratio]{../fig/R.png}%
+          \hfill
+        }
       \end{minipage}
     \end{column}
     \begin{column}{0.23\textwidth}
@@ -131,10 +182,20 @@
     \end{column}
   \end{columns}
   \speakernote{
-    \textbf{Memory cue:} Problem $\rightarrow$ certified teacher $\rightarrow$ learned residual.\par\smallskip
-    Good morning everyone. Today I will present our work on learning with unknown input observers for robust nonlinear estimation. The problem is simple to state but difficult in practice: our physical model is nonlinear, and part of the dynamics is unknown. In a vehicle, for example, these unknown dynamics can be tire-force residuals, modelling errors, or external disturbances.\par\smallskip
-    Our main idea is to combine a certified observer with a learning-based observer. The first layer gives a bounded and physically meaningful estimate, even when the usual unknown-input observer condition is not exactly satisfied. The second layer uses this reliable estimate as a teacher and learns the state-dependent residual dynamics. I will first explain the observer construction, then the learning layer, and finally show the vehicle results.
+    \textbf{Memory cue:} Brief welcome, name, and title.\par\smallskip
+    Good morning everyone, and thank you for joining us. I am Quang Huy Nguyen, and today I will present our work on learning with unknown input observers for robust nonlinear estimation.
   }
+\end{frame}
+
+% -----------------------------------------------------------------------------
+\begin{frame}{Global architecture: certified estimation guides learning}
+\teacherarchitecture
+\speakernote{
+  \textbf{Memory cue:} State the core idea through the complete architecture.\par\smallskip
+  Let me begin with the core idea and the global view. Our physical model is nonlinear, and part of its dynamics is unknown. Instead of asking one estimator to do everything, we combine a certified model-based observer with an adaptive learning layer.\par\smallskip
+  From left to right, the measured output and known input first feed the generalized UIO. This certified teacher estimates both the state $\hat x_{\rm UIO}$ and the unknown input $\hat\mu_x$. These bounded, physics-based signals supervise the residual learner. The learned residual $\mu_\theta$ is then injected into Layer 2, a neural adaptive observer that propagates its own state estimate $\hat x_{\rm NN}$ and remains anchored to the measurements.\par\smallskip
+  This is the roadmap for the talk: first I will construct and certify Layer 1; then I will return to this architecture to explain the Layer-2 observer and its online learning loop; finally, I will show the vehicle results.
+}
 \end{frame}
 
 % -----------------------------------------------------------------------------
@@ -347,36 +408,7 @@
 
 % -----------------------------------------------------------------------------
 \begin{frame}{A certified teacher supervises learning}
-\vspace{0.12cm}
-\centering
-\begin{tikzpicture}
-  \node[block, text width=2.35cm] (plant) at (0,0)
-    {Plant\\$\dot x=\varphi(x,u)+B\mu_x$};
-  \node[block, text width=2.55cm] (uio) at (3.55,1.22)
-    {Layer 1: generalized UIO\\$\hat x_{\rm UIO},\ \hat\mu_x$};
-  \node[learnblock, text width=2.45cm] (model) at (7.18,1.22)
-    {Residual learner\\$\mu_\theta(\hat x_{\rm NN},\mathrm{UIO},u)$};
-  \node[learnblock, text width=2.55cm] (nao) at (5.10,-1.46)
-    {Layer 2: neural adaptive observer\\$\hat x_{\rm NN}$};
-
-  \node[font=\scriptsize\bfseries\color{ifacblue}, above=0.18cm of uio]
-    {CERTIFIED TEACHER};
-  \node[font=\scriptsize\bfseries\color{ifacgreen}, above=0.18cm of model]
-    {ADAPTIVE STUDENT};
-
-  \draw[flow] (plant.east) to[out=24,in=180]
-    node[signal, pos=.55, above] {$y,\,u$} (uio.west);
-  \draw[learnflow] (uio.east) -- (model.west);
-  \draw[learnflow] (model.south) to[out=-90,in=26]
-    node[signal, pos=.56, right] {$\mu_\theta$} (nao.east);
-  \draw[flow] (plant.south) |- 
-    node[signal, pos=.73, below] {$y,\,u$} (nao.west);
-\end{tikzpicture}
-
-\vspace{0.28cm}
-\scriptsize\textcolor{ifacblue}{\textbf{Teacher:}} bounded, physics-based supervisory signals
-\hspace{1.6em}
-\textcolor{ifacgreen}{\textbf{Student:}} adaptive residual learning
+\teacherarchitecture
 \speakernote{
   \textbf{Memory cue:} Layer 1 teaches; Layer 2 learns the part that the fixed model misses.\par\smallskip
   This diagram summarizes the hybrid architecture. The plant provides the measured output and receives the known input. Layer 1, the generalized UIO, estimates both the state $\hat x_{\rm UIO}$ and the unknown residual $\hat\mu_x$.\par\smallskip
@@ -385,10 +417,77 @@
 \end{frame}
 
 % -----------------------------------------------------------------------------
-\begin{frame}{Layer 2: online adaptation loop}
+\begin{frame}{Layer 2: a neural observer estimates its own state}
+\begin{columns}[T,onlytextwidth]
+  \begin{column}{0.55\textwidth}
+    \vspace{0.05cm}
+    \small
+    \begin{block}{State-dependent residual model}
+      \vspace{-0.20cm}
+      \begin{align*}
+        \mu_\theta(\hat x_{\rm NN})
+        =\mathcal N_\theta\!\left(
+        \hat x_{\rm NN},\hat x_{\rm UIO},\hat\mu_x,u\right).
+      \end{align*}
+      \vspace{-0.32cm}
+    \end{block}
+    \vspace{0.16cm}
+    \begin{block}{Layer-2 observer dynamics}
+      \vspace{-0.24cm}
+      \begin{align*}
+        \dot{\hat x}_{\rm NN}
+          &=\varphi(\hat x_{\rm NN},u)
+            +B\mu_\theta(\hat x_{\rm NN})
+            +L_{\rm NN}(y-y_{\rm NN}),\\[-1mm]
+        y_{\rm NN}&=C\hat x_{\rm NN}.
+      \end{align*}
+      \vspace{-0.32cm}
+    \end{block}
+    \vspace{0.01cm}
+    \scriptsize
+    The UIO supplies supervisory inputs; it does not replace the independent
+    dynamic state $\hat x_{\rm NN}\in\R^{n_x}$.
+  \end{column}
+  \begin{column}{0.40\textwidth}
+    \vspace{0.05cm}
+    \begin{block}{Three contributions to $\dot{\hat x}_{\rm NN}$}
+      \small
+      \begin{itemize}
+        \item known nonlinear physics $\varphi$;
+        \item learned unknown dynamics $B\mu_\theta$;
+        \item measurement innovation $L_{\rm NN}(y-y_{\rm NN})$.
+      \end{itemize}
+    \end{block}
+    \vspace{0.01cm}
+    \begin{alertblock}{Certified error channel}
+      \scriptsize
+      With $\epsilon_{\rm NN}=x-\hat x_{\rm NN}$ and
+      $\Delta_x=\mu_x-\mu_\theta$,
+      \vspace{-0.05cm}
+      \begin{align*}
+        \dot\epsilon_{\rm NN}
+        &=\bigl(\nabla_x^\varphi-L_{\rm NN}C\bigr)
+          \epsilon_{\rm NN}+B\Delta_x,\\[-1mm]
+        \norm{\epsilon_{\rm NN}}_{\Ltwo}
+        &\leq\lambda_{\rm NN}\norm{\Delta_x}_{\Ltwo}
+          +\beta_{\rm NN}\norm{\epsilon_{\rm NN}(0)}.
+      \end{align*}
+      \vspace{-0.25cm}
+    \end{alertblock}
+  \end{column}
+\end{columns}
+\speakernote{
+  \textbf{Memory cue:} Layer 2 is an observer with its own state, not only a neural correction block.\par\smallskip
+  The neural model takes the current Layer-2 estimate together with the UIO state estimate, the UIO unknown-input estimate, and the known input. It predicts the state-dependent residual $\mu_\theta$.\par\smallskip
+  Crucially, Layer 2 propagates its own state $\hat x_{\rm NN}$. Its dynamics combine the known nonlinear physics, the learned residual through $B\mu_\theta$, and the measurement innovation through $L_{\rm NN}(y-y_{\rm NN})$. Subtracting this observer from the plant gives the error dynamics on the right. The remaining approximation error $\Delta_x$ is the input to the certified $\mathcal L_2$ bound. The next slide explains how online learning reduces this mismatch.
+}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+\begin{frame}{Layer 2: online parameter adaptation}
 \vspace{0.02cm}
 \centering
-\begin{tikzpicture}[node distance=0.42cm]
+\begin{tikzpicture}[node distance=0.76cm]
   \node[smallblock, text width=2.45cm, minimum height=1.14cm] (features)
     {\textbf{1. Assemble features}\\[-1mm]
      \scriptsize state $\mid$ UIO teacher $\mid$ control};
@@ -408,7 +507,7 @@
     node[signal, pos=.52, below] {$\theta_{k+1}$} (network.south);
 \end{tikzpicture}
 
-\vspace{0.20cm}
+\vspace{0.08cm}
 \begin{columns}[T,onlytextwidth]
   \begin{column}{0.57\textwidth}
     \small
@@ -428,25 +527,25 @@
   \end{column}
   \begin{column}{0.38\textwidth}
     \small
-    \begin{block}{What the guarantee means}
+    \begin{block}{Features and parameter update}
       \scriptsize
-      Let $\Delta_{x,k}=\mu_{x,k}-\mu_{\theta,k}$. The LMI-designed gain
-      $L_{\rm NN}$ remains fixed while $\theta_k$ adapts online.
-      \vspace{0.10cm}
-      \[
-        \norm{\epsilon_{\rm NN}}_{\Ltwo}
-        \leq\lambda_{\rm NN}\norm{\Delta_x}_{\Ltwo}
-        +\beta_{\rm NN}\norm{\epsilon_{\rm NN}(0)}.
-      \]
-      Learning is therefore directed at reducing $\Delta_x$ without removing the
-      observer's robustness certificate.
+      \begin{align*}
+        z_k={}&\operatorname{col}(\hat x_{{\rm NN},k},
+          \hat x_{{\rm UIO},k},\hat\mu_{x,k},u_k),\\[-1mm]
+        \mu_{\theta,k}={}&\mathcal N_{\theta_k}(z_k),\\[-1mm]
+        \theta_{k+1}={}&\theta_k-\alpha_k
+          \nabla_\theta\mathcal L_k,\qquad \alpha_k>0.
+      \end{align*}
+      \vspace{-0.08cm}
+      The LMI-designed observer gain $L_{\rm NN}$ remains fixed while the network
+      parameters adapt online to reduce $\Delta_x$.
     \end{block}
   \end{column}
 \end{columns}
 \speakernote{
   \textbf{Memory cue:} Learn the residual, keep output feedback, and bound the remaining mismatch.\par\smallskip
-  The neural network receives the current neural-state estimate, the UIO state estimate, the UIO unknown-input estimate, and the known input. It produces $\mu_{\theta,k}$, an approximation of the unknown dynamics. This learned residual is injected into the nonlinear observer model, while the output-error feedback $L_{\rm NN}(y-C\hat x_{\rm NN})$ keeps the estimate anchored to the data.\par\smallskip
-  The four loss terms promote reference tracking, measurement consistency, agreement with the certified UIO teacher, and residual matching to the teacher proxy. The $\mathcal L_2$ inequality on the right bounds neural-state error by the remaining approximation error $\Delta_x$ plus an initial-condition transient. Thus the learning layer remains connected to robustness analysis.
+  The feature vector collects the current neural-state estimate, the UIO state estimate, the UIO unknown-input estimate, and the known input. The network produces $\mu_{\theta,k}$, which enters the state observer shown on the previous slide.\par\smallskip
+  The four loss terms promote reference tracking, measurement consistency, agreement with the certified UIO teacher, and residual matching to the teacher proxy. Gradient descent updates only the neural parameters. The LMI-designed innovation gain remains fixed, so online adaptation reduces the residual mismatch without changing the certified observer structure.
 }
 \end{frame}
 

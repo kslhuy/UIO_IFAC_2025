@@ -1,12 +1,12 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2024.2.25)  20 AUG 2026 17:11
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2024.2.25)  20 AUG 2026 22:51
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**./UIO_IFAC_15min_beamer.tex
-(UIO_IFAC_15min_beamer.tex
+**./UIO_IFAC_15min_presenter_notes.tex
+(UIO_IFAC_15min_presenter_notes.tex
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-13>
-
+(UIO_IFAC_15min_beamer.tex
 (C:\Users\Quang Huy Nugyen\AppData\Local\Programs\MiKTeX\tex/latex/beamer\beame
 r.cls
 Document Class: beamer 2026/01/22 v3.77 A class for typesetting presentations
@@ -1009,24 +1009,24 @@ File: l3backend-pdftex.def 2024-01-04 L3 backend support: PDF output (pdfTeX)
 ) (UIO_IFAC_15min_presenter_notes.aux)
 \openout1 = `UIO_IFAC_15min_presenter_notes.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 103.
-LaTeX Font Info:    ... okay on input line 103.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 103.
-LaTeX Font Info:    ... okay on input line 103.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 103.
-LaTeX Font Info:    ... okay on input line 103.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 103.
-LaTeX Font Info:    ... okay on input line 103.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 103.
-LaTeX Font Info:    ... okay on input line 103.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 103.
-LaTeX Font Info:    ... okay on input line 103.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 103.
-LaTeX Font Info:    ... okay on input line 103.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 103.
-LaTeX Font Info:    ... okay on input line 103.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 103.
-LaTeX Font Info:    ... okay on input line 103.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 141.
+LaTeX Font Info:    ... okay on input line 141.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 141.
+LaTeX Font Info:    ... okay on input line 141.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 141.
+LaTeX Font Info:    ... okay on input line 141.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 141.
+LaTeX Font Info:    ... okay on input line 141.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 141.
+LaTeX Font Info:    ... okay on input line 141.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 141.
+LaTeX Font Info:    ... okay on input line 141.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 141.
+LaTeX Font Info:    ... okay on input line 141.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 141.
+LaTeX Font Info:    ... okay on input line 141.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 141.
+LaTeX Font Info:    ... okay on input line 141.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -1088,7 +1088,7 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 topdf-sys.cfg
 File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 ))
-Package hyperref Info: Link coloring OFF on input line 103.
+Package hyperref Info: Link coloring OFF on input line 141.
  (UIO_IFAC_15min_presenter_notes.out)
 (UIO_IFAC_15min_presenter_notes.out)
 \@outlinefile=\write5
@@ -1119,24 +1119,34 @@ Dictionary: translator-numbers-dictionary, Language: English
 ranslator-theorem-dictionary-English.dict
 Dictionary: translator-theorem-dictionary, Language: English 
 ) (UIO_IFAC_15min_presenter_notes.nav)
-LaTeX Font Info:    Trying to load font information for U+msa on input line 138
+<../fig/image001.png, id=14, 118.041pt x 23.48775pt>
+File: ../fig/image001.png Graphic file (type png)
+<use ../fig/image001.png>
+Package pdftex.def Info: ../fig/image001.png  used on input line 180.
+(pdftex.def)             Requested size: 60.0578pt x 11.9501pt.
+<../fig/R.png, id=16, 1218.5525pt x 501.875pt>
+File: ../fig/R.png Graphic file (type png)
+<use ../fig/R.png>
+Package pdftex.def Info: ../fig/R.png  used on input line 180.
+(pdftex.def)             Requested size: 42.82103pt x 17.64056pt.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 180
 .
 
 (C:\Users\Quang Huy Nugyen\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\ums
 a.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 138
+LaTeX Font Info:    Trying to load font information for U+msb on input line 180
 .
 
 (C:\Users\Quang Huy Nugyen\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\ums
 b.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-<../fig/IFAC_2026_banner.png, id=14, 237.88875pt x 473.51906pt>
+<../fig/IFAC_2026_banner.png, id=17, 237.88875pt x 473.51906pt>
 File: ../fig/IFAC_2026_banner.png Graphic file (type png)
 <use ../fig/IFAC_2026_banner.png>
-Package pdftex.def Info: ../fig/IFAC_2026_banner.png  used on input line 138.
+Package pdftex.def Info: ../fig/IFAC_2026_banner.png  used on input line 180.
 (pdftex.def)             Requested size: 89.88321pt x 178.91753pt.
  [2
 
@@ -1146,17 +1156,18 @@ pdfTeX warning (ext4): destination with the same identifier (name{Navigation1})
 
 \pgfpages@shipoutshipoutbox ...physicalpagesizes }
                                                   \endgroup 
-l.182 \end{frame}
+l.191 \end{frame}
                  
 pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has 
 been already used, duplicate ignored
 
 \pgfpages@shipoutshipoutbox ...physicalpagesizes }
                                                   \endgroup 
-l.182 \end{frame}
+l.191 \end{frame}
                  
 
- <../fig/IFAC_2026_banner.png>] [3
+ <../fig/image001.png> <../fig/R.png (PNG copy)> <../fig/IFAC_2026_banner.png>]
+ [3
 
 
 pdfTeX warning (ext4): destination with the same identifier (name{Navigation2})
@@ -1164,14 +1175,14 @@ pdfTeX warning (ext4): destination with the same identifier (name{Navigation2})
 
 \pgfpages@shipoutshipoutbox ...physicalpagesizes }
                                                   \endgroup 
-l.217 \end{frame}
+l.235 \end{frame}
                  
 pdfTeX warning (ext4): destination with the same identifier (name{page.2}) has 
 been already used, duplicate ignored
 
 \pgfpages@shipoutshipoutbox ...physicalpagesizes }
                                                   \endgroup 
-l.217 \end{frame}
+l.235 \end{frame}
                  
 
 ] [4
@@ -1182,14 +1193,14 @@ pdfTeX warning (ext4): destination with the same identifier (name{Navigation3})
 
 \pgfpages@shipoutshipoutbox ...physicalpagesizes }
                                                   \endgroup 
-l.261 \end{frame}
+l.270 \end{frame}
                  
 pdfTeX warning (ext4): destination with the same identifier (name{page.3}) has 
 been already used, duplicate ignored
 
 \pgfpages@shipoutshipoutbox ...physicalpagesizes }
                                                   \endgroup 
-l.261 \end{frame}
+l.270 \end{frame}
                  
 
 ] [5
@@ -1200,14 +1211,14 @@ pdfTeX warning (ext4): destination with the same identifier (name{Navigation4})
 
 \pgfpages@shipoutshipoutbox ...physicalpagesizes }
                                                   \endgroup 
-l.295 \end{frame}
+l.314 \end{frame}
                  
 pdfTeX warning (ext4): destination with the same identifier (name{page.4}) has 
 been already used, duplicate ignored
 
 \pgfpages@shipoutshipoutbox ...physicalpagesizes }
                                                   \endgroup 
-l.295 \end{frame}
+l.314 \end{frame}
                  
 
 ] [6
@@ -1218,14 +1229,14 @@ pdfTeX warning (ext4): destination with the same identifier (name{Navigation5})
 
 \pgfpages@shipoutshipoutbox ...physicalpagesizes }
                                                   \endgroup 
-l.346 \end{frame}
+l.348 \end{frame}
                  
 pdfTeX warning (ext4): destination with the same identifier (name{page.5}) has 
 been already used, duplicate ignored
 
 \pgfpages@shipoutshipoutbox ...physicalpagesizes }
                                                   \endgroup 
-l.346 \end{frame}
+l.348 \end{frame}
                  
 
 ] [7
@@ -1236,14 +1247,14 @@ pdfTeX warning (ext4): destination with the same identifier (name{Navigation6})
 
 \pgfpages@shipoutshipoutbox ...physicalpagesizes }
                                                   \endgroup 
-l.385 \end{frame}
+l.399 \end{frame}
                  
 pdfTeX warning (ext4): destination with the same identifier (name{page.6}) has 
 been already used, duplicate ignored
 
 \pgfpages@shipoutshipoutbox ...physicalpagesizes }
                                                   \endgroup 
-l.385 \end{frame}
+l.399 \end{frame}
                  
 
 ] [8
@@ -1254,14 +1265,14 @@ pdfTeX warning (ext4): destination with the same identifier (name{Navigation7})
 
 \pgfpages@shipoutshipoutbox ...physicalpagesizes }
                                                   \endgroup 
-l.451 \end{frame}
+l.409 \end{frame}
                  
 pdfTeX warning (ext4): destination with the same identifier (name{page.7}) has 
 been already used, duplicate ignored
 
 \pgfpages@shipoutshipoutbox ...physicalpagesizes }
                                                   \endgroup 
-l.451 \end{frame}
+l.409 \end{frame}
                  
 
 ] [9
@@ -1272,23 +1283,17 @@ pdfTeX warning (ext4): destination with the same identifier (name{Navigation8})
 
 \pgfpages@shipoutshipoutbox ...physicalpagesizes }
                                                   \endgroup 
-l.493 \end{frame}
+l.476 \end{frame}
                  
 pdfTeX warning (ext4): destination with the same identifier (name{page.8}) has 
 been already used, duplicate ignored
 
 \pgfpages@shipoutshipoutbox ...physicalpagesizes }
                                                   \endgroup 
-l.493 \end{frame}
+l.476 \end{frame}
                  
 
-]
-<../img/traj_control_py.png, id=106, 588.0369pt x 499.1448pt>
-File: ../img/traj_control_py.png Graphic file (type png)
-<use ../img/traj_control_py.png>
-Package pdftex.def Info: ../img/traj_control_py.png  used on input line 520.
-(pdftex.def)             Requested size: 188.29228pt x 159.82861pt.
- [10
+] [10
 
 
 pdfTeX warning (ext4): destination with the same identifier (name{Navigation9})
@@ -1296,23 +1301,17 @@ pdfTeX warning (ext4): destination with the same identifier (name{Navigation9})
 
 \pgfpages@shipoutshipoutbox ...physicalpagesizes }
                                                   \endgroup 
-l.520 \end{frame}
+l.542 \end{frame}
                  
 pdfTeX warning (ext4): destination with the same identifier (name{page.9}) has 
 been already used, duplicate ignored
 
 \pgfpages@shipoutshipoutbox ...physicalpagesizes }
                                                   \endgroup 
-l.520 \end{frame}
+l.542 \end{frame}
                  
 
-]
-<../img/State_est_py.png, id=114, 575.5101pt x 458.6736pt>
-File: ../img/State_est_py.png Graphic file (type png)
-<use ../img/State_est_py.png>
-Package pdftex.def Info: ../img/State_est_py.png  used on input line 546.
-(pdftex.def)             Requested size: 194.55559pt x 155.0581pt.
- [11
+] [11
 
 
 pdfTeX warning (ext4): destination with the same identifier (name{Navigation10}
@@ -1320,22 +1319,22 @@ pdfTeX warning (ext4): destination with the same identifier (name{Navigation10}
 
 \pgfpages@shipoutshipoutbox ...physicalpagesizes }
                                                   \endgroup 
-l.546 \end{frame}
+l.584 \end{frame}
                  
 pdfTeX warning (ext4): destination with the same identifier (name{page.10}) has
  been already used, duplicate ignored
 
 \pgfpages@shipoutshipoutbox ...physicalpagesizes }
                                                   \endgroup 
-l.546 \end{frame}
+l.584 \end{frame}
                  
 
- <../img/traj_control_py.png>]
-<../img/tireforce_slip_py.png, id=123, 577.1964pt x 410.4936pt>
-File: ../img/tireforce_slip_py.png Graphic file (type png)
-<use ../img/tireforce_slip_py.png>
-Package pdftex.def Info: ../img/tireforce_slip_py.png  used on input line 572.
-(pdftex.def)             Requested size: 241.51367pt x 171.76099pt.
+]
+<../img/traj_control_py.png, id=127, 588.0369pt x 499.1448pt>
+File: ../img/traj_control_py.png Graphic file (type png)
+<use ../img/traj_control_py.png>
+Package pdftex.def Info: ../img/traj_control_py.png  used on input line 611.
+(pdftex.def)             Requested size: 188.29228pt x 159.82861pt.
  [12
 
 
@@ -1344,17 +1343,23 @@ pdfTeX warning (ext4): destination with the same identifier (name{Navigation11}
 
 \pgfpages@shipoutshipoutbox ...physicalpagesizes }
                                                   \endgroup 
-l.572 \end{frame}
+l.611 \end{frame}
                  
 pdfTeX warning (ext4): destination with the same identifier (name{page.11}) has
  been already used, duplicate ignored
 
 \pgfpages@shipoutshipoutbox ...physicalpagesizes }
                                                   \endgroup 
-l.572 \end{frame}
+l.611 \end{frame}
                  
 
- <../img/State_est_py.png>] [13
+]
+<../img/State_est_py.png, id=135, 575.5101pt x 458.6736pt>
+File: ../img/State_est_py.png Graphic file (type png)
+<use ../img/State_est_py.png>
+Package pdftex.def Info: ../img/State_est_py.png  used on input line 637.
+(pdftex.def)             Requested size: 194.55559pt x 155.0581pt.
+ [13
 
 
 pdfTeX warning (ext4): destination with the same identifier (name{Navigation12}
@@ -1362,14 +1367,56 @@ pdfTeX warning (ext4): destination with the same identifier (name{Navigation12}
 
 \pgfpages@shipoutshipoutbox ...physicalpagesizes }
                                                   \endgroup 
-l.598 \end{frame}
+l.637 \end{frame}
                  
 pdfTeX warning (ext4): destination with the same identifier (name{page.12}) has
  been already used, duplicate ignored
 
 \pgfpages@shipoutshipoutbox ...physicalpagesizes }
                                                   \endgroup 
-l.598 \end{frame}
+l.637 \end{frame}
+                 
+
+ <../img/traj_control_py.png>]
+<../img/tireforce_slip_py.png, id=144, 577.1964pt x 410.4936pt>
+File: ../img/tireforce_slip_py.png Graphic file (type png)
+<use ../img/tireforce_slip_py.png>
+Package pdftex.def Info: ../img/tireforce_slip_py.png  used on input line 663.
+(pdftex.def)             Requested size: 241.51367pt x 171.76099pt.
+ [14
+
+
+pdfTeX warning (ext4): destination with the same identifier (name{Navigation13}
+) has been already used, duplicate ignored
+
+\pgfpages@shipoutshipoutbox ...physicalpagesizes }
+                                                  \endgroup 
+l.663 \end{frame}
+                 
+pdfTeX warning (ext4): destination with the same identifier (name{page.13}) has
+ been already used, duplicate ignored
+
+\pgfpages@shipoutshipoutbox ...physicalpagesizes }
+                                                  \endgroup 
+l.663 \end{frame}
+                 
+
+ <../img/State_est_py.png>] [15
+
+
+pdfTeX warning (ext4): destination with the same identifier (name{Navigation14}
+) has been already used, duplicate ignored
+
+\pgfpages@shipoutshipoutbox ...physicalpagesizes }
+                                                  \endgroup 
+l.689 \end{frame}
+                 
+pdfTeX warning (ext4): destination with the same identifier (name{page.14}) has
+ been already used, duplicate ignored
+
+\pgfpages@shipoutshipoutbox ...physicalpagesizes }
+                                                  \endgroup 
+l.689 \end{frame}
                  
 
  <../img/tireforce_slip_py.png>]
@@ -1382,22 +1429,22 @@ l.598 \end{frame}
 \tf@snm=\write8
 \openout8 = `UIO_IFAC_15min_presenter_notes.snm'.
 
- [14
+ [16
 
 
-pdfTeX warning (ext4): destination with the same identifier (name{Navigation13}
+pdfTeX warning (ext4): destination with the same identifier (name{Navigation15}
 ) has been already used, duplicate ignored
 
 \pgfpages@shipoutshipoutbox ...physicalpagesizes }
                                                   \endgroup 
-l.600 \end{document}
+l.691 \end{document}
                     
-pdfTeX warning (ext4): destination with the same identifier (name{page.13}) has
+pdfTeX warning (ext4): destination with the same identifier (name{page.15}) has
  been already used, duplicate ignored
 
 \pgfpages@shipoutshipoutbox ...physicalpagesizes }
                                                   \endgroup 
-l.600 \end{document}
+l.691 \end{document}
                     
 
 ] (UIO_IFAC_15min_presenter_notes.aux)
@@ -1408,57 +1455,62 @@ L3 programming layer <2024-02-13>
 Package rerunfilecheck Info: File `UIO_IFAC_15min_presenter_notes.out' has not 
 changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
- ) 
+ ) ) 
 Here is how much of TeX's memory you used:
- 26381 strings out of 474462
- 532196 string characters out of 5737655
- 1953998 words of memory out of 5000000
- 48110 multiletter control sequences out of 15000+600000
+ 26403 strings out of 474462
+ 532702 string characters out of 5737655
+ 1956998 words of memory out of 5000000
+ 48125 multiletter control sequences out of 15000+600000
  585289 words of font info for 110 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 128i,19n,123p,619b,1087s stack positions out of 10000i,1000n,20000p,200000b,200000s
- <C:\Users\Quang Huy Nugyen\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/
-dpi600\ecsx1000.pk> <C:\Users\Quang Huy Nugyen\AppData\Local\MiKTeX\fonts/pk/lj
-four/jknappen/ec/dpi600\ecsx0900.pk> <C:\Users\Quang Huy Nugyen\AppData\Local\M
-iKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecss0700.pk> <C:\Users\Quang Huy Nugye
-n\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecsx0700.pk> <C:\User
-s\Quang Huy Nugyen\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecss
-1200.pk> <C:\Users\Quang Huy Nugyen\AppData\Local\MiKTeX\fonts/pk/ljfour/jknapp
-en/ec/dpi600\ecss1000.pk> <C:\Users\Quang Huy Nugyen\AppData\Local\MiKTeX\fonts
-/pk/ljfour/jknappen/ec/dpi600\ecss0900.pk> <C:\Users\Quang Huy Nugyen\AppData\L
-ocal\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecsx1200.pk> <C:\Users\Quang Huy
- Nugyen\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecsx1440.pk><C:
-/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfon
-ts/cm/cmex10.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts
-/type1/public/amsfonts/cmextra/cmex9.pfb><C:/Users/Quang Huy Nugyen/AppData/Loc
-al/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/Quang Hu
-y Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi12.pf
-b><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/a
-msfonts/cm/cmmi5.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/f
-onts/type1/public/amsfonts/cm/cmmi6.pfb><C:/Users/Quang Huy Nugyen/AppData/Loca
-l/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/Quang Huy 
-Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi9.pfb><
+ 133i,19n,126p,662b,1087s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ <C:\Users\Quang Huy Nugyen\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/e
+c/dpi600\ecsx0900.pk> <C:\Users\Quang Huy Nugyen\AppData\Local\MiKTeX\fonts/pk/
+ljfour/jknappen/ec/dpi600\ecss1200.pk> <C:\Users\Quang Huy Nugyen\AppData\Local
+\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecsx1000.pk> <C:\Users\Quang Huy Nug
+yen\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecss0700.pk> <C:\Us
+ers\Quang Huy Nugyen\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ec
+sx0700.pk> <C:\Users\Quang Huy Nugyen\AppData\Local\MiKTeX\fonts/pk/ljfour/jkna
+ppen/ec/dpi600\ecss1000.pk> <C:\Users\Quang Huy Nugyen\AppData\Local\MiKTeX\fon
+ts/pk/ljfour/jknappen/ec/dpi600\ecss0900.pk> <C:\Users\Quang Huy Nugyen\AppData
+\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecsx1200.pk> <C:\Users\Quang H
+uy Nugyen\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecsx1440.pk><
 C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsf
-onts/cm/cmr10.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/font
-s/type1/public/amsfonts/cm/cmr5.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Pr
-ograms/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/Quang Huy Nugye
-n/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Use
+onts/cm/cmex10.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fon
+ts/type1/public/amsfonts/cmextra/cmex7.pfb><C:/Users/Quang Huy Nugyen/AppData/L
+ocal/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmex9.pfb><C:/Users/Qu
+ang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmm
+i10.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/pu
+blic/amsfonts/cm/cmmi12.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/M
+iKTeX/fonts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Users/Quang Huy Nugyen/AppDa
+ta/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi6.pfb><C:/Users/Qua
+ng Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi
+7.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/publ
+ic/amsfonts/cm/cmmi9.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKT
+eX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/Quang Huy Nugyen/AppData/
+Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/Quang 
+Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr5.pf
+b><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/a
+msfonts/cm/cmr6.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fo
+nts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/
+Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/Quang Huy Nug
+yen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/U
+sers/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts
+/cm/cmss8.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/ty
+pe1/public/amsfonts/cm/cmsy10.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Prog
+rams/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Users/Quang Huy Nugyen
+/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy6.pfb><C:/Use
 rs/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/c
-m/cmr9.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1
-/public/amsfonts/cm/cmss8.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs
-/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/Quang Huy Nugyen/Ap
-pData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Users/
-Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/c
-msy6.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/p
-ublic/amsfonts/cm/cmsy7.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/M
-iKTeX/fonts/type1/public/amsfonts/cm/cmsy9.pfb><C:/Users/Quang Huy Nugyen/AppDa
-ta/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msam10.pfb><C:/Use
-rs/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/s
-ymbols/msbm10.pfb>
-Output written on UIO_IFAC_15min_presenter_notes.pdf (13 pages, 1858560 bytes).
+m/cmsy7.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type
+1/public/amsfonts/cm/cmsy9.pfb><C:/Users/Quang Huy Nugyen/AppData/Local/Program
+s/MiKTeX/fonts/type1/public/amsfonts/symbols/msam10.pfb><C:/Users/Quang Huy Nug
+yen/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pf
+b><C:/Users/Quang Huy Nugyen/AppData/Local/Programs/MiKTeX/fonts/type1/public/a
+msfonts/symbols/msbm7.pfb>
+Output written on UIO_IFAC_15min_presenter_notes.pdf (15 pages, 1962703 bytes).
 
 PDF statistics:
- 642 PDF objects out of 1000 (max. 8388607)
- 27 named destinations out of 1000 (max. 500000)
- 63 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 689 PDF objects out of 1000 (max. 8388607)
+ 31 named destinations out of 1000 (max. 500000)
+ 73 words of extra memory for PDF output out of 10000 (max. 10000000)
 

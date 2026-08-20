@@ -3,6 +3,8 @@
 /presentation_build/npm-cache/
 /presentation_build/rendered*/
 /presentation_build/*.pdf
-
+/tmp/pdfs
+/ifac/rendered_beamer
+/ifac/rendered_speech
 # Temporary Microsoft Office lock files
 ~$*.pptx

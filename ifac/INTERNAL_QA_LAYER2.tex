@@ -1,0 +1,95 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[margin=1.55cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{xcolor}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\usepackage[most]{tcolorbox}
+\usepackage{microtype}
+\pagestyle{empty}
+
+\definecolor{navy}{HTML}{163A5F}
+\definecolor{green}{HTML}{176B4D}
+\definecolor{amber}{HTML}{9A5B00}
+\definecolor{red}{HTML}{A61B1B}
+\definecolor{lightblue}{HTML}{EEF5FB}
+\definecolor{lightgreen}{HTML}{EDF8F2}
+\definecolor{lightamber}{HTML}{FFF6E5}
+\definecolor{lightred}{HTML}{FDEEEE}
+
+\newtcolorbox{questionbox}{
+  colback=lightblue,colframe=navy,boxrule=.65pt,arc=1.5mm,
+  left=2.5mm,right=2.5mm,top=1.8mm,bottom=1.8mm,
+  fonttitle=\bfseries,coltitle=navy
+}
+\newtcolorbox{saybox}{
+  colback=lightgreen,colframe=green,boxrule=.55pt,arc=1.2mm,
+  left=2.5mm,right=2.5mm,top=1.5mm,bottom=1.5mm
+}
+\newtcolorbox{limitbox}{
+  colback=lightamber,colframe=amber,boxrule=.55pt,arc=1.2mm,
+  left=2.5mm,right=2.5mm,top=1.5mm,bottom=1.5mm
+}
+\newcommand{\qa}[1]{\vspace{1.2mm}\begin{questionbox}\textcolor{navy}{\textbf{Q.}}\ #1\end{questionbox}}
+\newcommand{\say}[1]{\begin{saybox}\textcolor{green}{\textbf{Say:}}\ #1\end{saybox}}
+\newcommand{\limit}[1]{\begin{limitbox}\textcolor{amber}{\textbf{Limit:}}\ #1\end{limitbox}}
+
+\begin{document}
+
+\begin{center}
+  {\LARGE\bfseries\textcolor{navy}{Internal Q\&A --- Layer 2}}\\[1mm]
+  {\small UIO--NN paper \quad|\quad concise defense notes}
+\end{center}
+
+\begin{tcolorbox}[colback=lightred,colframe=red,boxrule=.7pt,arc=1.5mm,
+  left=3mm,right=3mm,top=2mm,bottom=2mm]
+\textcolor{red}{\textbf{Core position.}} Layer 1 has the main theoretical guarantee. Layer 2 has a \emph{conditional} $\mathcal L_2$ observer-error certificate. The paper does \textbf{not} prove convergence or boundedness of online NN weights $\theta$, reduction of $\Delta_x$, or full closed-loop stability.
+\end{tcolorbox}
+
+\qa{Do you prove stability of Layer 2?}
+\say{We prove a conditional $\mathcal L_2$ error bound for the Layer-2 observer. With $e= x-\hat x_{NN}$ and $\Delta_x=\mu_x-\mu_\theta(\hat x_{NN})$, LMI feasibility gives
+\[
+  \dot V+\|e\|^2-\sigma\|\Delta_x\|^2<0,\qquad V=e^\top P e.
+\]
+Thus $\|e\|_{\mathcal L_2}\leq\sqrt{\sigma}\|\Delta_x\|_{\mathcal L_2}+\sqrt{\lambda_{\max}(P)}\|e(0)\|$.}
+\limit{This is \textbf{not} a proof of NN-learning stability: it does not show $\theta$ converges, remains bounded, or makes $\Delta_x\to0$.}
+
+\qa{Is the Layer-2 error exponentially stable?}
+\say{Only in the ideal residual-free case. If $\Delta_x=0$, the strict Lyapunov inequality gives $\dot V\leq-\|e\|^2\leq-V/\lambda_{\max}(P)$, hence exponential convergence.}
+\limit{For nonzero $\Delta_x$, the stated result is an $\mathcal L_2$ gain bound. Do not call it unconditional exponential stability or a pointwise state bound.}
+
+\qa{How is the LMI proof obtained?}
+\say{Write $\dot e=(\nabla\varphi_x-L_{NN}C)e+B\Delta_x$, use $V=e^\top Pe$, set $L_{NN}=P^{-1}Q^\top$, and require the resulting quadratic form to be negative at every Jacobian-polytope vertex. The Schur complement gives the LMI; convexity covers all admissible Jacobians; integration gives the $\mathcal L_2$ bound.}
+
+\qa{What does the NN contribute to that theorem?}
+\say{The theorem certifies robustness of the observer gain against the residual $\Delta_x$. The NN can improve performance only by reducing that residual, which is evaluated in simulation.}
+\limit{The LMI by itself does not establish that the NN is beneficial; the same certificate applies to any additive residual input.}
+
+\qa{Why use a UIO estimate as NN supervision?}
+\say{When the true tire-force residual is unavailable, Layer 1 supplies a bounded physics-based proxy target. Layer 2 uses that signal together with measurements to refine the estimate.}
+\limit{The proxy can be biased, especially when the rank condition is relaxed. It is supervision, not ground truth.}
+
+\qa{Does the NN have a shortcut because $\hat\mu_x$ is both an input and its target?}
+\say{Yes, this is a legitimate concern. As written, $\mathcal N_\theta(\hat x_{NN},\hat x_{UIO},\hat\mu_x,u)$ can learn to copy $\hat\mu_x$. If retained, describe Layer 2 as a \textbf{learned UIO-refinement/filter}, not necessarily a predictive state-dependent dynamics model.}
+\limit{To support a predictive-dynamics claim, train/evaluate a version without the current $\hat\mu_x$ input (for example using state and input, or past UIO history only) and report the ablation.}
+
+\qa{Why is $x_{\rm ref}$ included in the training loss? Does it bias the estimate?}
+\say{It acts as a task-specific prior that encourages useful estimates for trajectory tracking.}
+\limit{It can bias the observer toward the desired trajectory rather than the actual disturbed state. Do not present it as independent evidence of estimation accuracy; report state-estimation errors and an ablation without this term.}
+
+\qa{Do you prove closed-loop vehicle--controller stability?}
+\say{No. We certify an observer-error property. Closed-loop stability of the plant, controller, NN adaptation, and both observers would require a separate ISS/small-gain or composite-Lyapunov analysis.}
+
+\qa{What is the role of the rank relaxation and output derivative?}
+\say{If $\operatorname{rank}(CB)=\operatorname{rank}(B)$, an exponential UIO can be constructed with the output-derivative augmentation. When it fails, regularization trades exact unknown-input decoupling for an adjustable $\mathcal H^1$ error bound.}
+
+\qa{What evidence would make the Layer-2 claim convincing?}
+\say{Show ablations on the same manoeuvres and unseen manoeuvres: (i) UIO only, (ii) UIO plus a simple low-pass filter, (iii) NN without UIO supervision, and (iv) the full method. Include sensor noise, model mismatch, and the NN-input shortcut test.}
+
+\begin{tcolorbox}[colback=lightblue,colframe=navy,boxrule=.65pt,arc=1.5mm,
+  left=3mm,right=3mm,top=2mm,bottom=2mm]
+\textcolor{navy}{\textbf{One-sentence presentation claim.}} ``Layer 1 provides a bounded physics-based supervisory estimate; Layer 2 is a practical residual-refinement observer with a certified $\mathcal L_2$ error gain conditional on the remaining approximation residual.''
+\end{tcolorbox}
+
+\end{document}
