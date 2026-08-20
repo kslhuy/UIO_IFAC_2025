@@ -1,4 +1,4 @@
-\begin{thebibliography}{5}
+\begin{thebibliography}{9}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \providecommand{\urlprefix}{URL }
@@ -14,6 +14,18 @@ Abdollahi, F., Talebi, H.A., and Patel, R.V. (2006).
 \newblock \emph{IEEE Transactions on Neural Networks}, 17(1), 118--129.
 \newblock \doi{10.1109/TNN.2005.863458}.
 
+\bibitem[{Bakhshande and S{\"o}ffker(2015)}]{PIOreview}
+Bakhshande, F. and S{\"o}ffker, D. (2015).
+\newblock Proportional--integral--observer: A brief survey with special
+  attention to the actual methods using {ACC} benchmark.
+\newblock \emph{IFAC-PapersOnLine}, 48.
+\newblock \doi{10.3182/20150218-3-AU-30250//978-3-902823-71-70058}.
+
+\bibitem[{Barfoot(2017)}]{State_Esti2017}
+Barfoot, T.D. (2017).
+\newblock State estimation for robotics.
+\newblock \urlprefix\url{https://api.semanticscholar.org/CorpusID:65172180}.
+
 \bibitem[{Buisson-Fenet et~al.(2021)Buisson-Fenet, Morgenthaler, Trimpe, and
   Di~Meglio}]{HO_GP}
 Buisson-Fenet, M., Morgenthaler, V., Trimpe, S., and Di~Meglio, F. (2021).
@@ -21,6 +33,15 @@ Buisson-Fenet, M., Morgenthaler, V., Trimpe, S., and Di~Meglio, F. (2021).
   gaussian process models.
 \newblock \emph{IEEE Control Systems Letters}, 5(5), 1627--1632.
 \newblock \doi{10.1109/LCSYS.2020.3042412}.
+
+\bibitem[{Chaouche et~al.(2022)Chaouche, Zemouche, Ramdani, Chaib~Draa, and
+  Delattre}]{chaouche2022unknown}
+Chaouche, A., Zemouche, A., Ramdani, M., Chaib~Draa, K., and Delattre, D.
+  (2022).
+\newblock Unknown input estimation algorithms for a class of {LPV}/nonlinear
+  systems with application to wastewater treatment process.
+\newblock \emph{Proceedings of the Institution of Mechanical Engineers, Part I:
+  Journal of Systems and Control Engineering}, 236(7), 1372--1385.
 
 \bibitem[{Hou and M{\"u}ller(1992)}]{Hou:256351}
 Hou, M. and M{\"u}ller, P.C. (1992).
@@ -32,6 +53,12 @@ Phanomchoeng, G. and Rajamani, R. (2014).
 \newblock Real-time estimation of rollover index for tripped rollovers with a
   novel unknown input nonlinear observer.
 \newblock \emph{IEEE/ASME Transactions on Mechatronics}, 19(2), 743--754.
+
+\bibitem[{S{\"o}ffker et~al.(1995)S{\"o}ffker, Yu, and M{\"u}ller}]{PIO_1995}
+S{\"o}ffker, D., Yu, T.J., and M{\"u}ller, P.C. (1995).
+\newblock State estimation of dynamical systems with nonlinearities by using
+  proportional-integral observer.
+\newblock \emph{International Journal of Systems Science}, 26, 1571--1582.
 
 \bibitem[{Trinh et~al.(2008)Trinh, Tran, and Fernando}]{Trinh:TAC08}
 Trinh, H., Tran, T.D., and Fernando, T. (2008).

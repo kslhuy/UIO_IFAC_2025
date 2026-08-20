@@ -1,0 +1,157 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[a4paper,margin=1.85cm]{geometry}
+\usepackage{xcolor}
+\usepackage{microtype}
+\usepackage{parskip}
+\usepackage{enumitem}
+
+\definecolor{ifacblue}{RGB}{17,91,140}
+\definecolor{ifacgreen}{RGB}{35,126,98}
+\definecolor{ifaclight}{RGB}{242,247,250}
+
+\setlength{\parindent}{0pt}
+\setlist[itemize]{leftmargin=1.4em,itemsep=0.15em,topsep=0.2em}
+
+\newcommand{\slideheading}[3]{%
+  \vspace{1.0em}%
+  \noindent\colorbox{ifacblue}{\parbox{\dimexpr\linewidth-2\fboxsep\relax}{\color{white}\large\bfseries Slide #1 \;---\; #2}}\par
+  \vspace{0.35em}%
+  \noindent\textcolor{ifacgreen}{\textbf{Target time: #3}}\par
+}
+\newcommand{\cue}[1]{%
+  \vspace{0.22em}\noindent\fcolorbox{ifacgreen}{ifaclight}{\parbox{0.94\linewidth}{\textbf{Memory cue:} #1}}\par\vspace{0.35em}%
+}
+\newcommand{\say}{\noindent\textcolor{ifacblue}{\textbf{Say:}}\ }
+
+\begin{document}
+
+\begin{center}
+  {\LARGE\bfseries 15-Minute Speaking Script}\\[0.28em]
+  {\large Learning with Unknown Input Observers for Robust Nonlinear Estimation}\\[0.45em]
+  \textit{Companion to \texttt{UIO\_IFAC\_15min\_beamer.tex}}
+\end{center}
+
+\vspace{0.35em}
+\noindent\textbf{How to rehearse.} Read this aloud once with the slides. On the next rehearsal, use only the green memory cues and the opening sentence of each slide. The script is written for a calm pace of about 110--120 words per minute, including short pauses to point at equations and figures.
+
+\slideheading{1}{Title}{0:00--0:40 \quad (40 seconds)}
+\cue{Problem \textrightarrow{} certified teacher \textrightarrow{} learned residual.}
+\say Good morning everyone. Today I will present our work on learning with unknown input observers for robust nonlinear estimation. The problem is simple to state but difficult in practice: our physical model is nonlinear, and part of the dynamics is unknown. In a vehicle, for example, these unknown dynamics can be tire-force residuals, modelling errors, or external disturbances.
+
+Our main idea is to combine a certified observer with a learning-based observer. The first layer gives us a bounded and physically meaningful estimate, even when the usual unknown-input observer condition is not exactly satisfied. The second layer uses this reliable estimate as a teacher and learns the state-dependent residual dynamics. I will first explain the observer construction, then the learning layer, and finally show the vehicle results.
+
+\slideheading{2}{Why estimation becomes difficult with unknown dynamics}{0:40--1:45 \quad (65 seconds)}
+\cue{Known physics plus an unknown input. Estimate both the state and the residual.}
+\say Let us start from the model on this slide. The state evolves according to the known nonlinear physics, written as $\varphi(x,u)$, plus an unknown input $B\mu_x$. We measure only $y=Cx$.
+
+The term $\mu_x$ collects what the nominal model does not explain: unmodelled dynamics, disturbances, or force residuals. The difficulty is that this term affects the state, but it is not directly measured. Therefore, a good estimator should do two things at the same time. First, it should reconstruct the physical state robustly. Second, it should provide a useful estimate of the unknown input, because this estimate tells us where the model is incomplete.
+
+This is the point where classical unknown-input observer theory is useful, but it also reveals its main limitation.
+
+\slideheading{3}{The classical UIO condition is often too restrictive}{1:45--2:45 \quad (60 seconds)}
+\cue{Classical UIO needs rank. Real systems often do not give it.}
+\say A conventional unknown-input observer relies on the rank condition shown here: the rank of $CB$ must equal the rank of $B$. Intuitively, the measured output must contain enough information to separate the effect of the unknown input from the state dynamics.
+
+When this condition holds, an observer can exactly decouple the unknown input and obtain exponential convergence. However, this assumption is often too strong in practice. A sensor set may not see every direction in which an unknown tire force, disturbance, or model mismatch acts. In that case, $CB$ can be rank deficient.
+
+Instead of discarding the observer design, our approach relaxes exact decoupling and replaces it with a quantified estimation bound. The next slide explains how we make that tradeoff explicit.
+
+\slideheading{4}{Regularization converts a rank obstacle into a bounded disturbance}{2:45--4:10 \quad (85 seconds)}
+\cue{Do not force exact decoupling; make the remaining effect measurable and bounded.}
+\say The key step is a regularized reformulation of the original system. We introduce the tunable quantities $\delta_1$ and $\delta_2$, and write an equivalent model in which the derivative of the unknown input and the unknown input itself appear through the disturbance vector $\omega_\delta$.
+
+This does not change the underlying plant. What changes is the observer-design problem. The regularization creates enough freedom to construct an observer even when the direct rank condition is not available. Of course, this flexibility has a cost: the effect of the unknown input is no longer cancelled exactly. Instead, it enters the performance analysis explicitly.
+
+The inequality on the right is the important conclusion. It says that the estimation error of the augmented state is bounded in the $\mathcal H^1$ norm by two terms: one term scales with the unknown dynamics, and the other comes from the initial estimation error. So, rather than claiming perfect rejection in every case, we obtain a certified robustness level. If the classical rank condition is available, the regularization can be removed and exact convergence is recovered.
+
+\slideheading{5}{Output derivatives create a generalized unknown-input observer}{4:10--5:20 \quad (70 seconds)}
+\cue{Augment with output derivatives, but estimate them through the observer.}
+\say To strengthen the information available to the observer, we introduce the output and its derivative as auxiliary variables: $\chi_1=y$ and $\chi_2=\dot y$. These variables are included together with the state and unknown input in one generalized augmented state.
+
+The equations on the left show that the derivative channel brings in additional information about the nonlinear dynamics and about the unknown input. This is especially useful when the original output alone is insufficient for direct decoupling.
+
+One practical point is important here. We do not take a noisy numerical derivative of the measurement. The generalized observer estimates $\chi_2$ internally. Therefore, $\hat\chi_2$ behaves as a filtered output derivative. This gives more information to the observer without amplifying measurement noise in the usual finite-difference way.
+
+With this generalized model, we can now synthesize the first, certified estimation layer.
+
+\slideheading{6}{Layer 1: LMI-certified generalized UIO}{5:20--6:35 \quad (75 seconds)}
+\cue{Offline LMI, online robust observer.}
+\say This slide gives the first-layer observer. The observer has an internal state $\eta$, and the estimated augmented state $\hat\zeta$ contains the output-related variables, the physical state, and the unknown input estimate.
+
+The matrices $P_\zeta$ and $Q_\zeta$ enforce the structural decoupling relation, while the gain $K$ is computed from the solution of the LMI. The LMI is solved offline at the vertices of the nonlinear embedding. This is important because it turns the gain design into a convex feasibility problem.
+
+Once the LMI is feasible, we obtain a gain that comes with an $\mathcal H^1$ estimation guarantee. In other words, Layer 1 is not only an estimator. It is a source of supervisory signals whose robustness can be quantified before deployment. This reliability is exactly what we need before introducing learning.
+
+\slideheading{7}{A certified teacher supervises learning}{6:35--7:40 \quad (65 seconds)}
+\cue{Layer 1 teaches; Layer 2 learns the part that the fixed model misses.}
+\say This diagram summarizes the hybrid architecture. The plant provides the measured output and receives the known input. Layer 1, the generalized UIO, estimates both the state $\hat x_{\rm UIO}$ and the unknown residual $\hat\mu_x$.
+
+These two quantities are passed to the neural approximation. They act as a teacher signal: they are not assumed to be perfect, but they are bounded and physically meaningful because they come from the certified observer.
+
+Layer 2 is the neural adaptive observer. It uses the neural approximation of the unknown dynamics together with measurement feedback to refine the state estimate. The division of responsibilities is deliberate. The first layer protects the learning process with a robust baseline. The second layer captures state-dependent effects that a fixed observer model cannot represent well.
+
+Let me now show how this neural observer is trained and how its performance is also constrained by an analytical guarantee.
+
+\slideheading{8}{Layer 2: neural adaptive observer with an $\mathcal L_2$ guarantee}{7:40--9:10 \quad (90 seconds)}
+\cue{Learn the residual, keep output feedback, and bound the remaining mismatch.}
+\say The neural observer is shown on the left. The neural network receives the current neural-state estimate, the UIO state estimate, the UIO unknown-input estimate, and the known input. From these signals, it produces $\mu_\theta$, an approximation of the unknown dynamics.
+
+This learned residual is injected into the nonlinear observer model. We also retain the output-error feedback term $L_{\rm NN}(y-C\hat x_{\rm NN})$. This feedback is essential: the neural network improves the model, while the measurement innovation keeps the estimate anchored to the data.
+
+The loss has four components. The first tracks a reference state when it is available. The second enforces output consistency. The third keeps the neural observer close to the certified UIO teacher. The fourth aligns the learned residual with the UIO residual estimate. Together, these terms make the learning problem informative even though the true unknown input is not directly measured.
+
+On the right, the $\mathcal L_2$ inequality gives the second guarantee. The neural-state estimation error is bounded by the remaining approximation error $\Delta_x$, plus a transient term from the initial condition. The LMI below provides a gain $L_{\rm NN}$ that enforces this bound. So the learning layer is adaptive, but it is not disconnected from robustness analysis.
+
+\slideheading{9}{Case study: nonlinear vehicle with unknown tire forces}{9:10--10:15 \quad (65 seconds)}
+\cue{Unmeasured lateral velocity and unknown front--rear tire-force residuals.}
+\say We evaluate the method on a nonlinear vehicle model. The state contains longitudinal velocity, lateral velocity, yaw angle, and yaw rate. The known inputs are acceleration and steering angle.
+
+The measured output contains longitudinal velocity, yaw angle, and yaw rate. Notice that the lateral velocity $v_y$ is not measured directly. This makes it a useful state-estimation test.
+
+The unknown input is composed of the front and rear lateral tire-force residuals. These residuals represent the difference between the nominal tire model and the effective forces needed to explain the motion. The vehicle setting is therefore a good illustration of the broader problem: use known physics where it is reliable, then estimate and learn the structured dynamics that are missing.
+
+I will now show the trajectory, state, and force-reconstruction results.
+
+\slideheading{10}{Trajectory tracking: centimetre-scale position error}{10:15--11:25 \quad (70 seconds)}
+\cue{First practical result: the estimated path follows GPS closely.}
+\say First, consider the trajectory result. In the upper-left plot, the estimated trajectory closely follows the GPS reference throughout the manoeuvre. This means that the combined estimator remains consistent at the position level, even while it is handling nonlinear dynamics and unknown tire-force effects.
+
+The upper-right plot reports the position error. The mean position error is 0.44 centimetres in this simulation. The key point is not only the small average value; it is also the absence of a sustained drift during the trajectory.
+
+The lower plots show the steering and throttle inputs. They confirm that this performance is achieved during an actual manoeuvre with changing control inputs, rather than in a static operating condition. Next, we look more closely at the state estimates that support this trajectory result.
+
+\slideheading{11}{State estimation: the unmeasured lateral velocity is reconstructed}{11:25--12:30 \quad (65 seconds)}
+\cue{Measured states stay consistent; the estimator supplies the state that sensors do not give.}
+\say This slide shows the individual state estimates. The measured channels remain consistent with their corresponding sensor signals. More importantly, the estimator reconstructs the lateral velocity $v_y$, which is not part of the measurement vector.
+
+The lateral-velocity plot is a useful test of the hybrid approach. Its dynamics are affected by the uncertain tire forces, so a purely nominal model can suffer from mismatch. Here, the UIO provides the stable baseline and the neural layer refines the transient behaviour.
+
+The yaw-rate and yaw-angle plots show the same overall message: the observer follows the nonlinear vehicle motion while maintaining output consistency. This state reconstruction is then reflected in the quality of the unknown tire-force residual estimates.
+
+\slideheading{12}{Residual learning improves tire-force reconstruction}{12:30--13:40 \quad (70 seconds)}
+\cue{The teacher is bounded; the student is faster and closer.}
+\say Finally, these plots compare the reconstructed tire-force residuals and slip angles. Layer 1 already gives a bounded and physically meaningful residual estimate. That is valuable by itself, because it turns an unknown modelling effect into an interpretable signal.
+
+Layer 2 improves this estimate. The neural adaptive observer converges faster and tracks the front and rear tire-force residuals more closely over the manoeuvre. This improvement is what we expect from a state-dependent residual model: the neural map can adapt to nonlinear effects that a fixed observer gain and nominal physics cannot capture completely.
+
+The result is not a replacement of model-based estimation. It is a refinement built on top of a certified model-based estimate. This distinction is the central design principle of the paper.
+
+\slideheading{13}{Takeaways}{13:40--15:00 \quad (80 seconds)}
+\cue{Relax the rank condition, certify the baseline, then learn the residual.}
+\say Let me conclude with four takeaways.
+
+First, the generalized unknown-input observer relaxes the need for exact unknown-input decoupling by using regularization and output derivatives.
+
+Second, the method keeps analytical guarantees. The first layer has an $\mathcal H^1$ robustness bound, and the neural observer has an $\mathcal L_2$ performance bound.
+
+Third, the learning stage is guided by a certified teacher rather than being trained in isolation. This makes the learning signals more reliable and helps preserve physical interpretability.
+
+Finally, in the nonlinear vehicle example, the architecture achieves accurate trajectory tracking, reconstructs the unmeasured lateral velocity, and improves tire-force residual estimation.
+
+So the main message is: certification and learning should work together. The observer makes adaptation trustworthy, and adaptation makes the observer more accurate. Thank you for your attention. I would be happy to take your questions.
+
+\end{document}

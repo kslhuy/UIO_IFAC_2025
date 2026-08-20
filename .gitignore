@@ -1,0 +1,8 @@
+# Generated presentation build dependencies and outputs
+/presentation_build/node_modules/
+/presentation_build/npm-cache/
+/presentation_build/rendered*/
+/presentation_build/*.pdf
+
+# Temporary Microsoft Office lock files
+~$*.pptx

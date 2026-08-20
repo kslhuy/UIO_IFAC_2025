@@ -1,0 +1,19 @@
+REFERENCES
+
+Abdollahi, F., Talebi, H.A., and Patel, R.V. (2006). A stable neural network-based observer with application to flexible-joint manipulators. IEEE Transactions on Neural Networks, 17(1), 118–129. doi:10.1109/TNN.2005.863458.
+
+Bakhshande, F. and Söffker, D. (2015). Proportional–integral–observer: A brief survey with special attention to the actual methods using ACC benchmark. IFAC-PapersOnLine, 48. doi:10.3182/20150218-3-AU-30250//978-3-902823-71-70058.
+
+Barfoot, T.D. (2017). State estimation for robotics. URL https://api.semanticscholar.org/CorpusID:65172180.
+
+Buisson-Fenet, M., Morgenthaler, V., Trimpe, S., and Di Meglio, F. (2021). Joint state and dynamics estimation with high-gain observers and gaussian process models. IEEE Control Systems Letters, 5(5), 1627–1632. doi:10.1109/LCSYS.2020.3042412.
+
+Chaouche, A., Zemouche, A., Ramdani, M., Chaib Draa, K., and Delattre, D. (2022). Unknown input estimation algorithms for a class of LPV/nonlinear systems with application to wastewater treatment process. Proceedings of the Institution of Mechanical Engineers, Part I: Journal of Systems and Control Engineering, 236(7), 1372–1385.
+
+Hou, M. and Müller, P.C. (1992). Design of observers for linear systems with unknown inputs. IEEE Transactions on Automatic Control, 37(6), 871–875.
+
+Phanomchoeng, G. and Rajamani, R. (2014). Real-time estimation of rollover index for tripped rollovers with a novel unknown input nonlinear observer. IEEE/ASME Transactions on Mechatronics, 19(2), 743–754.
+
+Söffker, D., Yu, T.J., and Müller, P.C. (1995). State estimation of dynamical systems with nonlinearities by using proportional-integral observer. International Journal of Systems Science, 26, 1571–1582.
+
+Trinh, H., Tran, T.D., and Fernando, T. (2008). Disturbance decoupled observers for systems with unknown inputs. IEEE Transactions on Automatic Control, 53(10), 2397–2402.

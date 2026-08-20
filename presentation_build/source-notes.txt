@@ -1,0 +1,3 @@
+User-provided manuscript: ifac/UIO_IFAC.tex
+Figures used: img/traj_control_py.png, img/State_est_py.png, img/tireforce_slip_py.png
+All claims and figures in the deck are derived from the user-provided manuscript and local simulation outputs.
